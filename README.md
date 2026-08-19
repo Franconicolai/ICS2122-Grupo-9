@@ -1,16 +1,5 @@
 # ICS2122-Grupo-9
 
-## Tabla de contenidos
-
-- [Contexto](#contexto)
-- [Objetivo](#objetivo)
-- [Alcance del proyecto: etapas](#alcance-del-proyecto-etapas)
-- [Datos](#datos)
-- [Lenguaje y herramientas](#lenguaje-y-herramientas)
-- [Estructura del repositorio](#estructura-del-repositorio)
-- [Cómo ejecutar](#cómo-ejecutar)
-- [Autores](#autores)
-
 ## Contexto
 
 La red modelada opera bajo una arquitectura *hub & spoke* centrada en Miami (MIA), con 19 aviones cargueros repartidos entre cuatro operadores (filiales con base en países distintos), cerca de doce mil toneladas semanales de carga y una fuerte asimetría de flujo hacia el hub. La operación es **cíclica**: el itinerario se repite semana a semana, por lo que cada avión debe terminar su rotación donde puede comenzar la siguiente.
