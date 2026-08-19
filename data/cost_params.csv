@@ -1,0 +1,11 @@
+param,operator,value,unit
+fuel_burn_gal_per_hour,ALL,930,gal/h
+fuel_price_usd_per_gal,ALL,4.57,USD/gal
+ex_fuel_usd_per_block_hour,AND,4450,USD/h
+ex_fuel_usd_per_block_hour,BRA,3800,USD/h
+ex_fuel_usd_per_block_hour,PAC,3300,USD/h
+ex_fuel_usd_per_block_hour,SUR,4250,USD/h
+handling_usd_per_ton,AND,44,USD/ton
+handling_usd_per_ton,BRA,52,USD/ton
+handling_usd_per_ton,PAC,42,USD/ton
+handling_usd_per_ton,SUR,39,USD/ton
