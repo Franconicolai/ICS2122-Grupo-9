@@ -1,0 +1,238 @@
+# Modelo
+
+## 1. Conjuntos e Índices
+
+| Símbolo                                                                                                                                  | Descripción                           |
+| ----------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| $\mathcal{K}$                       | Conjunto de aviones de la flota,$k \in \mathcal{K}$                                             |                                        |
+| $\mathcal{A}$                       | Conjunto de aeropuertos de la red,$a \in \mathcal{A}$                                           |                                        |
+| $\mathcal{L}$                       | Catálogo de tramos permitidos,$(a,b) \in \mathcal{L} \subseteq \mathcal{A} \times \mathcal{A}$ |                                        |
+| $\mathcal{D}$                       | Días de la semana,$d \in \mathcal{D} = \{1,2,...,7\}$ (cíclico: $d=8 \equiv d=1$)           |                                        |
+| $\mathcal{OD}$                      | Pares origen-destino con demanda,$(i,j) \in \mathcal{OD}$                                       |                                        |
+| $\mathcal{P}$                       | Conjunto de operadores (filiales),$p \in \mathcal{P}$                                           |                                        |
+| $\mathcal{H} \subseteq \mathcal{A}$                                                                                                     | Aeropuertos hub (principalmente Miami) |
+
+---
+
+## 2. Parámetros
+
+### Flota y Aeropuertos
+
+| Símbolo                                                                                                                               | Descripción                                                    |
+| -------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| $\text{cap}_k$                                | Capacidad máxima de carga del avión$k$ (toneladas)                               |                                                                 |
+| $\text{op}_k \in \mathcal{P}$                 | Operador asignado al avión$k$                                                     |                                                                 |
+| $\text{TAT}$                                                                                                                         | Tiempo mínimo en tierra entre vuelos consecutivos (turnaround) |
+| $[m_k^{\text{ini}}, m_k^{\text{fin}}, a_k^m]$ | Ventana de mantenimiento del avión$k$: días de inicio/fin y aeropuerto requerido |                                                                 |
+
+### Tramos (Legs)
+
+| Símbolo                                                                 | Descripción |
+| ------------------------------------------------------------------------ | ------------ |
+| $\tau_{ab}$   | Duración de vuelo del tramo$(a \to b)$ (horas)      |              |
+| $\delta_{ab}$ | Distancia del tramo$(a \to b)$ (km)                  |              |
+| $\text{lf}_b$ | Tasa de aterrizaje en el aeropuerto destino$b$ (USD) |              |
+
+### Demanda
+
+| Símbolo                                                                                     | Descripción |
+| -------------------------------------------------------------------------------------------- | ------------ |
+| $\text{dem}_{ij}^d$ | Toneladas disponibles del par$(i,j)$ el día $d$                 |              |
+| $r_{ij}$            | Tarifa por kg del par$(i,j)$ (USD/ton)                             |              |
+| $f_{ij}^{\min}$     | Frecuencia mínima comprometida para el par$(i,j)$ (vuelos/semana) |              |
+
+### Costos Operacionales
+
+| Símbolo                                                                                 | Descripción                                           |
+| ---------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| $c_k^{\text{fuel}}$ | Costo de combustible del avión$k$ por hora de vuelo (USD/hr)  |                                                        |
+| $c_k^{\text{hr}}$   | Costo horario del avión$k$ (tripulación + overhead) (USD/hr) |                                                        |
+| $c^{\text{man}}$                                                                       | Costo de manipulación de carga por tonelada (USD/ton) |
+
+Costo fijo de operar el tramo $(a \to b)$ con el avión $k$ (independiente de la carga):
+
+$$
+c_{k,ab} = (c_k^{\text{fuel}} + c_k^{\text{hr}}) \cdot \tau_{ab} + \text{lf}_b
+$$
+
+Tarifa neta de manipulación por par OD:
+
+$$
+\tilde{r}_{ij} = r_{ij} - c^{\text{man}}
+$$
+
+### Derechos de Tráfico
+
+| Símbolo                       | Descripción                                                          |
+| ------------------------------ | --------------------------------------------------------------------- |
+| $\text{TR}_{p,\text{país}}$ | $= 1$ si el operador $p$ tiene derechos en ese país, $0$ si no |
+
+---
+
+## 3. Variables de Decisión
+
+### Capa 1: Flujo de Aviones (Variables Binarias)
+
+$$
+y_{k,a,b,d} \in \{0, 1\}
+$$
+
+> **Interpretación**: $y_{k,a,b,d} = 1$ si y solo si el avión $k$ opera el tramo $(a \to b)$ saliendo el día $d$.
+
+$$
+w_{k,a,d} \in \{0, 1\}
+$$
+
+> **Interpretación**: $w_{k,a,d} = 1$ si el avión $k$ permanece en tierra en el aeropuerto $a$ durante el día $d$.
+
+### Capa 2: Flujo de Carga (Variables Continuas)
+
+$$
+x_{ij,k,a,b,d} \geq 0
+$$
+
+> **Interpretación**: Toneladas de carga del par origen-destino $(i \to j)$ que viajan **en el avión $k$** a través del tramo $(a \to b)$ el día $d$.
+
+> **Clave con transbordo**: El índice $k$ identifica en qué avión viaja la carga en **ese tramo específico**. En el próximo tramo (tras transbordo en un hub), la misma carga puede estar en un avión $k' \neq k$.
+
+---
+
+## 4. Función Objetivo
+
+Maximizar el **margen neto semanal** de la red:
+
+$$
+\max \quad Z = \underbrace{\sum_{(i,j) \in \mathcal{OD}} \sum_{k \in \mathcal{K}} \sum_{(a,b) \in \mathcal{L}} \sum_{d \in \mathcal{D}} \tilde{r}_{ij} \cdot x_{ij,k,a,b,d}}_{\text{Ingresos netos por carga (descontando manipulación)}} - \underbrace{\sum_{k \in \mathcal{K}} \sum_{(a,b) \in \mathcal{L}} \sum_{d \in \mathcal{D}} c_{k,ab} \cdot y_{k,a,b,d}}_{\text{Costos fijos de operación de vuelos}}
+$$
+
+---
+
+## 5. Restricciones
+
+### [R1] Balance de Flujo de Aviones — Rotación Cerrada
+
+Para cada avión $k$, aeropuerto $a$ y día $d$:
+
+$$
+\sum_{b \,:\, (a,b) \in \mathcal{L}} y_{k,a,b,d} + w_{k,a,d} = \sum_{b \,:\, (b,a) \in \mathcal{L}} y_{k,b,a,d-1} + w_{k,a,d-1} \quad \forall\, k,\, a,\, d
+$$
+
+> **Explicación**: El número de "salidas" desde $(a, d)$ iguala el número de "llegadas" a $(a, d)$ para cada avión. Los índices de días son módulo 7. Esto garantiza que la rotación sea cíclica: el avión termina la semana donde la comenzó.
+
+### [R2] Un Avión en un Lugar a la Vez
+
+$$
+\sum_{b \,:\, (a,b) \in \mathcal{L}} y_{k,a,b,d} + w_{k,a,d} \leq 1 \quad \forall\, k,\, a,\, d
+$$
+
+### [R3] Capacidad de Carga — Restricción de Acoplamiento
+
+La carga total en el avión $k$ en el tramo $(a \to b)$ el día $d$ no puede superar su capacidad si el vuelo existe:
+
+$$
+\sum_{(i,j) \in \mathcal{OD}} x_{ij,k,a,b,d} \leq \text{cap}_k \cdot y_{k,a,b,d} \quad \forall\, k,\, (a,b) \in \mathcal{L},\, d
+$$
+
+> **Rol central**: Si $y_{k,a,b,d} = 0$ (el vuelo no existe), fuerza $x_{ij,k,a,b,d} = 0$ para todo $(i,j)$. Esta es la restricción que enlaza ambas capas del modelo.
+
+---
+
+### [R4'] Conservación de Carga en Tránsito **con Transbordo el Mismo Día** ⚠️ Actualizado
+
+Para cada par $(i,j)$, aeropuerto **intermedio** $m$ (donde $m \neq i$ y $m \neq j$) y día $d$:
+
+$$
+\sum_{k \in \mathcal{K}} \sum_{a \,:\, (a,m) \in \mathcal{L}} x_{ij,k,a,m,d} \;\;=\;\; \sum_{k \in \mathcal{K}} \sum_{b \,:\, (m,b) \in \mathcal{L}} x_{ij,k,m,b,d} \quad \forall\, (i,j),\, m \notin \{i,j\},\, d
+$$
+
+> **¿Qué dice?** Toda la carga del par $(i,j)$ que llega al aeropuerto $m$ el día $d$ — sumando **todos los aviones que aterrizan ese día** — debe salir de $m$ en ese **mismo día $d$** — en **cualquier avión disponible**.
+
+> **¿Por qué el mismo día?** La operación hub-and-spoke permite consolidar y redistribuir carga en el mismo turno operacional. El transbordo físico (descarga + recarga) ocurre en tierra mientras los aviones hacen su escala.
+
+> **Implicación operativa**: Para que esta restricción sea factible, el vuelo de llegada a $m$ debe ocurrir con suficiente anticipación al vuelo de salida desde $m$ (garantizado implícitamente por el TAT en R10 y los horarios de los tramos $\tau_{ab}$).
+
+**Ejemplo concreto con transbordo en Miami el mismo día (lunes):**
+
+```
+LUNES — Hub Miami:
+
+  08:00  k₁ llega GRU→MIA:   x_{GRU→AMS, k₁, GRU, MIA, lun} = 20 ton
+           ↓ transbordo en tierra (descarga + consolidación)
+  14:00  k₃ sale MIA→AMS:   x_{GRU→AMS, k₃, MIA, AMS, lun} = 20 ton
+
+Restricción R4' en MIA, día lunes:
+  Σ_k [llegadas a MIA el lunes] = Σ_k [salidas de MIA el lunes]
+         20 ton (en k₁)         =        20 ton (en k₃)   ✓
+
+La carga llegó y salió el MISMO día. k₁ ≠ k₃ → transbordo entre aviones.
+```
+
+---
+
+### [R5] Carga en Origen — Satisfacción de Demanda Diaria
+
+Las toneladas cargadas para el par $(i,j)$ en el origen $i$ el día $d$ no pueden exceder la demanda disponible ese día:
+
+$$
+\sum_{k \in \mathcal{K}} \sum_{b \,:\, (i,b) \in \mathcal{L}} x_{ij,k,i,b,d} \leq \text{dem}_{ij}^d \quad \forall\, (i,j) \in \mathcal{OD},\, d \in \mathcal{D}
+$$
+
+> La demanda es un **límite superior**: solo se embarca la carga cuya tarifa cubre el costo de moverla.
+
+### [R6] Carga en Destino — Entrega Final
+
+Las toneladas que llegan al destino $j$ para el par $(i,j)$ el día $d$ provienen solo del último tramo:
+
+$$
+\sum_{k \in \mathcal{K}} \sum_{a \,:\, (a,j) \in \mathcal{L}} x_{ij,k,a,j,d} \geq 0 \quad \forall\, (i,j) \in \mathcal{OD},\, d
+$$
+
+> No hay restricción de entrega obligatoria (la demanda es oportunística). Las toneladas que llegan a $j$ cierran el flujo del commodity $(i,j)$ — no hay arcos de salida desde el destino.
+
+### [R7] Frecuencia Mínima Comprometida
+
+$$
+\sum_{k \in \mathcal{K}} \sum_{d \in \mathcal{D}} y_{k,i,j,d} \geq f_{ij}^{\min} \quad \forall\, (i,j) \in \mathcal{OD} \;:\; f_{ij}^{\min} > 0
+$$
+
+### [R8] Derechos de Tráfico
+
+$$
+y_{k,a,b,d} = 0 \quad \text{si } \text{TR}_{\text{op}_k,\,\text{país}(a)} = 0 \;\text{ o }\; \text{TR}_{\text{op}_k,\,\text{país}(b)} = 0 \quad \forall\, k, (a,b), d
+$$
+
+> En la práctica se implementa eliminando las variables inviables antes de resolver.
+
+### [R9] Ventana de Mantenimiento
+
+$$
+y_{k,a,b,d} = 0 \quad \forall\, d \in [m_k^{\text{ini}}, m_k^{\text{fin}}],\; (a,b) \in \mathcal{L}
+$$
+
+$$
+w_{k,\, a_k^m,\, d} = 1 \quad \forall\, d \in [m_k^{\text{ini}}, m_k^{\text{fin}}]
+$$
+
+### [R10] Tiempo Mínimo en Tierra (Turnaround)
+
+Si el avión $k$ llega al aeropuerto $a$ tras el tramo $(b \to a)$ el día $d$, el siguiente vuelo saliendo de $a$ debe respetar el tiempo mínimo TAT:
+
+$$
+y_{k,b,a,d} + y_{k,a,c,d'} \leq 1 \quad \text{si la diferencia horaria entre llegada y salida} < \text{TAT}
+$$
+
+---
+
+## 6. Dominio de Variables
+
+$$
+y_{k,a,b,d} \in \{0, 1\} \quad \forall\, k \in \mathcal{K},\; (a,b) \in \mathcal{L},\; d \in \mathcal{D}
+$$
+
+$$
+w_{k,a,d} \in \{0, 1\} \quad \forall\, k \in \mathcal{K},\; a \in \mathcal{A},\; d \in \mathcal{D}
+$$
+
+$$
+x_{ij,k,a,b,d} \geq 0 \quad \forall\, (i,j) \in \mathcal{OD},\; k \in \mathcal{K},\; (a,b) \in \mathcal{L},\; d \in \mathcal{D}
+$$
