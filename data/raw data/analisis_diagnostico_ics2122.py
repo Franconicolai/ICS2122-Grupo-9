@@ -94,8 +94,24 @@ def save_fig(fig, path: Path):
     plt.close(fig)
 
 
+def resolve_data_dir(root: Path) -> Path:
+    """Devuelve la carpeta de datos. Primero prueba root/data (estándar), si no, root mismo."""
+    if (root / "data" / "fleet.csv").exists():
+        return root / "data"
+    return root
+
+
+def resolve_repo_root(root: Path) -> Path:
+    """Devuelve la raíz del repo (donde está README.md y carpeta docs). Sube 2 niveles si hace falta."""
+    if (root / "README.md").exists():
+        return root
+    if (root.parent.parent / "README.md").exists():
+        return root.parent.parent
+    return root
+
+
 def load_data(root: Path):
-    data = root / "data"
+    data = resolve_data_dir(root)
     required = [
         "fleet.csv", "airports.csv", "legs_catalog.csv", "demand_weekly.csv",
         "demand_daily.csv", "traffic_rights.csv", "interchange_airports.csv",
@@ -364,6 +380,14 @@ def operator_analysis(d):
         cost_rows.append({"operator": op, "fuel_usd_h": fuel_hour, "ex_fuel_usd_h": ex,
                           "costo_hora_aprox_usd": fuel_hour + ex, "handling_usd_t": handling})
     cost_by_op = pd.DataFrame(cost_rows)
+    # Incorporar payload promedio y calcular costo por tonelada-capacidad por hora
+    cost_by_op = cost_by_op.merge(
+        op_summary[["operator", "payload_promedio_t", "payload_total_t", "n_aviones"]],
+        on="operator", how="left"
+    )
+    cost_by_op["costo_por_tonelada_usd_t"] = (
+        cost_by_op["costo_hora_aprox_usd"] / cost_by_op["payload_promedio_t"]
+    )
 
     stats = {
         "all_ops_interchange_n": len(all_ops_airports),
@@ -417,9 +441,11 @@ def slack_catalog():
 
 
 def modeling_alerts(root: Path, d, net_stats, op_stats):
-    readme = (root / "README.md").read_text(encoding="utf-8", errors="ignore") if (root / "README.md").exists() else ""
-    model_md = (root / "docs" / "modelo_matematico.md").read_text(encoding="utf-8", errors="ignore") if (root / "docs" / "modelo_matematico.md").exists() else ""
-    ops_text = (root / "data" / "ops_rules.yaml").read_text(encoding="utf-8", errors="ignore")
+    repo_root = resolve_repo_root(root)
+    data_dir = resolve_data_dir(root)
+    readme = (repo_root / "README.md").read_text(encoding="utf-8", errors="ignore") if (repo_root / "README.md").exists() else ""
+    model_md = (repo_root / "docs" / "modelo_matematico.md").read_text(encoding="utf-8", errors="ignore") if (repo_root / "docs" / "modelo_matematico.md").exists() else ""
+    ops_text = (data_dir / "ops_rules.yaml").read_text(encoding="utf-8", errors="ignore")
     legs = d["legs"]
 
     alerts = []
@@ -667,11 +693,21 @@ def make_graphs(out_graphs: Path, results):
     paths["dem_maint"] = out_graphs / "18_demanda_vs_mantenimiento.png"
     save_fig(fig, paths["dem_maint"])
 
-    # 19 Costos horarios
-    fig, ax = plt.subplots(figsize=(7, 4.5))
-    ax.bar(cost_by_op["operator"], cost_by_op["costo_hora_aprox_usd"])
-    clean_ax(ax, "Costo aproximado por block-hour según operador", ylabel="USD/h (combustible + ex-fuel)")
-    paths["costs"] = out_graphs / "19_costo_hora_operador.png"
+    # 19 Costo por tonelada de capacidad útil por hora
+    cb = cost_by_op.sort_values("costo_por_tonelada_usd_t", ascending=True).reset_index(drop=True)
+    fig, ax = plt.subplots(figsize=(7.2, 4.8))
+    idx_min = int(cb["costo_por_tonelada_usd_t"].idxmin())
+    colors = ["#012169" if i == idx_min else "#4a6fa5" for i in range(len(cb))]
+    bars = ax.bar(cb["operator"], cb["costo_por_tonelada_usd_t"], color=colors, edgecolor="white", linewidth=0.6)
+    # Etiqueta valor encima de cada barra
+    for bar, val in zip(bars, cb["costo_por_tonelada_usd_t"]):
+        ax.text(bar.get_x() + bar.get_width() / 2, val + max(cb["costo_por_tonelada_usd_t"]) * 0.018,
+                f"{val:,.0f}", ha="center", va="bottom", fontsize=9, fontweight="bold", color="#012169")
+    clean_ax(ax, "Costo por tonelada-capacidad útil según operador",
+             ylabel="USD por tonelada y por block-hour")
+    ax.set_xlabel("Operador (ordenado por costo/t, ascendente)", fontsize=9)
+    ax.grid(axis="y", color="#e8ecf1", linewidth=0.6)
+    paths["costs"] = out_graphs / "19_costo_por_tonelada_operador.png"
     save_fig(fig, paths["costs"])
 
     # 20 Regional heatmap
@@ -888,7 +924,7 @@ def build_word(out_path: Path, results, graphs):
 
     doc.add_heading("8. Costos y diferencias entre operadores", level=1)
     add_table(doc, results["cost_by_op"], max_rows=10)
-    add_figure(doc, graphs["costs"], "Figura: costo aproximado por block-hour según operador.")
+    add_figure(doc, graphs["costs"], "Figura: costo por tonelada de capacidad útil por block-hour, según operador. Menor = más eficiente en costo por carga transportada.")
     add_table(doc, results["fees_summary"], max_rows=10)
     doc.add_paragraph(
         "Los operadores no solo difieren en derechos de tráfico y tamaño de flota; también tienen costos ex-fuel y handling distintos. "

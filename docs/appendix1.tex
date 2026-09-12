@@ -1,0 +1,1728 @@
+% ============================================================
+% APÉNDICE: FORMULACIONES MATEMÁTICAS Y ALGORITMOS
+% ============================================================
+
+\subsection{Formulaciones matemáticas y algoritmos de referencia}
+\label{app:metodologia}
+
+Este apéndice desarrolla las formulaciones y procedimientos algorítmicos asociados a las
+metodologías discutidas en la Sección~\ref{sec:discusion_metodologica}. En primer lugar se
+presenta una formulación MILP integrada que determina simultáneamente la secuencia semanal
+de vuelos de las aeronaves, sus tiempos de operación y la asignación de la carga. Luego se
+presentan formulaciones alternativas basadas en rotaciones, generación de columnas,
+branch-and-price, descomposición de Benders y métodos matheurísticos.
+
+La formulación principal utiliza únicamente el catálogo físico de tramos disponibles.
+No se enumeran previamente vuelos con horarios específicos ni rotaciones completas. Para
+cada aeronave se dispone de un número máximo de posiciones dentro de su secuencia semanal,
+y el modelo decide qué tramo ocupa cada posición y en qué instante se realiza.
+
+
+% ============================================================
+\subsubsection{Red física y posiciones de vuelo}
+\label{app:red_fisica}
+% ============================================================
+
+La red física se representa mediante un grafo dirigido
+
+\[
+G=(A,E),
+\]
+
+donde $A$ es el conjunto de aeropuertos y $E$ el conjunto de tramos dirigidos permitidos
+entre ellos.
+
+Para cada tramo $e\in E$ se conocen su aeropuerto de origen $o_e$, aeropuerto de destino
+$d_e$ y tiempo de vuelo o block time $\tau_e$.
+
+Para cada aeronave se define un conjunto de posiciones
+
+\[
+S=\{1,\ldots,\bar S\},
+\]
+
+donde $\bar S$ es una cota superior al número de vuelos que una aeronave puede efectuar
+durante una semana. Esta cota puede obtenerse de manera conservadora a partir del horizonte
+semanal y de la mínima duración posible de un ciclo vuelo--tiempo en tierra.
+
+La utilización de $S$ no implica enumerar rutas. Por ejemplo, si
+
+\[
+y_{k,s,e}=1,
+\]
+
+el modelo está indicando que la aeronave $k$ realiza el tramo físico $e$ en la posición $s$
+de su secuencia. La combinación completa de tramos de cada aeronave es determinada por el
+solver.
+
+
+% ============================================================
+\subsubsection{Notación del modelo MILP}
+\label{app:notacion_milp}
+% ============================================================
+
+\vspace{0.5em}
+\noindent\textbf{Conjuntos.}
+
+\begin{description}
+
+    \item[$A$]
+    conjunto de aeropuertos.
+
+    \item[$E$]
+    conjunto de tramos físicos dirigidos disponibles.
+
+    \item[$K$]
+    conjunto de aeronaves.
+
+    \item[$S=\{1,\ldots,\bar S\}$]
+    posiciones potenciales dentro de la secuencia semanal de una aeronave.
+
+    \item[$S^-=\{1,\ldots,\bar S-1\}$]
+    posiciones que pueden tener una operación posterior dentro de la misma semana.
+
+    \item[$Q$]
+    conjunto de demandas o commodities de carga.
+
+    \item[$C$]
+    conjunto de pares de tramos físicamente consecutivos,
+    \[
+    C=\{(e,e')\in E\times E:d_e=o_{e'}\}.
+    \]
+
+    \item[$L$]
+    conjunto de mercados sujetos a frecuencia mínima.
+
+    \item[$E_\ell\subseteq E$]
+    conjunto de tramos que contribuyen al cumplimiento de la frecuencia del mercado
+    $\ell\in L$.
+
+    \item[$R_k^M$]
+    conjunto de requerimientos de mantenimiento de la aeronave $k$.
+
+\end{description}
+
+
+\vspace{0.5em}
+\noindent\textbf{Parámetros de red y aeronaves.}
+
+\begin{description}
+
+    \item[$O_{ie}$]
+    parámetro igual a 1 si el tramo $e$ sale del aeropuerto $i$.
+
+    \item[$D_{ie}$]
+    parámetro igual a 1 si el tramo $e$ llega al aeropuerto $i$.
+
+    \item[$\tau_e$]
+    block time del tramo $e$.
+
+    \item[$Q_{ke}$]
+    capacidad efectiva de carga de la aeronave $k$ al operar el tramo $e$.
+
+    \item[$c_{ke}^{\mathrm{op}}$]
+    costo operacional de realizar el tramo $e$ con la aeronave $k$.
+
+    \item[$R_{ke}\in\{0,1\}$]
+    parámetro igual a 1 si el operador asociado a la aeronave $k$ posee los derechos de
+    tráfico necesarios para operar el tramo $e$.
+
+    \item[$A_{ke}\in\{0,1\}$]
+    parámetro igual a 1 si el tramo $e$ es técnicamente factible para la aeronave $k$.
+
+    \item[$T_{kee'}^{\mathrm{TAT}}$]
+    tiempo mínimo en tierra requerido cuando la aeronave $k$ opera consecutivamente
+    los tramos $e$ y $e'$.
+
+    \item[$H$]
+    duración del horizonte semanal, expresada en las mismas unidades de tiempo utilizadas
+    en el modelo. Para una representación en horas, $H=168$.
+
+    \item[$\Gamma$]
+    constante suficientemente grande utilizada en restricciones Big-M.
+
+\end{description}
+
+
+\vspace{0.5em}
+\noindent\textbf{Parámetros de demanda.}
+
+Para cada $q\in Q$ se definen:
+
+\begin{description}
+
+    \item[$o_q$]
+    aeropuerto de origen de la demanda.
+
+    \item[$d_q$]
+    aeropuerto de destino de la demanda.
+
+    \item[$D_q$]
+    demanda máxima disponible, medida en toneladas.
+
+    \item[$r_q$]
+    ingreso unitario por kilogramo transportado.
+
+\end{description}
+
+Se introduce además
+
+\[
+T^{\mathrm{tr}}\geq0,
+\]
+
+correspondiente al tiempo mínimo de conexión exigido cuando la carga cambia de aeronave.
+Su valor numérico constituye un parámetro del modelo.
+
+Para cada aeropuerto $i\in A$ se define
+
+\[
+\chi_i=
+\begin{cases}
+1, & \text{si está permitido realizar transbordos comerciales en }i,\\
+0, & \text{en otro caso}.
+\end{cases}
+\]
+
+Esto permite excluir, por ejemplo, eventos que correspondan exclusivamente a escalas
+técnicas sin manipulación de carga.
+
+
+\vspace{0.5em}
+\noindent\textbf{Parámetros de frecuencia y mantenimiento.}
+
+Para cada mercado $\ell\in L$ se define $F_\ell^{\min}$ como su frecuencia semanal mínima.
+
+Para cada requerimiento $r\in R_k^M$ se conocen:
+
+\[
+a_{kr}^{M},
+\qquad
+\underline{t}_{kr}^{M},
+\qquad
+\overline{t}_{kr}^{M},
+\qquad
+d_{kr}^{M},
+\]
+
+correspondientes al aeropuerto de mantenimiento, inicio y fin de la ventana disponible, y
+duración mínima de la actividad, respectivamente.
+
+
+% ============================================================
+\subsubsection{Variables de decisión}
+\label{app:variables_milp}
+% ============================================================
+
+\vspace{0.5em}
+\noindent\textbf{Variables asociadas a las aeronaves.}
+
+\begin{align}
+y_{kse}
+&=
+\begin{cases}
+1, & \text{si la aeronave $k$ opera el tramo $e$ en la posición $s$},\\
+0, & \text{en otro caso},
+\end{cases}
+\label{var:y}
+\\
+u_{ks}
+&=
+\begin{cases}
+1, & \text{si la posición $s$ de la aeronave $k$ es utilizada},\\
+0, & \text{en otro caso},
+\end{cases}
+\label{var:u}
+\\
+p_{ksee'}
+&=
+\begin{cases}
+1, & \text{si $k$ realiza $e$ en $s$ y $e'$ en $s+1$},\\
+0, & \text{en otro caso},
+\end{cases}
+\quad (e,e')\in C,
+\label{var:p}
+\\
+\ell_{ks}
+&=
+\begin{cases}
+1, & \text{si $s$ es la última posición utilizada por $k$},\\
+0, & \text{en otro caso},
+\end{cases}
+\label{var:last}
+\\
+p^{W}_{ksee'}
+&=
+\begin{cases}
+1, & \text{si $e$ es el último tramo de $k$ y $e'$ el primero}\\
+   & \text{de la semana siguiente},
+\end{cases}
+\quad (e,e')\in C,
+\label{var:wrap}
+\\
+t_{ks}^{\mathrm{dep}}
+&\geq0,
+\quad
+\text{instante de salida de la posición $s$},
+\label{var:tdep}
+\\
+t_{ks}^{\mathrm{arr}}
+&\geq0,
+\quad
+\text{instante de llegada de la posición $s$}.
+\label{var:tarr}
+\end{align}
+
+
+\vspace{0.5em}
+\noindent\textbf{Variables asociadas a la carga.}
+
+\begin{align}
+x_{qks}
+&\geq0,
+\quad
+\text{toneladas de $q$ transportadas en la posición $(k,s)$},
+\label{var:x}
+\\
+b_{qks}
+&\geq0,
+\quad
+\text{toneladas de $q$ que ingresan a la red en $(k,s)$},
+\label{var:b}
+\\
+a_{qks}
+&\geq0,
+\quad
+\text{toneladas de $q$ que terminan su recorrido en $(k,s)$},
+\label{var:a}
+\\
+w_{qks}
+&\geq0,
+\quad
+\text{toneladas de $q$ que continúan desde $(k,s)$ hacia $(k,s+1)$},
+\label{var:w}
+\\
+z_{qksk's'}
+&\geq0,
+\quad
+\text{toneladas de $q$ transferidas desde $(k,s)$ hacia $(k',s')$},
+\quad k\neq k',
+\label{var:z}
+\\
+g_{ksk's'}
+&=
+\begin{cases}
+1, & \text{si existe una conexión de transbordo factible entre}\\
+   & \text{$(k,s)$ y $(k',s')$},
+\end{cases}
+\quad k\neq k',
+\label{var:g}
+\\
+s_q
+&\geq0,
+\quad
+\text{toneladas totales de la demanda $q$ efectivamente servidas}.
+\label{var:s}
+\end{align}
+
+
+\vspace{0.5em}
+\noindent\textbf{Variables asociadas al mantenimiento.}
+
+Se define
+
+\[
+m_{krs}=
+\begin{cases}
+1, & \text{si el mantenimiento $r$ de $k$ se realiza entre las posiciones $s$ y $s+1$},\\
+0, & \text{en otro caso},
+\end{cases}
+\]
+
+y
+
+\[
+\theta_{kr}\geq0,
+\]
+
+correspondiente al instante de inicio del mantenimiento $r$ de la aeronave $k$.
+
+
+% ============================================================
+\subsubsection{Formulación MILP integrada}
+\label{app:modelo_milp}
+% ============================================================
+
+Para facilitar la lectura y permitir saltos de página, la formulación se presenta en tres
+bloques: programación de aeronaves, flujo de carga y restricciones operacionales. Los tres
+bloques constituyen conjuntamente un único MILP.
+
+
+% ------------------------------------------------------------
+% FUNCIÓN OBJETIVO
+% ------------------------------------------------------------
+
+\vspace{0.5em}
+\noindent\textbf{Función objetivo.}
+
+La función objetivo maximiza el margen neto semanal:
+
+\begin{align}
+\max \quad Z
+={}&
+\sum_{q\in Q}1000\,r_qs_q
+-
+\sum_{k\in K}\sum_{s\in S}\sum_{e\in E}
+c_{ke}^{\mathrm{op}}y_{kse}
+-
+C^{\mathrm{cargo}}(b,a,z).
+\tag{FO}
+\label{eq:fo}
+\end{align}
+
+La función $C^{\mathrm{cargo}}(b,a,z)$ representa los costos lineales de manipulación,
+embarque, descarga y transbordo de la carga de acuerdo con las tarifas correspondientes a
+cada aeropuerto. Esta notación permite mantener legible la formulación sin alterar su
+estructura lineal.
+
+
+% ------------------------------------------------------------
+% BLOQUE A
+% ------------------------------------------------------------
+
+\vspace{0.5em}
+\noindent\textbf{Bloque A: selección, secuencia y tiempo de las aeronaves.}
+
+Cada posición utilizada contiene exactamente un tramo:
+
+\begin{align}
+\sum_{e\in E}y_{kse}
+&=
+u_{ks},
+\quad
+\forall k\in K,\ s\in S.
+\tag{R1}
+\label{eq:r1}
+\end{align}
+
+Las posiciones se utilizan consecutivamente desde el comienzo de la secuencia:
+
+\begin{align}
+u_{k,s+1}
+&\leq
+u_{ks},
+\quad
+\forall k\in K,\ s\in S^-.
+\tag{R2a}
+\label{eq:r2a}
+\\
+\ell_{ks}
+&=
+u_{ks}-u_{k,s+1},
+\quad
+\forall k\in K,\ s\in S^-,
+\tag{R2b}
+\label{eq:r2b}
+\\
+\ell_{k,\bar S}
+&=
+u_{k,\bar S},
+\quad
+\forall k\in K.
+\tag{R2c}
+\label{eq:r2c}
+\end{align}
+
+Para dos posiciones consecutivas se selecciona un par de tramos físicamente compatible:
+
+\begin{align}
+p_{ksee'}
+&\leq y_{kse},
+\quad
+\forall k,\ s\in S^-,\ (e,e')\in C,
+\tag{R3a}
+\label{eq:r3a}
+\\
+p_{ksee'}
+&\leq y_{k,s+1,e'},
+\quad
+\forall k,\ s\in S^-,\ (e,e')\in C,
+\tag{R3b}
+\label{eq:r3b}
+\\
+p_{ksee'}
+&\geq
+y_{kse}+y_{k,s+1,e'}-1,
+\quad
+\forall k,\ s\in S^-,\ (e,e')\in C,
+\tag{R3c}
+\label{eq:r3c}
+\\
+\sum_{(e,e')\in C}p_{ksee'}
+&=
+u_{k,s+1},
+\quad
+\forall k\in K,\ s\in S^-.
+\tag{R3d}
+\label{eq:r3d}
+\end{align}
+
+Los tiempos de llegada se obtienen a partir de los tiempos de salida y del tramo seleccionado:
+
+\begin{align}
+t_{ks}^{\mathrm{arr}}
+&=
+t_{ks}^{\mathrm{dep}}
++
+\sum_{e\in E}\tau_e y_{kse},
+\quad
+\forall k\in K,\ s\in S.
+\tag{R4a}
+\label{eq:r4a}
+\end{align}
+
+Entre vuelos consecutivos debe cumplirse el tiempo mínimo en tierra:
+
+\begin{align}
+t_{k,s+1}^{\mathrm{dep}}
+&\geq
+t_{ks}^{\mathrm{arr}}
++
+\sum_{(e,e')\in C}
+T_{kee'}^{\mathrm{TAT}}p_{ksee'}
+-
+\Gamma(1-u_{k,s+1}),
+\nonumber\\[-1mm]
+&\hspace{5cm}
+\forall k\in K,\ s\in S^-.
+\tag{R4b}
+\label{eq:r4b}
+\end{align}
+
+Los tiempos quedan dentro del horizonte semanal cuando la posición es utilizada:
+
+\begin{align}
+0
+\leq t_{ks}^{\mathrm{dep}}
+&\leq
+H\,u_{ks},
+\quad
+\forall k\in K,\ s\in S,
+\tag{R4c}
+\label{eq:r4c}
+\\
+0
+\leq t_{ks}^{\mathrm{arr}}
+&\leq
+H\,u_{ks},
+\quad
+\forall k\in K,\ s\in S.
+\tag{R4d}
+\label{eq:r4d}
+\end{align}
+
+El último tramo debe conectarse físicamente con el primero para formar una rotación semanal
+cíclica:
+
+\begin{align}
+p^W_{ksee'}
+&\leq
+\ell_{ks},
+\quad
+\forall k,\ s,\ (e,e')\in C,
+\tag{R5a}
+\label{eq:r5a}
+\\
+p^W_{ksee'}
+&\leq
+y_{kse},
+\quad
+\forall k,\ s,\ (e,e')\in C,
+\tag{R5b}
+\label{eq:r5b}
+\\
+p^W_{ksee'}
+&\leq
+y_{k,1,e'},
+\quad
+\forall k,\ s,\ (e,e')\in C,
+\tag{R5c}
+\label{eq:r5c}
+\\
+p^W_{ksee'}
+&\geq
+\ell_{ks}+y_{kse}+y_{k,1,e'}-2,
+\quad
+\forall k,\ s,\ (e,e')\in C,
+\tag{R5d}
+\label{eq:r5d}
+\\
+\sum_{s\in S}\sum_{(e,e')\in C}
+p^W_{ksee'}
+&=
+u_{k1},
+\quad
+\forall k\in K.
+\tag{R5e}
+\label{eq:r5e}
+\end{align}
+
+La conexión entre el último vuelo y el primero de la semana siguiente debe ser también
+temporalmente factible:
+
+\begin{align}
+t_{k1}^{\mathrm{dep}}+H
+&\geq
+t_{ks}^{\mathrm{arr}}
++
+T_{kee'}^{\mathrm{TAT}}
+-
+\Gamma(1-p^W_{ksee'}),
+\nonumber\\[-1mm]
+&\hspace{3.8cm}
+\forall k,\ s,\ (e,e')\in C.
+\tag{R5f}
+\label{eq:r5f}
+\end{align}
+
+
+% ------------------------------------------------------------
+% BLOQUE B
+% ------------------------------------------------------------
+
+\vspace{0.5em}
+\noindent\textbf{Bloque B: flujo multicommodity de carga.}
+
+La carga transportada en una operación está limitada por la capacidad de la aeronave y el
+tramo seleccionado:
+
+\begin{align}
+\sum_{q\in Q}x_{qks}
+&\leq
+\sum_{e\in E}Q_{ke}y_{kse},
+\quad
+\forall k\in K,\ s\in S.
+\tag{R6}
+\label{eq:r6}
+\end{align}
+
+La conservación del flujo al entrar a una operación se expresa mediante
+
+\begin{align}
+x_{qks}
+={}&
+b_{qks}
++
+w_{q,k,s-1}
++
+\sum_{\substack{k'\in K\\k'\neq k}}
+\sum_{s'\in S}
+z_{qk's'ks},
+\nonumber\\[-1mm]
+&\hspace{4cm}
+\forall q\in Q,\ k\in K,\ s\in S,
+\tag{R7a}
+\label{eq:r7a}
+\end{align}
+
+donde se adopta la convención
+
+\[
+w_{q,k,0}=0.
+\]
+
+La conservación al abandonar una operación es
+
+\begin{align}
+x_{qks}
+={}&
+a_{qks}
++
+w_{qks}
++
+\sum_{\substack{k'\in K\\k'\neq k}}
+\sum_{s'\in S}
+z_{qksk's'},
+\nonumber\\[-1mm]
+&\hspace{4cm}
+\forall q\in Q,\ k\in K,\ s\in S,
+\tag{R7b}
+\label{eq:r7b}
+\end{align}
+
+con
+
+\[
+w_{q,k,\bar S}=0.
+\]
+
+La carga puede continuar en la misma aeronave entre posiciones consecutivas:
+
+\begin{align}
+w_{qks}
+&\leq
+D_q\,u_{k,s+1},
+\quad
+\forall q\in Q,\ k\in K,\ s\in S^-.
+\tag{R8a}
+\label{eq:r8a}
+\end{align}
+
+Cuando existe cambio de aeronave se utiliza la variable de conexión $g_{ksk's'}$. Esta solo
+puede activarse si ambas operaciones existen:
+
+\begin{align}
+g_{ksk's'}
+&\leq
+u_{ks},
+\quad
+\forall k\neq k',\ s,s'\in S,
+\tag{R8b}
+\label{eq:r8b}
+\\
+g_{ksk's'}
+&\leq
+u_{k's'},
+\quad
+\forall k\neq k',\ s,s'\in S.
+\tag{R8c}
+\label{eq:r8c}
+\end{align}
+
+Para que la conexión exista, el destino de la primera operación debe coincidir con el origen
+de la segunda. Para cada aeropuerto $i\in A$:
+
+\begin{align}
+\sum_{e\in E}D_{ie}y_{kse}
+-
+\sum_{e\in E}O_{ie}y_{k's'e}
+&\leq
+1-g_{ksk's'},
+\nonumber\\[-1mm]
+&\hspace{2.7cm}
+\forall i,\ k\neq k',\ s,s',
+\tag{R8d}
+\label{eq:r8d}
+\\
+\sum_{e\in E}O_{ie}y_{k's'e}
+-
+\sum_{e\in E}D_{ie}y_{kse}
+&\leq
+1-g_{ksk's'},
+\nonumber\\[-1mm]
+&\hspace{2.7cm}
+\forall i,\ k\neq k',\ s,s'.
+\tag{R8e}
+\label{eq:r8e}
+\end{align}
+
+La conexión solo puede utilizar un aeropuerto donde se permita manipular carga:
+
+\begin{align}
+g_{ksk's'}
+&\leq
+1-
+\sum_{e\in E}D_{ie}y_{kse}
++
+\chi_i,
+\nonumber\\[-1mm]
+&\hspace{2.7cm}
+\forall i,\ k\neq k',\ s,s'.
+\tag{R8f}
+\label{eq:r8f}
+\end{align}
+
+Cuando se cambia de aeronave debe respetarse el tiempo mínimo de transbordo:
+
+\begin{align}
+t_{k's'}^{\mathrm{dep}}
+&\geq
+t_{ks}^{\mathrm{arr}}
++
+T^{\mathrm{tr}}
+-
+\Gamma(1-g_{ksk's'}),
+\nonumber\\[-1mm]
+&\hspace{3.2cm}
+\forall k\neq k',\ s,s'.
+\tag{R8g}
+\label{eq:r8g}
+\end{align}
+
+El flujo transferido solo puede ser positivo cuando dicha conexión está habilitada:
+
+\begin{align}
+z_{qksk's'}
+&\leq
+D_q\,g_{ksk's'},
+\quad
+\forall q\in Q,\ k\neq k',\ s,s'.
+\tag{R8h}
+\label{eq:r8h}
+\end{align}
+
+La carga solo puede comenzar su recorrido en su aeropuerto de origen:
+
+\begin{align}
+b_{qks}
+&\leq
+D_q
+\sum_{\substack{e\in E\\o_e=o_q}}
+y_{kse},
+\quad
+\forall q\in Q,\ k\in K,\ s\in S.
+\tag{R9a}
+\label{eq:r9a}
+\end{align}
+
+Análogamente, solo puede finalizarlo en su aeropuerto de destino:
+
+\begin{align}
+a_{qks}
+&\leq
+D_q
+\sum_{\substack{e\in E\\d_e=d_q}}
+y_{kse},
+\quad
+\forall q\in Q,\ k\in K,\ s\in S.
+\tag{R9b}
+\label{eq:r9b}
+\end{align}
+
+La cantidad total servida debe coincidir tanto con la carga que ingresa como con la que
+alcanza su destino:
+
+\begin{align}
+s_q
+&=
+\sum_{k\in K}\sum_{s\in S}b_{qks},
+\quad
+\forall q\in Q,
+\tag{R9c}
+\label{eq:r9c}
+\\
+s_q
+&=
+\sum_{k\in K}\sum_{s\in S}a_{qks},
+\quad
+\forall q\in Q,
+\tag{R9d}
+\label{eq:r9d}
+\\
+0\leq s_q
+&\leq
+D_q,
+\quad
+\forall q\in Q.
+\tag{R9e}
+\label{eq:r9e}
+\end{align}
+
+
+% ------------------------------------------------------------
+% BLOQUE C
+% ------------------------------------------------------------
+
+\vspace{0.5em}
+\noindent\textbf{Bloque C: restricciones operacionales adicionales.}
+
+Los compromisos comerciales de frecuencia se expresan como
+
+\begin{align}
+\sum_{k\in K}\sum_{s\in S}
+\sum_{e\in E_\ell}
+y_{kse}
+&\geq
+F_\ell^{\min},
+\quad
+\forall \ell\in L.
+\tag{R10}
+\label{eq:r10}
+\end{align}
+
+Los derechos de tráfico del operador asociado a cada aeronave se imponen mediante
+
+\begin{align}
+y_{kse}
+&\leq
+R_{ke},
+\quad
+\forall k\in K,\ s\in S,\ e\in E.
+\tag{R11}
+\label{eq:r11}
+\end{align}
+
+La factibilidad técnica de cada tramo se impone mediante
+
+\begin{align}
+y_{kse}
+&\leq
+A_{ke},
+\quad
+\forall k\in K,\ s\in S,\ e\in E.
+\tag{R12}
+\label{eq:r12}
+\end{align}
+
+Cada requerimiento de mantenimiento debe ser asignado exactamente una vez a un intervalo
+entre vuelos consecutivos:
+
+\begin{align}
+\sum_{s\in S^-}m_{krs}
+&=
+1,
+\quad
+\forall k\in K,\ r\in R_k^M.
+\tag{R13a}
+\label{eq:r13a}
+\end{align}
+
+El mantenimiento solo puede asignarse a un intervalo que realmente exista:
+
+\begin{align}
+m_{krs}
+&\leq
+u_{k,s+1},
+\quad
+\forall k,\ r\in R_k^M,\ s\in S^-.
+\tag{R13b}
+\label{eq:r13b}
+\end{align}
+
+La aeronave debe encontrarse en el aeropuerto de mantenimiento al terminar el vuelo anterior:
+
+\begin{align}
+m_{krs}
+&\leq
+\sum_{\substack{e\in E\\d_e=a_{kr}^{M}}}
+y_{kse},
+\quad
+\forall k,\ r\in R_k^M,\ s\in S^-.
+\tag{R13c}
+\label{eq:r13c}
+\end{align}
+
+Asimismo, el siguiente vuelo debe partir desde dicho aeropuerto:
+
+\begin{align}
+m_{krs}
+&\leq
+\sum_{\substack{e\in E\\o_e=a_{kr}^{M}}}
+y_{k,s+1,e},
+\quad
+\forall k,\ r\in R_k^M,\ s\in S^-.
+\tag{R13d}
+\label{eq:r13d}
+\end{align}
+
+El inicio del mantenimiento debe ubicarse dentro de su ventana temporal:
+
+\begin{align}
+\underline{t}_{kr}^{M}
+\leq
+\theta_{kr}
+&\leq
+\overline{t}_{kr}^{M}-d_{kr}^{M},
+\quad
+\forall k,\ r\in R_k^M.
+\tag{R13e}
+\label{eq:r13e}
+\end{align}
+
+Cuando $m_{krs}=1$, el mantenimiento debe comenzar después de la llegada y terminar antes del
+siguiente vuelo:
+
+\begin{align}
+\theta_{kr}
+&\geq
+t_{ks}^{\mathrm{arr}}
+-
+\Gamma(1-m_{krs}),
+\nonumber\\[-1mm]
+&\hspace{3cm}
+\forall k,\ r\in R_k^M,\ s\in S^-,
+\tag{R13f}
+\label{eq:r13f}
+\\
+\theta_{kr}+d_{kr}^{M}
+&\leq
+t_{k,s+1}^{\mathrm{dep}}
++
+\Gamma(1-m_{krs}),
+\nonumber\\[-1mm]
+&\hspace{3cm}
+\forall k,\ r\in R_k^M,\ s\in S^-.
+\tag{R13g}
+\label{eq:r13g}
+\end{align}
+
+Finalmente, los dominios de las variables son
+
+\begin{align}
+y_{kse},u_{ks},p_{ksee'},\ell_{ks},p^W_{ksee'},
+m_{krs},g_{ksk's'}
+&\in
+\{0,1\},
+\tag{R14a}
+\label{eq:r14a}
+\\
+t_{ks}^{\mathrm{dep}},t_{ks}^{\mathrm{arr}},
+\theta_{kr},
+x_{qks},b_{qks},a_{qks},w_{qks},
+z_{qksk's'},s_q
+&\geq
+0.
+\tag{R14b}
+\label{eq:r14b}
+\end{align}
+
+
+% ============================================================
+\subsubsection{Interpretación del modelo MILP}
+\label{app:interpretacion_milp}
+% ============================================================
+
+\vspace{0.5em}
+\noindent\textbf{Variables $y_{kse}$ y $u_{ks}$.}
+
+La variable $y_{kse}$ determina conjuntamente qué aeronave opera cada tramo y en qué posición
+de su secuencia semanal lo realiza. No existe un conjunto de vuelos previamente calendarizados:
+la hora de operación se determina mediante $t_{ks}^{\mathrm{dep}}$ y
+$t_{ks}^{\mathrm{arr}}$.
+
+La variable $u_{ks}$ indica si la posición $s$ está ocupada. R1 obliga a seleccionar
+exactamente un tramo cuando la posición se utiliza.
+
+
+\vspace{0.5em}
+\noindent\textbf{R2. Estructura de las posiciones.}
+
+Las restricciones R2a--R2c evitan posiciones vacías en medio de una rotación. Si una posición
+$s+1$ es utilizada, entonces $s$ también debe serlo.
+
+La variable $\ell_{ks}$ identifica automáticamente cuál es la última posición utilizada, lo
+que permite imponer posteriormente el cierre semanal sin conocer de antemano cuántos vuelos
+realizará cada aeronave.
+
+
+\vspace{0.5em}
+\noindent\textbf{R3. Continuidad espacial.}
+
+Las variables $p_{ksee'}$ vinculan dos posiciones consecutivas.
+
+Como solo se definen para
+
+\[
+(e,e')\in C,
+\]
+
+y por definición
+
+\[
+d_e=o_{e'},
+\]
+
+R3 garantiza que el aeropuerto donde termina una operación coincida con aquel donde comienza
+la siguiente.
+
+Por lo tanto, la ruta completa de una aeronave surge de las decisiones del modelo:
+
+\[
+e_1\rightarrow e_2\rightarrow e_3\rightarrow\cdots,
+\]
+
+sin enumerar previamente ninguna rotación.
+
+
+\vspace{0.5em}
+\noindent\textbf{R4. Dimensión temporal.}
+
+R4a calcula la llegada de cada operación a partir del horario de salida y del block time del
+tramo seleccionado.
+
+R4b impone el tiempo mínimo en tierra entre vuelos consecutivos. Como las horas de salida son
+variables continuas, el modelo puede decidir libremente cuándo realizar cada vuelo dentro del
+horizonte semanal.
+
+La formulación evita así discretizar el tiempo generando, por ejemplo, copias de un mismo
+tramo a las 8:00, 9:00, 10:00, etc.
+
+
+\vspace{0.5em}
+\noindent\textbf{R5. Periodicidad semanal.}
+
+Las restricciones R5a--R5e conectan la última posición utilizada con la primera mediante un
+par de tramos físicamente compatible.
+
+R5f impone además que exista suficiente tiempo entre la última llegada y la primera salida
+de la semana siguiente:
+
+\[
+t_{k1}^{\mathrm{dep}}+H
+\geq
+t_{ks}^{\mathrm{arr}}
++
+T_{kee'}^{\mathrm{TAT}}.
+\]
+
+La secuencia de cada aeronave forma así una rotación semanal repetible.
+
+
+\vspace{0.5em}
+\noindent\textbf{R6. Capacidad y acoplamiento aeronave--carga.}
+
+R6 constituye el principal vínculo entre ambos componentes:
+
+\[
+\sum_{q\in Q}x_{qks}
+\leq
+\sum_{e\in E}Q_{ke}y_{kse}.
+\]
+
+La capacidad de la posición $(k,s)$ depende del tramo efectivamente seleccionado.
+
+Si no existe una operación en dicha posición,
+
+\[
+u_{ks}=0,
+\]
+
+entonces R1 implica que todos los $y_{kse}$ son cero y, por R6, ninguna carga puede utilizar
+esa operación.
+
+
+\vspace{0.5em}
+\noindent\textbf{R7. Conservación del flujo de carga.}
+
+R7a explica de dónde proviene la carga presente en una determinada operación. Puede haber
+sido embarcada inicialmente, haber llegado mediante un transbordo desde otra aeronave o haber
+continuado en el mismo avión desde la posición anterior.
+
+R7b describe los tres destinos posibles después del vuelo: descarga final, transbordo hacia
+otra aeronave o continuación en el mismo avión.
+
+De este modo, el itinerario completo de cada commodity también surge de las decisiones del
+modelo y no necesita ser enumerado previamente.
+
+
+\vspace{0.5em}
+\noindent\textbf{R8. Conexiones y transbordos.}
+
+R8a representa una conexión \textit{through}: la carga permanece en el mismo avión y continúa
+hacia su siguiente operación.
+
+Las restricciones R8b--R8f determinan si dos operaciones de aeronaves distintas pueden
+conectarse físicamente en un mismo aeropuerto.
+
+R8g incorpora la principal condición temporal de transbordo:
+
+\[
+t_{k's'}^{\mathrm{dep}}
+-
+t_{ks}^{\mathrm{arr}}
+\geq
+T^{\mathrm{tr}}.
+\]
+
+Por lo tanto, una carga puede cambiar de avión en cualquier aeropuerto donde se permita
+manipular carga, siempre que exista suficiente tiempo entre ambos vuelos.
+
+R8h impide enviar carga por una conexión que no haya sido habilitada.
+
+
+\vspace{0.5em}
+\noindent\textbf{R9. Origen, destino y demanda disponible.}
+
+R9a permite que una demanda entre a la red únicamente mediante una operación que parte desde
+su aeropuerto de origen.
+
+R9b exige que solo pueda finalizar su recorrido en una operación que llegue a su destino.
+
+R9c y R9d igualan la cantidad que entra a la red con la cantidad efectivamente entregada,
+mientras R9e limita el servicio a la demanda máxima disponible:
+
+\[
+s_q\leq D_q.
+\]
+
+No existe obligación de atender toda la demanda.
+
+
+\vspace{0.5em}
+\noindent\textbf{R10. Frecuencias mínimas.}
+
+R10 exige que los mercados sujetos a compromisos de frecuencia reciban al menos el número
+mínimo de operaciones establecido.
+
+
+\vspace{0.5em}
+\noindent\textbf{R11. Derechos de tráfico.}
+
+R11 impide seleccionar combinaciones aeronave--tramo que no estén autorizadas para el operador
+correspondiente.
+
+
+\vspace{0.5em}
+\noindent\textbf{R12. Factibilidad técnica.}
+
+R12 elimina tramos incompatibles con una aeronave considerando las restricciones técnicas
+aplicables.
+
+El parámetro $A_{ke}$ puede incorporar, entre otras condiciones, duración máxima de vuelo
+continuo, compatibilidad aeroportuaria y necesidad de realizar escalas técnicas.
+
+Cuando un viaje requiere una escala técnica, el modelo puede construirla seleccionando dos o
+más tramos consecutivos del catálogo físico. No es necesario representar el viaje completo
+como una alternativa enumerada.
+
+
+\vspace{0.5em}
+\noindent\textbf{R13. Mantenimiento.}
+
+R13 asigna cada mantenimiento a uno de los períodos de tierra existentes entre vuelos
+consecutivos.
+
+Las restricciones de ubicación aseguran que la aeronave permanezca en el aeropuerto correcto,
+mientras que R13e--R13g verifican que la actividad pueda completarse dentro de su ventana
+temporal.
+
+
+\vspace{0.5em}
+\noindent\textbf{R14. Dominio de las variables.}
+
+R14 establece la naturaleza binaria de las decisiones de programación y conexión y la no
+negatividad de las variables continuas de tiempo y carga.
+
+
+% ============================================================
+\subsubsection{Tratamiento de reglas operacionales adicionales}
+\label{app:reglas_adicionales}
+% ============================================================
+
+\vspace{0.5em}
+\noindent\textbf{Escalas técnicas sin manipulación de carga.}
+
+Una escala técnica puede ser parte de la secuencia de una aeronave mediante dos tramos
+consecutivos. Si el aeropuerto solo permite abastecimiento de combustible, se utiliza
+
+\[
+\chi_i=0,
+\]
+
+impidiendo transbordos entre aeronaves en dicho punto.
+
+La carga puede permanecer en el mismo avión mediante $w_{qks}$, lo que permite representar
+una escala técnica sin descarga ni transferencia.
+
+
+\vspace{0.5em}
+\noindent\textbf{Interacción combustible--payload.}
+
+La capacidad $Q_{ke}$ puede depender de la longitud del tramo y de las condiciones de
+combustible.
+
+Mientras no se disponga de una curva completa combustible--payload, el modelo utiliza la
+capacidad efectiva que pueda determinarse a partir de la información disponible, sin imponer
+una relación funcional no especificada.
+
+
+\vspace{0.5em}
+\noindent\textbf{Tonelaje mínimo asociado a escalas adicionales.}
+
+La regla operacional que exige un tonelaje mínimo cuando se incorpora una escala adicional
+requiere identificar con precisión qué secuencias son consideradas como tales y qué cantidad
+de carga debe utilizarse para verificar el umbral.
+
+Una vez definida dicha clasificación, puede introducirse un conjunto $C^{L}\subseteq C$ de
+transiciones sujetas a la regla y una variable binaria que distinga entre una operación ferry
+y una operación comercial. La estructura genérica es
+
+\[
+L_{ee'}^{\min}\,\nu_{ksee'}
+\leq
+X_{ksee'}
+\leq
+\overline{Q}_{k}\,\nu_{ksee'},
+\]
+
+donde $X_{ksee'}$ representa el tonelaje relevante para la regla y
+$\nu_{ksee'}=0$ permite la operación ferry sin carga.
+
+La definición exacta de $X_{ksee'}$ debe seguir la interpretación operacional entregada para
+esta condición, evitando imponer una definición adicional no contenida en los datos.
+
+
+\vspace{0.5em}
+\noindent\textbf{Demanda diaria.}
+
+Cuando la demanda se desagrega por día, cada commodity incorpora también su instante o ventana
+de disponibilidad.
+
+Las variables $b_{qks}$ pueden vincularse a esta ventana mediante restricciones Big-M sobre
+$t_{ks}^{\mathrm{dep}}$. De esta forma, una carga solo puede comenzar su recorrido cuando se
+encuentra disponible y no puede trasladarse artificialmente entre días.
+
+
+% ============================================================
+\subsubsection{Estructura general del MILP}
+\label{app:estructura_milp}
+% ============================================================
+
+La formulación puede interpretarse como dos sistemas acoplados.
+
+El primero construye cada rotación:
+
+\[
+\boxed{
+\begin{array}{c}
+\text{Tramos físicos}\\
+E
+\end{array}
+}
+\quad\longrightarrow\quad
+\boxed{
+\begin{array}{c}
+y_{kse}\\
+\text{selección de tramo}
+\end{array}
+}
+\quad\longrightarrow\quad
+\boxed{
+\begin{array}{c}
+t_{ks}^{\mathrm{dep}},\,t_{ks}^{\mathrm{arr}}\\
+\text{programación temporal}
+\end{array}
+}
+\]
+
+El segundo distribuye los commodities sobre las operaciones resultantes:
+
+\[
+\boxed{
+\begin{array}{c}
+x_{qks}\\
+\text{carga por vuelo}
+\end{array}
+}
+\quad\longrightarrow\quad
+\boxed{
+\begin{array}{c}
+w_{qks}\\
+\text{conexión through}
+\end{array}
+}
+\quad\text{o}\quad
+\boxed{
+\begin{array}{c}
+z_{qksk's'}\\
+\text{transbordo}
+\end{array}
+}
+\]
+
+Ambas capas se vinculan principalmente mediante R6:
+
+\[
+\boxed{
+\sum_{q\in Q}x_{qks}
+\leq
+\sum_{e\in E}Q_{ke}y_{kse}
+}
+\]
+
+Esta restricción expresa directamente que la carga solo puede utilizar capacidad generada por
+una aeronave que efectivamente realiza un tramo.
+
+
+% ============================================================
+\subsubsection{Formulación alternativa basada en rotaciones}
+\label{app:route_formulation}
+% ============================================================
+
+La formulación MILP utiliza decisiones por posición y tramo. Una representación alternativa
+consiste en definir variables asociadas a rotaciones semanales completas.
+
+Sea $R_k$ el conjunto conceptual de todas las rotaciones factibles de la aeronave $k$ y
+
+\begin{equation}
+\lambda_{kr}
+=
+\begin{cases}
+1, & \text{si la aeronave $k$ utiliza la rotación $r$},\\
+0, & \text{en otro caso}.
+\end{cases}
+\label{eq:lambda}
+\end{equation}
+
+Cada aeronave puede seleccionar como máximo una rotación:
+
+\begin{equation}
+\sum_{r\in R_k}\lambda_{kr}
+\leq1,
+\quad
+\forall k\in K.
+\label{eq:one_rotation}
+\end{equation}
+
+Una rotación contiene de antemano una secuencia espacial y temporalmente factible de vuelos,
+incluyendo las restricciones propias de la aeronave.
+
+El problema es que el número de elementos de $R_k$ puede crecer exponencialmente. Por ello,
+esta formulación no requiere enumerar previamente $R_k$ cuando se utiliza generación de
+columnas.
+
+
+% ============================================================
+\subsubsection{Generación de columnas}
+\label{app:column_generation}
+% ============================================================
+
+La generación de columnas comienza con un subconjunto reducido
+
+\[
+\overline{R}_k\subset R_k.
+\]
+
+Estas rotaciones forman un Restricted Master Problem (RMP). Una vez resuelta su relajación
+lineal, los precios duales permiten determinar si existe alguna rotación todavía no incluida
+que pueda mejorar la solución.
+
+En una formulación de minimización, el costo reducido genérico puede representarse mediante
+
+\begin{equation}
+\bar c_{kr}
+=
+c_{kr}
+-
+\alpha_k
+-
+\sum_m\pi_m a_{mkr},
+\label{eq:reduced_cost}
+\end{equation}
+
+donde $\alpha_k$ y $\pi_m$ son variables duales del RMP.
+
+El problema de \textit{pricing} busca
+
+\begin{equation}
+\min_{r\in R_k}\bar c_{kr}.
+\label{eq:pricing}
+\end{equation}
+
+Si encuentra una rotación con costo reducido favorable, esta se incorpora al RMP y el
+procedimiento se repite.
+
+Esta estructura es consistente con los enfoques desarrollados por
+\shortciteA{Derigs2009}, \shortciteA{Liang2015},
+\citeA{DerigsFriederichs2013}, \shortciteA{Xiao2022} y
+\shortciteA{Zhu2026}.
+
+
+\vspace{0.5em}
+\noindent\textbf{Algoritmo conceptual de generación de columnas.}
+
+\begin{enumerate}
+
+    \item Construir un conjunto inicial reducido de rotaciones factibles.
+
+    \item Resolver la relajación lineal del Restricted Master Problem.
+
+    \item Obtener los valores duales de las restricciones del RMP.
+
+    \item Resolver el problema de \textit{pricing} para cada aeronave o tipo de aeronave.
+
+    \item Incorporar las rotaciones con costo reducido favorable.
+
+    \item Resolver nuevamente el RMP.
+
+    \item Repetir hasta que ningún problema de \textit{pricing} encuentre una columna
+    mejorante.
+
+    \item Construir posteriormente una solución entera utilizando las columnas obtenidas.
+
+\end{enumerate}
+
+
+% ============================================================
+\subsubsection{Branch-and-price y branch-and-price-and-cut}
+\label{app:branch_price}
+% ============================================================
+
+La generación de columnas obtiene el óptimo de la relajación lineal del problema maestro,
+pero las variables $\lambda_{kr}$ pueden resultar fraccionales.
+
+Branch-and-price incorpora generación de columnas dentro de un árbol de branch-and-bound:
+
+\[
+\boxed{
+\text{Branch-and-Bound}
++
+\text{Column Generation}
+=
+\text{Branch-and-Price}.
+}
+\]
+
+Cuando además se incorporan dinámicamente desigualdades válidas,
+
+\[
+\boxed{
+\text{Branch-and-Price}
++
+\text{Cuts}
+=
+\text{Branch-and-Price-and-Cut}.
+}
+\]
+
+La metodología general de branch-and-price es desarrollada por
+\shortciteA{Barnhart1998}, mientras que \citeA{DerigsFriederichs2013} aplican
+branch-and-price-and-cut a planificación integrada de carga aérea.
+
+
+% ============================================================
+\subsubsection{Descomposición de Benders}
+\label{app:benders}
+% ============================================================
+
+El MILP presenta una separación natural entre las decisiones discretas de programación de
+aeronaves y las decisiones continuas de flujo de carga.
+
+Sea $m$ el vector que agrupa las decisiones de programación:
+
+\[
+m=(y,u,p,\ell,p^W,t,m^M),
+\]
+
+donde $m^M$ representa las decisiones de mantenimiento.
+
+Fijada una programación, quedan determinados los vuelos, sus horarios, sus capacidades y las
+conexiones disponibles. El problema restante consiste en distribuir la carga mediante las
+variables continuas
+
+\[
+h=(x,b,a,w,z,s).
+\]
+
+La estructura puede representarse abstractamente como
+
+\begin{equation}
+\max_{m\in Y}
+\left\{
+-c^\top m+Q(m)
+\right\},
+\label{eq:benders_outer}
+\end{equation}
+
+donde $Q(m)$ representa el beneficio máximo asociado al flujo de carga para una programación
+determinada.
+
+El subproblema puede expresarse genéricamente como
+
+\begin{align}
+Q(m)=\max_h\quad
+& r^\top h
+\label{eq:benders_sub_obj}
+\\
+\text{s.a.}\quad
+& Bh\leq d,
+\label{eq:benders_sub1}
+\\
+& Dh\leq Gm,
+\label{eq:benders_sub2}
+\\
+& h\geq0.
+\label{eq:benders_sub3}
+\end{align}
+
+Las restricciones \eqref{eq:benders_sub1} representan las condiciones propias del flujo de
+carga, mientras que \eqref{eq:benders_sub2} vinculan dicho flujo con la capacidad y conexiones
+generadas por el problema maestro.
+
+El dual puede representarse mediante
+
+\begin{align}
+Q(m)=\min_{\pi,\mu}\quad
+& d^\top\pi+(Gm)^\top\mu
+\label{eq:benders_dual_obj}
+\\
+\text{s.a.}\quad
+& B^\top\pi+D^\top\mu\geq r,
+\label{eq:benders_dual_cons}
+\\
+& \pi,\mu\geq0.
+\end{align}
+
+Introduciendo una variable $\theta$ que aproxima el beneficio del subproblema, cada solución
+dual extrema permite construir un corte
+
+\begin{equation}
+\theta
+\leq
+d^\top\pi^r
++
+(Gm)^\top\mu^r.
+\label{eq:benders_cut}
+\end{equation}
+
+Esta estructura es cercana al enfoque utilizado por \shortciteA{Li2006} para integrar
+\textit{fleet assignment} y \textit{cargo routing}.
+
+
+\vspace{0.5em}
+\noindent\textbf{Algoritmo conceptual de Benders.}
+
+\begin{enumerate}
+
+    \item Resolver el problema maestro y obtener una programación de aeronaves.
+
+    \item Fijar los vuelos, horarios, capacidades y conexiones generados por dicha
+    programación.
+
+    \item Resolver el subproblema continuo de flujo de carga.
+
+    \item Obtener las variables duales del subproblema.
+
+    \item Generar un corte de Benders y agregarlo al problema maestro.
+
+    \item Actualizar las cotas del problema.
+
+    \item Repetir hasta alcanzar la tolerancia de optimalidad o el límite de tiempo.
+
+\end{enumerate}
+
+
+% ============================================================
+\subsubsection{MIP restringido y matheurísticas}
+\label{app:restricted_mip}
+% ============================================================
+
+Una alternativa práctica a branch-and-price consiste en utilizar generación de columnas para
+obtener un conjunto reducido
+
+\[
+\overline{R}_k\subset R_k
+\]
+
+y posteriormente resolver un MILP imponiendo integralidad sobre dichas columnas:
+
+\begin{equation}
+\max
+\left\{
+Z(\lambda,h):
+\lambda_{kr}\in\{0,1\},
+\quad
+r\in\overline{R}_k
+\right\}.
+\label{eq:restricted_mip}
+\end{equation}
+
+Si todas las columnas corresponden a rotaciones factibles, la solución obtenida también es
+factible para el problema original. No existe, sin embargo, garantía de optimalidad global
+porque pueden existir rotaciones relevantes que no hayan sido generadas.
+
+Estrategias de \textit{diving}, fix-and-optimize y reoptimización pueden utilizarse para
+mejorar el incumbente. Este tipo de metodología es consistente con los procedimientos
+desarrollados por \shortciteA{Xiao2022} y \shortciteA{Zhu2026}.
+
+
+% ============================================================
+\subsubsection{Adaptive Large Neighborhood Search}
+\label{app:alns}
+% ============================================================
+
+Adaptive Large Neighborhood Search (ALNS) modifica iterativamente partes significativas de
+una solución.
+
+Si $S^{\mathrm{sol}}$ representa la solución actual, una iteración puede escribirse como
+
+\[
+S^{\mathrm{sol}}
+\longrightarrow
+S^{-}
+\longrightarrow
+S',
+\]
+
+donde $S^{-}$ corresponde a una solución parcialmente destruida y $S'$ a una solución
+reconstruida.
+
+El procedimiento general consiste en:
+
+\begin{enumerate}
+
+    \item Construir una solución inicial.
+
+    \item Seleccionar adaptativamente un operador de destrucción.
+
+    \item Liberar una parte de las decisiones de programación o flujo.
+
+    \item Reconstruirlas mediante una heurística o un problema de optimización restringido.
+
+    \item Aceptar o rechazar la nueva solución de acuerdo con el criterio utilizado.
+
+    \item Actualizar la valoración de los operadores.
+
+    \item Repetir hasta alcanzar el criterio de término.
+
+\end{enumerate}
+
+\shortciteA{Zheng2023} aplican esta metodología a planificación y programación de redes de
+carga aérea. Su principal ventaja corresponde a la flexibilidad para explorar grandes
+vecindarios, mientras que su principal limitación es la ausencia de una certificación de
+optimalidad global.
+
+
+% ============================================================
+\subsubsection{Métricas de evaluación computacional}
+\label{app:metricas}
+% ============================================================
+
+La comparación entre metodologías debe realizarse bajo condiciones computacionales
+equivalentes.
+
+Para los métodos exactos se consideran, como mínimo,
+
+\[
+\text{tiempo hasta la primera solución factible},
+\]
+
+\[
+\text{mejor incumbente},
+\qquad
+\text{mejor bound},
+\qquad
+\text{brecha de optimalidad},
+\]
+
+\[
+\text{tiempo total de resolución},
+\qquad
+\text{memoria utilizada}.
+\]
+
+Para un problema de maximización puede utilizarse
+
+\begin{equation}
+\mathrm{Gap}(\%)
+=
+100
+\frac{UB-LB}
+{\max\{1,|LB|\}},
+\label{eq:gap}
+\end{equation}
+
+donde $LB$ representa el valor de la mejor solución factible conocida y $UB$ una cota
+superior válida.
+
+En generación de columnas se registrarán además el número de iteraciones, número de columnas
+generadas y tiempo dedicado a los problemas de \textit{pricing}. Para Benders se considerarán
+el número de iteraciones, número de cortes generados y evolución de las cotas.
+
+En los métodos heurísticos y matheurísticos se comparará principalmente la calidad de la mejor
+solución obtenida bajo un mismo presupuesto de tiempo.
+
+Estas métricas permitirán identificar si la principal fuente de complejidad corresponde a la
+secuenciación y programación temporal de las aeronaves, al flujo multicommodity de carga, al
+número potencial de rotaciones o a la incorporación de restricciones operacionales
+adicionales.
