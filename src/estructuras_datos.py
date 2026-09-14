@@ -1,9 +1,6 @@
 """
 Módulo: estructuras_datos.py
-Descripción: Script puramente funcional para la extracción y generación de 
-estructuras de datos. Utiliza map, filter, reducciones e iteradores (itertools) 
-para crear diccionarios y listas inmutables a partir de SQLite.
-Autores: ICS2122 Grupo 9
+Descripción: 
 """
 
 import sqlite3
@@ -18,10 +15,7 @@ def leer_tabla(conexion: sqlite3.Connection, nombre_tabla: str) -> pd.DataFrame:
     return pd.read_sql_query(f"SELECT * FROM {nombre_tabla}", conexion)
 
 def cargar_estructuras_funcionales(ruta_bd: str) -> Dict[str, Any]:
-    """
-    Función orquestadora que construye todas las estructuras de datos 
-    usando principios estrictos de programación funcional (map, filter).
-    """
+  
     with obtener_conexion(ruta_bd) as conexion:
         dfs = {
             'aeropuertos': leer_tabla(conexion, 'airports').to_dict('records'),
@@ -30,24 +24,28 @@ def cargar_estructuras_funcionales(ruta_bd: str) -> Dict[str, Any]:
             'demanda': leer_tabla(conexion, 'demand_daily').to_dict('records')
         }
 
-    # ========================================================
-    # 1. SETS PRINCIPALES (Uso de map)
-    # ========================================================
+    # Aeropuertos
     A = list(map(lambda fila: fila['iata'], dfs['aeropuertos']))
+
+    # Flota
     K = list(map(lambda fila: fila['aircraft_id'], dfs['flota']))
+
+    # Tramos
     E = list(map(lambda fila: (fila['origin'], fila['dest']), dfs['tramos']))
+
+    # Demanda
     Q = list(map(lambda fila: (fila['origin'], fila['dest']), dfs['demanda']))
 
-    # ========================================================
-    # 2. PARÁMETROS BÁSICOS (Map a Diccionarios)
-    # ========================================================
+    # Tiempo de vuelo
     tau_e = dict(map(lambda fila: ((fila['origin'], fila['dest']), fila['block_hours']), dfs['tramos']))
+
+    # Distancia entre tramos
     dist_e = dict(map(lambda fila: ((fila['origin'], fila['dest']), fila['distance_km']), dfs['tramos']))
 
-    # Conexiones válidas C: Filtro sobre producto cartesiano de tramos (Destino == Origen)
+    # Conexiones validas C: Filtro sobre producto cartesiano de tramos (Destino == Origen)
     C_consecutivos = list(filter(lambda par: par[0][1] == par[1][0], itertools.product(E, E)))
 
-    # Agregación funcional de la demanda diaria usando sum y map interno
+    # Demanda diaria
     D_q = dict(map(
         lambda fila: (
             (fila['origin'], fila['dest']), 
@@ -56,11 +54,9 @@ def cargar_estructuras_funcionales(ruta_bd: str) -> Dict[str, Any]:
         dfs['demanda']
     ))
     
+    # Ingreso constante para prueba
     r_q = dict(map(lambda q: (q, 1.5), Q)) # Ingreso constante para prueba
 
-    # ========================================================
-    # 3. PARÁMETROS CRUZADOS (Itertools Product)
-    # ========================================================
     # Capacidad Q_ke: Cruzar flota con tramos
     Q_ke = dict(map(
         lambda tupla: ((tupla[0]['aircraft_id'], tupla[1]), tupla[0]['payload_tons']),

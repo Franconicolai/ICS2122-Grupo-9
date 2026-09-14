@@ -1,3 +1,8 @@
+"""
+Módulo: exportador_resultados.py
+Descripción: Script para la extracción y generación de reportes de resultados del modelo.
+"""
+
 import os
 import json
 import pandas as pd
@@ -57,3 +62,16 @@ def generar_reportes(modelo: gp.Model, ruta_salida: str):
     ))
     
     pd.DataFrame(demanda).to_csv(os.path.join(ruta_salida, "demanda_servida.csv"), index=False)
+
+    from pathlib import Path
+    import json
+    
+    base_dir = Path(__file__).parent.parent
+    resources_dir = base_dir / "data" / "resources"
+    resources_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Nota: Aquí se debería construir la estructura de resultados.json completa
+    # usando la misma lógica que generar_datos_demo.py pero con los valores de las variables (v.X).
+    # Dejo la firma de escritura preparada para cuando la licencia Gurobi se active.
+    # json.dump(estructura_visualizador, open(resources_dir / "resultados.json", 'w'))
+

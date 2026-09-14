@@ -1,0 +1,2814 @@
+{
+  "aeropuertos": [
+    {
+      "iata": "AGT",
+      "lat": -25.52,
+      "lon": -54.59,
+      "pais": "Brasil",
+      "region": "BRA"
+    },
+    {
+      "iata": "ANF",
+      "lat": -23.44,
+      "lon": -70.44,
+      "pais": "Chile",
+      "region": "SAM"
+    },
+    {
+      "iata": "ASU",
+      "lat": -25.24,
+      "lon": -57.52,
+      "pais": "Paraguay",
+      "region": "SAM"
+    },
+    {
+      "iata": "BAQ",
+      "lat": 10.89,
+      "lon": -74.78,
+      "pais": "Colombia",
+      "region": "SAM"
+    },
+    {
+      "iata": "BEL",
+      "lat": -1.38,
+      "lon": -48.48,
+      "pais": "Brasil",
+      "region": "SAM"
+    },
+    {
+      "iata": "BOG",
+      "lat": 4.7,
+      "lon": -74.15,
+      "pais": "Colombia",
+      "region": "SAM"
+    },
+    {
+      "iata": "BRU",
+      "lat": 50.9,
+      "lon": 4.48,
+      "pais": "Bélgica",
+      "region": "EUR"
+    },
+    {
+      "iata": "BSB",
+      "lat": -15.87,
+      "lon": -47.92,
+      "pais": "Brasil",
+      "region": "SAM"
+    },
+    {
+      "iata": "CCS",
+      "lat": 10.6,
+      "lon": -66.99,
+      "pais": "Venezuela",
+      "region": "SAM"
+    },
+    {
+      "iata": "CLO",
+      "lat": 3.54,
+      "lon": -76.38,
+      "pais": "Colombia",
+      "region": "SAM"
+    },
+    {
+      "iata": "CNF",
+      "lat": -19.63,
+      "lon": -43.97,
+      "pais": "Brasil",
+      "region": "BRA"
+    },
+    {
+      "iata": "CWB",
+      "lat": -25.53,
+      "lon": -49.17,
+      "pais": "Brasil",
+      "region": "BRA"
+    },
+    {
+      "iata": "EZE",
+      "lat": -34.82,
+      "lon": -58.54,
+      "pais": "Argentina",
+      "region": "SAM"
+    },
+    {
+      "iata": "FLN",
+      "lat": -27.67,
+      "lon": -48.55,
+      "pais": "Brasil",
+      "region": "BRA"
+    },
+    {
+      "iata": "FRA",
+      "lat": 50.03,
+      "lon": 8.57,
+      "pais": "Alemania",
+      "region": "EUR"
+    },
+    {
+      "iata": "GEO",
+      "lat": 6.5,
+      "lon": -58.25,
+      "pais": "Guyana",
+      "region": "BRA"
+    },
+    {
+      "iata": "GIG",
+      "lat": -22.81,
+      "lon": -43.25,
+      "pais": "Brasil",
+      "region": "BRA"
+    },
+    {
+      "iata": "GRU",
+      "lat": -23.43,
+      "lon": -46.47,
+      "pais": "Brasil",
+      "region": "BRA"
+    },
+    {
+      "iata": "GUA",
+      "lat": 14.58,
+      "lon": -90.53,
+      "pais": "Guatemala",
+      "region": "CEAM"
+    },
+    {
+      "iata": "GYE",
+      "lat": -2.16,
+      "lon": -79.88,
+      "pais": "Ecuador",
+      "region": "SAM"
+    },
+    {
+      "iata": "LAX",
+      "lat": 33.94,
+      "lon": -118.41,
+      "pais": "Estados Unidos",
+      "region": "NAM"
+    },
+    {
+      "iata": "LIM",
+      "lat": -12.02,
+      "lon": -77.11,
+      "pais": "Perú",
+      "region": "SAM"
+    },
+    {
+      "iata": "MAD",
+      "lat": 40.47,
+      "lon": -3.56,
+      "pais": "España",
+      "region": "EUR"
+    },
+    {
+      "iata": "MAO",
+      "lat": -3.04,
+      "lon": -60.05,
+      "pais": "Brasil",
+      "region": "BRA"
+    },
+    {
+      "iata": "MDE",
+      "lat": 6.17,
+      "lon": -75.43,
+      "pais": "Colombia",
+      "region": "SAM"
+    },
+    {
+      "iata": "MEX",
+      "lat": 19.44,
+      "lon": -99.07,
+      "pais": "México",
+      "region": "NAM"
+    },
+    {
+      "iata": "MIA",
+      "lat": 25.79,
+      "lon": -80.29,
+      "pais": "Estados Unidos",
+      "region": "NAM"
+    },
+    {
+      "iata": "MTY",
+      "lat": 25.78,
+      "lon": -100.11,
+      "pais": "México",
+      "region": "NAM"
+    },
+    {
+      "iata": "MVD",
+      "lat": -34.84,
+      "lon": -56.03,
+      "pais": "Uruguay",
+      "region": "SAM"
+    },
+    {
+      "iata": "NVT",
+      "lat": -26.88,
+      "lon": -48.65,
+      "pais": "Brasil",
+      "region": "BRA"
+    },
+    {
+      "iata": "POA",
+      "lat": -29.99,
+      "lon": -51.17,
+      "pais": "Brasil",
+      "region": "BRA"
+    },
+    {
+      "iata": "PTY",
+      "lat": 9.07,
+      "lon": -79.38,
+      "pais": "Panamá",
+      "region": "SAM"
+    },
+    {
+      "iata": "REC",
+      "lat": -8.13,
+      "lon": -34.92,
+      "pais": "Brasil",
+      "region": "BRA"
+    },
+    {
+      "iata": "SAL",
+      "lat": 13.44,
+      "lon": -89.06,
+      "pais": "El Salvador",
+      "region": "SAM"
+    },
+    {
+      "iata": "SCL",
+      "lat": -33.39,
+      "lon": -70.79,
+      "pais": "Chile",
+      "region": "SAM"
+    },
+    {
+      "iata": "SDQ",
+      "lat": 18.43,
+      "lon": -69.67,
+      "pais": "República Dominicana",
+      "region": "CEAM"
+    },
+    {
+      "iata": "SEA",
+      "lat": 47.45,
+      "lon": -122.31,
+      "pais": "Estados Unidos",
+      "region": "NAM"
+    },
+    {
+      "iata": "SID",
+      "lat": 16.74,
+      "lon": -22.95,
+      "pais": "Cabo Verde",
+      "region": "EUR"
+    },
+    {
+      "iata": "SJK",
+      "lat": -23.23,
+      "lon": -45.87,
+      "pais": "Brasil",
+      "region": "BRA"
+    },
+    {
+      "iata": "SJO",
+      "lat": 9.99,
+      "lon": -84.21,
+      "pais": "Costa Rica",
+      "region": "CEAM"
+    },
+    {
+      "iata": "UIO",
+      "lat": -0.13,
+      "lon": -78.36,
+      "pais": "Ecuador",
+      "region": "SAM"
+    },
+    {
+      "iata": "VCP",
+      "lat": -23.01,
+      "lon": -47.13,
+      "pais": "Brasil",
+      "region": "BRA"
+    },
+    {
+      "iata": "VIX",
+      "lat": -20.26,
+      "lon": -40.29,
+      "pais": "Brasil",
+      "region": "BRA"
+    },
+    {
+      "iata": "ZAZ",
+      "lat": 41.67,
+      "lon": -1.04,
+      "pais": "España",
+      "region": "SAM"
+    }
+  ],
+  "flota": [
+    {
+      "aircraft_id": "AC-01",
+      "operador": "SUR",
+      "payload_tons": 52.0
+    },
+    {
+      "aircraft_id": "AC-02",
+      "operador": "SUR",
+      "payload_tons": 54.0
+    },
+    {
+      "aircraft_id": "AC-03",
+      "operador": "AND",
+      "payload_tons": 52.0
+    },
+    {
+      "aircraft_id": "AC-04",
+      "operador": "SUR",
+      "payload_tons": 54.0
+    },
+    {
+      "aircraft_id": "AC-05",
+      "operador": "AND",
+      "payload_tons": 52.0
+    },
+    {
+      "aircraft_id": "AC-06",
+      "operador": "BRA",
+      "payload_tons": 50.0
+    },
+    {
+      "aircraft_id": "AC-07",
+      "operador": "PAC",
+      "payload_tons": 52.0
+    },
+    {
+      "aircraft_id": "AC-08",
+      "operador": "AND",
+      "payload_tons": 54.0
+    },
+    {
+      "aircraft_id": "AC-09",
+      "operador": "SUR",
+      "payload_tons": 52.0
+    },
+    {
+      "aircraft_id": "AC-10",
+      "operador": "BRA",
+      "payload_tons": 52.0
+    },
+    {
+      "aircraft_id": "AC-11",
+      "operador": "SUR",
+      "payload_tons": 52.0
+    },
+    {
+      "aircraft_id": "AC-12",
+      "operador": "AND",
+      "payload_tons": 52.0
+    },
+    {
+      "aircraft_id": "AC-13",
+      "operador": "SUR",
+      "payload_tons": 52.0
+    },
+    {
+      "aircraft_id": "AC-14",
+      "operador": "AND",
+      "payload_tons": 50.0
+    },
+    {
+      "aircraft_id": "AC-15",
+      "operador": "PAC",
+      "payload_tons": 50.0
+    },
+    {
+      "aircraft_id": "AC-16",
+      "operador": "AND",
+      "payload_tons": 54.0
+    },
+    {
+      "aircraft_id": "AC-17",
+      "operador": "SUR",
+      "payload_tons": 50.0
+    },
+    {
+      "aircraft_id": "AC-18",
+      "operador": "AND",
+      "payload_tons": 52.0
+    },
+    {
+      "aircraft_id": "AC-19",
+      "operador": "AND",
+      "payload_tons": 52.0
+    }
+  ],
+  "vuelos": [
+    {
+      "aeronave": "AC-01",
+      "operador": "SUR",
+      "posicion": 1,
+      "origen": "MIA",
+      "destino": "BRU",
+      "hora_salida": 15.35,
+      "hora_llegada": 24.18,
+      "carga_tons": 23.4,
+      "costo_operacion": 85628.0,
+      "distancia_km": 9620.0,
+      "block_hours": 8.83
+    },
+    {
+      "aeronave": "AC-01",
+      "operador": "SUR",
+      "posicion": 2,
+      "origen": "CNF",
+      "destino": "BOG",
+      "hora_salida": 26.46,
+      "hora_llegada": 32.63,
+      "carga_tons": 38.3,
+      "costo_operacion": 48222.0,
+      "distancia_km": 4400.0,
+      "block_hours": 6.17
+    },
+    {
+      "aeronave": "AC-01",
+      "operador": "SUR",
+      "posicion": 3,
+      "origen": "BSB",
+      "destino": "EZE",
+      "hora_salida": 36.41,
+      "hora_llegada": 39.83,
+      "carga_tons": 35.3,
+      "costo_operacion": 26225.0,
+      "distancia_km": 2338.0,
+      "block_hours": 3.42
+    },
+    {
+      "aeronave": "AC-02",
+      "operador": "SUR",
+      "posicion": 1,
+      "origen": "SJO",
+      "destino": "MIA",
+      "hora_salida": 2.25,
+      "hora_llegada": 5.0,
+      "carga_tons": 36.9,
+      "costo_operacion": 24638.0,
+      "distancia_km": 2590.0,
+      "block_hours": 2.75
+    },
+    {
+      "aeronave": "AC-02",
+      "operador": "SUR",
+      "posicion": 2,
+      "origen": "VCP",
+      "destino": "GRU",
+      "hora_salida": 8.12,
+      "hora_llegada": 8.79,
+      "carga_tons": 30.2,
+      "costo_operacion": 3218.0,
+      "distancia_km": 74.0,
+      "block_hours": 0.67
+    },
+    {
+      "aeronave": "AC-02",
+      "operador": "SUR",
+      "posicion": 3,
+      "origen": "MIA",
+      "destino": "CLO",
+      "hora_salida": 11.69,
+      "hora_llegada": 15.27,
+      "carga_tons": 44.4,
+      "costo_operacion": 20025.0,
+      "distancia_km": 962.0,
+      "block_hours": 3.58
+    },
+    {
+      "aeronave": "AC-02",
+      "operador": "SUR",
+      "posicion": 4,
+      "origen": "GEO",
+      "destino": "MAO",
+      "hora_salida": 17.28,
+      "hora_llegada": 19.2,
+      "carga_tons": 40.3,
+      "costo_operacion": 14220.0,
+      "distancia_km": 1212.0,
+      "block_hours": 1.92
+    },
+    {
+      "aeronave": "AC-03",
+      "operador": "AND",
+      "posicion": 1,
+      "origen": "CNF",
+      "destino": "BOG",
+      "hora_salida": 3.73,
+      "hora_llegada": 9.9,
+      "carga_tons": 18.2,
+      "costo_operacion": 48222.0,
+      "distancia_km": 4400.0,
+      "block_hours": 6.17
+    },
+    {
+      "aeronave": "AC-03",
+      "operador": "AND",
+      "posicion": 2,
+      "origen": "MIA",
+      "destino": "SCL",
+      "hora_salida": 12.09,
+      "hora_llegada": 20.42,
+      "carga_tons": 35.8,
+      "costo_operacion": 83502.0,
+      "distancia_km": 9620.0,
+      "block_hours": 8.33
+    },
+    {
+      "aeronave": "AC-03",
+      "operador": "AND",
+      "posicion": 3,
+      "origen": "SEA",
+      "destino": "MIA",
+      "hora_salida": 24.03,
+      "hora_llegada": 30.03,
+      "carga_tons": 33.4,
+      "costo_operacion": 54200.0,
+      "distancia_km": 5740.0,
+      "block_hours": 6.0
+    },
+    {
+      "aeronave": "AC-03",
+      "operador": "AND",
+      "posicion": 4,
+      "origen": "MVD",
+      "destino": "BOG",
+      "hora_salida": 33.98,
+      "hora_llegada": 40.48,
+      "carga_tons": 17.7,
+      "costo_operacion": 50875.0,
+      "distancia_km": 4650.0,
+      "block_hours": 6.5
+    },
+    {
+      "aeronave": "AC-03",
+      "operador": "AND",
+      "posicion": 5,
+      "origen": "MIA",
+      "destino": "UIO",
+      "hora_salida": 43.07,
+      "hora_llegada": 47.24,
+      "carga_tons": 34.9,
+      "costo_operacion": 44372.0,
+      "distancia_km": 5330.0,
+      "block_hours": 4.17
+    },
+    {
+      "aeronave": "AC-04",
+      "operador": "SUR",
+      "posicion": 1,
+      "origen": "MIA",
+      "destino": "EZE",
+      "hora_salida": 1.1,
+      "hora_llegada": 10.1,
+      "carga_tons": 50.8,
+      "costo_operacion": 88250.0,
+      "distancia_km": 10000.0,
+      "block_hours": 9.0
+    },
+    {
+      "aeronave": "AC-04",
+      "operador": "SUR",
+      "posicion": 2,
+      "origen": "CLO",
+      "destino": "UIO",
+      "hora_salida": 13.81,
+      "hora_llegada": 15.06,
+      "carga_tons": 28.8,
+      "costo_operacion": 8872.0,
+      "distancia_km": 712.0,
+      "block_hours": 1.25
+    },
+    {
+      "aeronave": "AC-04",
+      "operador": "SUR",
+      "posicion": 3,
+      "origen": "MIA",
+      "destino": "VCP",
+      "hora_salida": 17.97,
+      "hora_llegada": 26.3,
+      "carga_tons": 20.9,
+      "costo_operacion": 83502.0,
+      "distancia_km": 9620.0,
+      "block_hours": 8.33
+    },
+    {
+      "aeronave": "AC-04",
+      "operador": "SUR",
+      "posicion": 4,
+      "origen": "MIA",
+      "destino": "BAQ",
+      "hora_salida": 29.01,
+      "hora_llegada": 31.68,
+      "carga_tons": 40.5,
+      "costo_operacion": 23848.0,
+      "distancia_km": 2500.0,
+      "block_hours": 2.67
+    },
+    {
+      "aeronave": "AC-05",
+      "operador": "AND",
+      "posicion": 1,
+      "origen": "VCP",
+      "destino": "CWB",
+      "hora_salida": 1.71,
+      "hora_llegada": 2.71,
+      "carga_tons": 40.1,
+      "costo_operacion": 6875.0,
+      "distancia_km": 525.0,
+      "block_hours": 1.0
+    },
+    {
+      "aeronave": "AC-05",
+      "operador": "AND",
+      "posicion": 2,
+      "origen": "MVD",
+      "destino": "EZE",
+      "hora_salida": 5.04,
+      "hora_llegada": 5.96,
+      "carga_tons": 24.3,
+      "costo_operacion": 6220.0,
+      "distancia_km": 462.0,
+      "block_hours": 0.92
+    },
+    {
+      "aeronave": "AC-05",
+      "operador": "AND",
+      "posicion": 3,
+      "origen": "VCP",
+      "destino": "MDE",
+      "hora_salida": 9.81,
+      "hora_llegada": 15.64,
+      "carga_tons": 22.6,
+      "costo_operacion": 45528.0,
+      "distancia_km": 4150.0,
+      "block_hours": 5.83
+    },
+    {
+      "aeronave": "AC-05",
+      "operador": "AND",
+      "posicion": 4,
+      "origen": "BOG",
+      "destino": "MIA",
+      "hora_salida": 18.29,
+      "hora_llegada": 21.96,
+      "carga_tons": 22.9,
+      "costo_operacion": 33098.0,
+      "distancia_km": 3500.0,
+      "block_hours": 3.67
+    },
+    {
+      "aeronave": "AC-06",
+      "operador": "BRA",
+      "posicion": 1,
+      "origen": "BOG",
+      "destino": "PTY",
+      "hora_salida": 7.57,
+      "hora_llegada": 9.32,
+      "carga_tons": 21.9,
+      "costo_operacion": 15762.0,
+      "distancia_km": 1665.0,
+      "block_hours": 1.75
+    },
+    {
+      "aeronave": "AC-06",
+      "operador": "BRA",
+      "posicion": 2,
+      "origen": "MIA",
+      "destino": "GYE",
+      "hora_salida": 13.21,
+      "hora_llegada": 18.21,
+      "carga_tons": 21.9,
+      "costo_operacion": 42075.0,
+      "distancia_km": 4165.0,
+      "block_hours": 5.0
+    },
+    {
+      "aeronave": "AC-06",
+      "operador": "BRA",
+      "posicion": 3,
+      "origen": "SEA",
+      "destino": "MIA",
+      "hora_salida": 21.21,
+      "hora_llegada": 27.21,
+      "carga_tons": 19.6,
+      "costo_operacion": 54200.0,
+      "distancia_km": 5740.0,
+      "block_hours": 6.0
+    },
+    {
+      "aeronave": "AC-06",
+      "operador": "BRA",
+      "posicion": 4,
+      "origen": "VCP",
+      "destino": "MVD",
+      "hora_salida": 29.49,
+      "hora_llegada": 32.07,
+      "carga_tons": 32.5,
+      "costo_operacion": 19530.0,
+      "distancia_km": 1713.0,
+      "block_hours": 2.58
+    },
+    {
+      "aeronave": "AC-06",
+      "operador": "BRA",
+      "posicion": 5,
+      "origen": "SCL",
+      "destino": "BOG",
+      "hora_salida": 35.56,
+      "hora_llegada": 41.64,
+      "carga_tons": 44.2,
+      "costo_operacion": 59140.0,
+      "distancia_km": 6660.0,
+      "block_hours": 6.08
+    },
+    {
+      "aeronave": "AC-07",
+      "operador": "PAC",
+      "posicion": 1,
+      "origen": "UIO",
+      "destino": "BEL",
+      "hora_salida": 5.26,
+      "hora_llegada": 10.26,
+      "carga_tons": 32.0,
+      "costo_operacion": 38875.0,
+      "distancia_km": 3525.0,
+      "block_hours": 5.0
+    },
+    {
+      "aeronave": "AC-07",
+      "operador": "PAC",
+      "posicion": 2,
+      "origen": "CWB",
+      "destino": "FLN",
+      "hora_salida": 13.77,
+      "hora_llegada": 15.52,
+      "carga_tons": 20.3,
+      "costo_operacion": 12878.0,
+      "distancia_km": 1088.0,
+      "block_hours": 1.75
+    },
+    {
+      "aeronave": "AC-07",
+      "operador": "PAC",
+      "posicion": 3,
+      "origen": "SAL",
+      "destino": "MIA",
+      "hora_salida": 17.84,
+      "hora_llegada": 20.59,
+      "carga_tons": 35.5,
+      "costo_operacion": 20878.0,
+      "distancia_km": 1838.0,
+      "block_hours": 2.75
+    },
+    {
+      "aeronave": "AC-07",
+      "operador": "PAC",
+      "posicion": 4,
+      "origen": "SID",
+      "destino": "BSB",
+      "hora_salida": 23.36,
+      "hora_llegada": 29.36,
+      "carga_tons": 33.2,
+      "costo_operacion": 46875.0,
+      "distancia_km": 4275.0,
+      "block_hours": 6.0
+    },
+    {
+      "aeronave": "AC-08",
+      "operador": "AND",
+      "posicion": 1,
+      "origen": "CWB",
+      "destino": "SCL",
+      "hora_salida": 20.66,
+      "hora_llegada": 24.41,
+      "carga_tons": 39.7,
+      "costo_operacion": 28878.0,
+      "distancia_km": 2588.0,
+      "block_hours": 3.75
+    },
+    {
+      "aeronave": "AC-08",
+      "operador": "AND",
+      "posicion": 2,
+      "origen": "MIA",
+      "destino": "BAQ",
+      "hora_salida": 27.48,
+      "hora_llegada": 30.15,
+      "carga_tons": 42.9,
+      "costo_operacion": 23848.0,
+      "distancia_km": 2500.0,
+      "block_hours": 2.67
+    },
+    {
+      "aeronave": "AC-08",
+      "operador": "AND",
+      "posicion": 3,
+      "origen": "MIA",
+      "destino": "FLN",
+      "hora_salida": 32.83,
+      "hora_llegada": 41.66,
+      "carga_tons": 30.8,
+      "costo_operacion": 77328.0,
+      "distancia_km": 7960.0,
+      "block_hours": 8.83
+    },
+    {
+      "aeronave": "AC-09",
+      "operador": "SUR",
+      "posicion": 1,
+      "origen": "SJO",
+      "destino": "GUA",
+      "hora_salida": 22.89,
+      "hora_llegada": 24.47,
+      "carga_tons": 41.2,
+      "costo_operacion": 11530.0,
+      "distancia_km": 963.0,
+      "block_hours": 1.58
+    },
+    {
+      "aeronave": "AC-09",
+      "operador": "SUR",
+      "posicion": 2,
+      "origen": "CNF",
+      "destino": "VCP",
+      "hora_salida": 27.49,
+      "hora_llegada": 28.74,
+      "carga_tons": 44.9,
+      "costo_operacion": 8872.0,
+      "distancia_km": 712.0,
+      "block_hours": 1.25
+    },
+    {
+      "aeronave": "AC-09",
+      "operador": "SUR",
+      "posicion": 3,
+      "origen": "SJO",
+      "destino": "MIA",
+      "hora_salida": 31.34,
+      "hora_llegada": 34.09,
+      "carga_tons": 35.9,
+      "costo_operacion": 24638.0,
+      "distancia_km": 2590.0,
+      "block_hours": 2.75
+    },
+    {
+      "aeronave": "AC-09",
+      "operador": "SUR",
+      "posicion": 4,
+      "origen": "GEO",
+      "destino": "UIO",
+      "hora_salida": 36.4,
+      "hora_llegada": 39.82,
+      "carga_tons": 33.6,
+      "costo_operacion": 26225.0,
+      "distancia_km": 2338.0,
+      "block_hours": 3.42
+    },
+    {
+      "aeronave": "AC-09",
+      "operador": "SUR",
+      "posicion": 5,
+      "origen": "VCP",
+      "destino": "CCS",
+      "hora_salida": 43.38,
+      "hora_llegada": 49.38,
+      "carga_tons": 46.6,
+      "costo_operacion": 46875.0,
+      "distancia_km": 4275.0,
+      "block_hours": 6.0
+    },
+    {
+      "aeronave": "AC-10",
+      "operador": "BRA",
+      "posicion": 1,
+      "origen": "MIA",
+      "destino": "UIO",
+      "hora_salida": 11.73,
+      "hora_llegada": 15.9,
+      "carga_tons": 45.2,
+      "costo_operacion": 44372.0,
+      "distancia_km": 5330.0,
+      "block_hours": 4.17
+    },
+    {
+      "aeronave": "AC-10",
+      "operador": "BRA",
+      "posicion": 2,
+      "origen": "MIA",
+      "destino": "GRU",
+      "hora_salida": 19.56,
+      "hora_llegada": 28.06,
+      "carga_tons": 23.2,
+      "costo_operacion": 82325.0,
+      "distancia_km": 9240.0,
+      "block_hours": 8.5
+    },
+    {
+      "aeronave": "AC-10",
+      "operador": "BRA",
+      "posicion": 3,
+      "origen": "VCP",
+      "destino": "REC",
+      "hora_salida": 30.54,
+      "hora_llegada": 33.54,
+      "carga_tons": 47.6,
+      "costo_operacion": 22875.0,
+      "distancia_km": 2025.0,
+      "block_hours": 3.0
+    },
+    {
+      "aeronave": "AC-11",
+      "operador": "SUR",
+      "posicion": 1,
+      "origen": "VCP",
+      "destino": "CWB",
+      "hora_salida": 11.66,
+      "hora_llegada": 12.66,
+      "carga_tons": 41.3,
+      "costo_operacion": 6875.0,
+      "distancia_km": 525.0,
+      "block_hours": 1.0
+    },
+    {
+      "aeronave": "AC-11",
+      "operador": "SUR",
+      "posicion": 2,
+      "origen": "SID",
+      "destino": "EZE",
+      "hora_salida": 14.92,
+      "hora_llegada": 24.42,
+      "carga_tons": 47.6,
+      "costo_operacion": 74875.0,
+      "distancia_km": 6900.0,
+      "block_hours": 9.5
+    },
+    {
+      "aeronave": "AC-11",
+      "operador": "SUR",
+      "posicion": 3,
+      "origen": "VCP",
+      "destino": "CCS",
+      "hora_salida": 26.75,
+      "hora_llegada": 32.75,
+      "carga_tons": 45.0,
+      "costo_operacion": 46875.0,
+      "distancia_km": 4275.0,
+      "block_hours": 6.0
+    },
+    {
+      "aeronave": "AC-12",
+      "operador": "AND",
+      "posicion": 1,
+      "origen": "GYE",
+      "destino": "UIO",
+      "hora_salida": 5.08,
+      "hora_llegada": 5.91,
+      "carga_tons": 39.5,
+      "costo_operacion": 5528.0,
+      "distancia_km": 400.0,
+      "block_hours": 0.83
+    },
+    {
+      "aeronave": "AC-12",
+      "operador": "AND",
+      "posicion": 2,
+      "origen": "MTY",
+      "destino": "BOG",
+      "hora_salida": 8.71,
+      "hora_llegada": 14.04,
+      "carga_tons": 30.1,
+      "costo_operacion": 41528.0,
+      "distancia_km": 3775.0,
+      "block_hours": 5.33
+    },
+    {
+      "aeronave": "AC-12",
+      "operador": "AND",
+      "posicion": 3,
+      "origen": "CWB",
+      "destino": "VCP",
+      "hora_salida": 17.08,
+      "hora_llegada": 18.0,
+      "carga_tons": 23.5,
+      "costo_operacion": 6220.0,
+      "distancia_km": 462.0,
+      "block_hours": 0.92
+    },
+    {
+      "aeronave": "AC-12",
+      "operador": "AND",
+      "posicion": 4,
+      "origen": "ASU",
+      "destino": "BOG",
+      "hora_salida": 20.13,
+      "hora_llegada": 25.46,
+      "carga_tons": 35.2,
+      "costo_operacion": 41528.0,
+      "distancia_km": 3775.0,
+      "block_hours": 5.33
+    },
+    {
+      "aeronave": "AC-12",
+      "operador": "AND",
+      "posicion": 5,
+      "origen": "LIM",
+      "destino": "SCL",
+      "hora_salida": 27.92,
+      "hora_llegada": 31.17,
+      "carga_tons": 15.2,
+      "costo_operacion": 30462.0,
+      "distancia_km": 3330.0,
+      "block_hours": 3.25
+    },
+    {
+      "aeronave": "AC-12",
+      "operador": "AND",
+      "posicion": 6,
+      "origen": "BOG",
+      "destino": "MTY",
+      "hora_salida": 34.59,
+      "hora_llegada": 39.92,
+      "carga_tons": 22.9,
+      "costo_operacion": 41528.0,
+      "distancia_km": 3775.0,
+      "block_hours": 5.33
+    },
+    {
+      "aeronave": "AC-12",
+      "operador": "AND",
+      "posicion": 7,
+      "origen": "MIA",
+      "destino": "MEX",
+      "hora_salida": 43.73,
+      "hora_llegada": 47.31,
+      "carga_tons": 17.4,
+      "costo_operacion": 36490.0,
+      "distancia_km": 4255.0,
+      "block_hours": 3.58
+    },
+    {
+      "aeronave": "AC-13",
+      "operador": "SUR",
+      "posicion": 1,
+      "origen": "VCP",
+      "destino": "FLN",
+      "hora_salida": 16.06,
+      "hora_llegada": 18.06,
+      "carga_tons": 19.6,
+      "costo_operacion": 14875.0,
+      "distancia_km": 1275.0,
+      "block_hours": 2.0
+    },
+    {
+      "aeronave": "AC-13",
+      "operador": "SUR",
+      "posicion": 2,
+      "origen": "VCP",
+      "destino": "SCL",
+      "hora_salida": 21.93,
+      "hora_llegada": 26.01,
+      "carga_tons": 34.8,
+      "costo_operacion": 40015.0,
+      "distancia_km": 4535.0,
+      "block_hours": 4.08
+    },
+    {
+      "aeronave": "AC-13",
+      "operador": "SUR",
+      "posicion": 3,
+      "origen": "SID",
+      "destino": "EZE",
+      "hora_salida": 28.5,
+      "hora_llegada": 38.0,
+      "carga_tons": 42.8,
+      "costo_operacion": 74875.0,
+      "distancia_km": 6900.0,
+      "block_hours": 9.5
+    },
+    {
+      "aeronave": "AC-13",
+      "operador": "SUR",
+      "posicion": 4,
+      "origen": "CCS",
+      "destino": "UIO",
+      "hora_salida": 40.38,
+      "hora_llegada": 43.21,
+      "carga_tons": 37.7,
+      "costo_operacion": 21528.0,
+      "distancia_km": 1900.0,
+      "block_hours": 2.83
+    },
+    {
+      "aeronave": "AC-14",
+      "operador": "AND",
+      "posicion": 1,
+      "origen": "CLO",
+      "destino": "UIO",
+      "hora_salida": 9.87,
+      "hora_llegada": 11.12,
+      "carga_tons": 17.0,
+      "costo_operacion": 8872.0,
+      "distancia_km": 712.0,
+      "block_hours": 1.25
+    },
+    {
+      "aeronave": "AC-14",
+      "operador": "AND",
+      "posicion": 2,
+      "origen": "CNF",
+      "destino": "VCP",
+      "hora_salida": 14.58,
+      "hora_llegada": 15.83,
+      "carga_tons": 23.1,
+      "costo_operacion": 8872.0,
+      "distancia_km": 712.0,
+      "block_hours": 1.25
+    },
+    {
+      "aeronave": "AC-14",
+      "operador": "AND",
+      "posicion": 3,
+      "origen": "SCL",
+      "destino": "MIA",
+      "hora_salida": 18.21,
+      "hora_llegada": 26.88,
+      "carga_tons": 19.6,
+      "costo_operacion": 84948.0,
+      "distancia_km": 9620.0,
+      "block_hours": 8.67
+    },
+    {
+      "aeronave": "AC-15",
+      "operador": "PAC",
+      "posicion": 1,
+      "origen": "SCL",
+      "destino": "MDE",
+      "hora_salida": 11.1,
+      "hora_llegada": 17.43,
+      "carga_tons": 41.3,
+      "costo_operacion": 49528.0,
+      "distancia_km": 4525.0,
+      "block_hours": 6.33
+    },
+    {
+      "aeronave": "AC-15",
+      "operador": "PAC",
+      "posicion": 2,
+      "origen": "CLO",
+      "destino": "UIO",
+      "hora_salida": 21.14,
+      "hora_llegada": 22.39,
+      "carga_tons": 16.6,
+      "costo_operacion": 8872.0,
+      "distancia_km": 712.0,
+      "block_hours": 1.25
+    },
+    {
+      "aeronave": "AC-15",
+      "operador": "PAC",
+      "posicion": 3,
+      "origen": "AGT",
+      "destino": "VCP",
+      "hora_salida": 26.39,
+      "hora_llegada": 27.81,
+      "carga_tons": 46.5,
+      "costo_operacion": 10225.0,
+      "distancia_km": 838.0,
+      "block_hours": 1.42
+    },
+    {
+      "aeronave": "AC-16",
+      "operador": "AND",
+      "posicion": 1,
+      "origen": "PTY",
+      "destino": "LAX",
+      "hora_salida": 20.37,
+      "hora_llegada": 26.79,
+      "carga_tons": 32.6,
+      "costo_operacion": 50225.0,
+      "distancia_km": 4588.0,
+      "block_hours": 6.42
+    },
+    {
+      "aeronave": "AC-16",
+      "operador": "AND",
+      "posicion": 2,
+      "origen": "NVT",
+      "destino": "VCP",
+      "hora_salida": 29.22,
+      "hora_llegada": 30.39,
+      "carga_tons": 47.8,
+      "costo_operacion": 8222.0,
+      "distancia_km": 650.0,
+      "block_hours": 1.17
+    },
+    {
+      "aeronave": "AC-16",
+      "operador": "AND",
+      "posicion": 3,
+      "origen": "AGT",
+      "destino": "ASU",
+      "hora_salida": 32.72,
+      "hora_llegada": 33.47,
+      "carga_tons": 50.8,
+      "costo_operacion": 4878.0,
+      "distancia_km": 338.0,
+      "block_hours": 0.75
+    },
+    {
+      "aeronave": "AC-16",
+      "operador": "AND",
+      "posicion": 4,
+      "origen": "SDQ",
+      "destino": "UIO",
+      "hora_salida": 36.0,
+      "hora_llegada": 39.58,
+      "carga_tons": 25.4,
+      "costo_operacion": 27530.0,
+      "distancia_km": 2463.0,
+      "block_hours": 3.58
+    },
+    {
+      "aeronave": "AC-17",
+      "operador": "SUR",
+      "posicion": 1,
+      "origen": "SID",
+      "destino": "SJK",
+      "hora_salida": 17.53,
+      "hora_llegada": 24.03,
+      "carga_tons": 20.0,
+      "costo_operacion": 50875.0,
+      "distancia_km": 4650.0,
+      "block_hours": 6.5
+    },
+    {
+      "aeronave": "AC-17",
+      "operador": "SUR",
+      "posicion": 2,
+      "origen": "BOG",
+      "destino": "MIA",
+      "hora_salida": 26.62,
+      "hora_llegada": 30.29,
+      "carga_tons": 33.8,
+      "costo_operacion": 33098.0,
+      "distancia_km": 3500.0,
+      "block_hours": 3.67
+    },
+    {
+      "aeronave": "AC-17",
+      "operador": "SUR",
+      "posicion": 3,
+      "origen": "MIA",
+      "destino": "GYE",
+      "hora_salida": 33.37,
+      "hora_llegada": 38.37,
+      "carga_tons": 16.9,
+      "costo_operacion": 42075.0,
+      "distancia_km": 4165.0,
+      "block_hours": 5.0
+    },
+    {
+      "aeronave": "AC-17",
+      "operador": "SUR",
+      "posicion": 4,
+      "origen": "SJO",
+      "destino": "GUA",
+      "hora_salida": 41.54,
+      "hora_llegada": 43.12,
+      "carga_tons": 44.9,
+      "costo_operacion": 11530.0,
+      "distancia_km": 963.0,
+      "block_hours": 1.58
+    },
+    {
+      "aeronave": "AC-17",
+      "operador": "SUR",
+      "posicion": 5,
+      "origen": "BOG",
+      "destino": "MIA",
+      "hora_salida": 46.18,
+      "hora_llegada": 49.85,
+      "carga_tons": 46.2,
+      "costo_operacion": 33098.0,
+      "distancia_km": 3500.0,
+      "block_hours": 3.67
+    },
+    {
+      "aeronave": "AC-17",
+      "operador": "SUR",
+      "posicion": 6,
+      "origen": "GRU",
+      "destino": "UIO",
+      "hora_salida": 52.01,
+      "hora_llegada": 58.01,
+      "carga_tons": 17.2,
+      "costo_operacion": 46875.0,
+      "distancia_km": 4275.0,
+      "block_hours": 6.0
+    },
+    {
+      "aeronave": "AC-17",
+      "operador": "SUR",
+      "posicion": 7,
+      "origen": "MAO",
+      "destino": "BOG",
+      "hora_salida": 60.15,
+      "hora_llegada": 62.98,
+      "carga_tons": 28.1,
+      "costo_operacion": 21528.0,
+      "distancia_km": 1900.0,
+      "block_hours": 2.83
+    },
+    {
+      "aeronave": "AC-18",
+      "operador": "AND",
+      "posicion": 1,
+      "origen": "ASU",
+      "destino": "UIO",
+      "hora_salida": 13.67,
+      "hora_llegada": 18.84,
+      "carga_tons": 36.3,
+      "costo_operacion": 40222.0,
+      "distancia_km": 3650.0,
+      "block_hours": 5.17
+    },
+    {
+      "aeronave": "AC-18",
+      "operador": "AND",
+      "posicion": 2,
+      "origen": "VIX",
+      "destino": "FLN",
+      "hora_salida": 21.68,
+      "hora_llegada": 23.76,
+      "carga_tons": 34.4,
+      "costo_operacion": 15530.0,
+      "distancia_km": 1338.0,
+      "block_hours": 2.08
+    },
+    {
+      "aeronave": "AC-18",
+      "operador": "AND",
+      "posicion": 3,
+      "origen": "MIA",
+      "destino": "ANF",
+      "hora_salida": 26.39,
+      "hora_llegada": 33.68,
+      "carga_tons": 22.0,
+      "costo_operacion": 64282.0,
+      "distancia_km": 6660.0,
+      "block_hours": 7.29
+    },
+    {
+      "aeronave": "AC-18",
+      "operador": "AND",
+      "posicion": 4,
+      "origen": "MAO",
+      "destino": "GRU",
+      "hora_salida": 37.11,
+      "hora_llegada": 40.86,
+      "carga_tons": 24.1,
+      "costo_operacion": 28878.0,
+      "distancia_km": 2588.0,
+      "block_hours": 3.75
+    },
+    {
+      "aeronave": "AC-18",
+      "operador": "AND",
+      "posicion": 5,
+      "origen": "MIA",
+      "destino": "GEO",
+      "hora_salida": 43.12,
+      "hora_llegada": 47.54,
+      "carga_tons": 30.7,
+      "costo_operacion": 39160.0,
+      "distancia_km": 4075.0,
+      "block_hours": 4.42
+    },
+    {
+      "aeronave": "AC-18",
+      "operador": "AND",
+      "posicion": 6,
+      "origen": "BRU",
+      "destino": "FRA",
+      "hora_salida": 51.4,
+      "hora_llegada": 52.48,
+      "carga_tons": 15.3,
+      "costo_operacion": 7525.0,
+      "distancia_km": 587.0,
+      "block_hours": 1.08
+    },
+    {
+      "aeronave": "AC-18",
+      "operador": "AND",
+      "posicion": 7,
+      "origen": "VCP",
+      "destino": "POA",
+      "hora_salida": 55.72,
+      "hora_llegada": 57.3,
+      "carga_tons": 49.3,
+      "costo_operacion": 11530.0,
+      "distancia_km": 963.0,
+      "block_hours": 1.58
+    },
+    {
+      "aeronave": "AC-19",
+      "operador": "AND",
+      "posicion": 1,
+      "origen": "EZE",
+      "destino": "UIO",
+      "hora_salida": 5.12,
+      "hora_llegada": 11.37,
+      "carga_tons": 47.1,
+      "costo_operacion": 48872.0,
+      "distancia_km": 4462.0,
+      "block_hours": 6.25
+    },
+    {
+      "aeronave": "AC-19",
+      "operador": "AND",
+      "posicion": 2,
+      "origen": "MAO",
+      "destino": "UIO",
+      "hora_salida": 15.13,
+      "hora_llegada": 18.38,
+      "carga_tons": 27.7,
+      "costo_operacion": 24872.0,
+      "distancia_km": 2212.0,
+      "block_hours": 3.25
+    },
+    {
+      "aeronave": "AC-19",
+      "operador": "AND",
+      "posicion": 3,
+      "origen": "VCP",
+      "destino": "GRU",
+      "hora_salida": 20.7,
+      "hora_llegada": 21.37,
+      "carga_tons": 39.2,
+      "costo_operacion": 3218.0,
+      "distancia_km": 74.0,
+      "block_hours": 0.67
+    },
+    {
+      "aeronave": "AC-19",
+      "operador": "AND",
+      "posicion": 4,
+      "origen": "VCP",
+      "destino": "CCS",
+      "hora_salida": 24.59,
+      "hora_llegada": 30.59,
+      "carga_tons": 15.3,
+      "costo_operacion": 46875.0,
+      "distancia_km": 4275.0,
+      "block_hours": 6.0
+    },
+    {
+      "aeronave": "AC-19",
+      "operador": "AND",
+      "posicion": 5,
+      "origen": "MIA",
+      "destino": "GEO",
+      "hora_salida": 34.22,
+      "hora_llegada": 38.64,
+      "carga_tons": 47.1,
+      "costo_operacion": 39160.0,
+      "distancia_km": 4075.0,
+      "block_hours": 4.42
+    }
+  ],
+  "rutas_catalogo": [
+    {
+      "origen": "AGT",
+      "destino": "ASU",
+      "distancia_km": 338.0,
+      "block_hours": 0.75
+    },
+    {
+      "origen": "AGT",
+      "destino": "NVT",
+      "distancia_km": 900.0,
+      "block_hours": 1.5
+    },
+    {
+      "origen": "AGT",
+      "destino": "SCL",
+      "distancia_km": 2025.0,
+      "block_hours": 3.0
+    },
+    {
+      "origen": "AGT",
+      "destino": "VCP",
+      "distancia_km": 838.0,
+      "block_hours": 1.42
+    },
+    {
+      "origen": "ANF",
+      "destino": "SCL",
+      "distancia_km": 1212.0,
+      "block_hours": 1.92
+    },
+    {
+      "origen": "ASU",
+      "destino": "BOG",
+      "distancia_km": 3775.0,
+      "block_hours": 5.33
+    },
+    {
+      "origen": "ASU",
+      "destino": "CNF",
+      "distancia_km": 1650.0,
+      "block_hours": 2.5
+    },
+    {
+      "origen": "ASU",
+      "destino": "LIM",
+      "distancia_km": 2712.0,
+      "block_hours": 3.92
+    },
+    {
+      "origen": "ASU",
+      "destino": "SCL",
+      "distancia_km": 1775.0,
+      "block_hours": 2.67
+    },
+    {
+      "origen": "ASU",
+      "destino": "SJK",
+      "distancia_km": 1296.0,
+      "block_hours": 2.03
+    },
+    {
+      "origen": "ASU",
+      "destino": "UIO",
+      "distancia_km": 3650.0,
+      "block_hours": 5.17
+    },
+    {
+      "origen": "ASU",
+      "destino": "VCP",
+      "distancia_km": 1025.0,
+      "block_hours": 1.67
+    },
+    {
+      "origen": "BAQ",
+      "destino": "UIO",
+      "distancia_km": 1338.0,
+      "block_hours": 2.08
+    },
+    {
+      "origen": "BEL",
+      "destino": "SID",
+      "distancia_km": 4025.0,
+      "block_hours": 5.67
+    },
+    {
+      "origen": "BOG",
+      "destino": "MIA",
+      "distancia_km": 3500.0,
+      "block_hours": 3.67
+    },
+    {
+      "origen": "BOG",
+      "destino": "MTY",
+      "distancia_km": 3775.0,
+      "block_hours": 5.33
+    },
+    {
+      "origen": "BOG",
+      "destino": "PTY",
+      "distancia_km": 1665.0,
+      "block_hours": 1.75
+    },
+    {
+      "origen": "BOG",
+      "destino": "UIO",
+      "distancia_km": 3330.0,
+      "block_hours": 1.67
+    },
+    {
+      "origen": "BRU",
+      "destino": "FRA",
+      "distancia_km": 587.0,
+      "block_hours": 1.08
+    },
+    {
+      "origen": "BRU",
+      "destino": "MAD",
+      "distancia_km": 1525.0,
+      "block_hours": 2.33
+    },
+    {
+      "origen": "BRU",
+      "destino": "SID",
+      "distancia_km": 4338.0,
+      "block_hours": 6.08
+    },
+    {
+      "origen": "BRU",
+      "destino": "ZAZ",
+      "distancia_km": 1400.0,
+      "block_hours": 2.17
+    },
+    {
+      "origen": "BSB",
+      "destino": "EZE",
+      "distancia_km": 2338.0,
+      "block_hours": 3.42
+    },
+    {
+      "origen": "CCS",
+      "destino": "BOG",
+      "distancia_km": 1212.0,
+      "block_hours": 1.92
+    },
+    {
+      "origen": "CCS",
+      "destino": "UIO",
+      "distancia_km": 1900.0,
+      "block_hours": 2.83
+    },
+    {
+      "origen": "CLO",
+      "destino": "UIO",
+      "distancia_km": 712.0,
+      "block_hours": 1.25
+    },
+    {
+      "origen": "CNF",
+      "destino": "BOG",
+      "distancia_km": 4400.0,
+      "block_hours": 6.17
+    },
+    {
+      "origen": "CNF",
+      "destino": "VCP",
+      "distancia_km": 712.0,
+      "block_hours": 1.25
+    },
+    {
+      "origen": "CWB",
+      "destino": "FLN",
+      "distancia_km": 1088.0,
+      "block_hours": 1.75
+    },
+    {
+      "origen": "CWB",
+      "destino": "SCL",
+      "distancia_km": 2588.0,
+      "block_hours": 3.75
+    },
+    {
+      "origen": "CWB",
+      "destino": "VCP",
+      "distancia_km": 462.0,
+      "block_hours": 0.92
+    },
+    {
+      "origen": "EZE",
+      "destino": "LIM",
+      "distancia_km": 3588.0,
+      "block_hours": 5.08
+    },
+    {
+      "origen": "EZE",
+      "destino": "SCL",
+      "distancia_km": 2220.0,
+      "block_hours": 2.17
+    },
+    {
+      "origen": "EZE",
+      "destino": "UIO",
+      "distancia_km": 4462.0,
+      "block_hours": 6.25
+    },
+    {
+      "origen": "FLN",
+      "destino": "BOG",
+      "distancia_km": 4525.0,
+      "block_hours": 6.33
+    },
+    {
+      "origen": "FLN",
+      "destino": "EZE",
+      "distancia_km": 1400.0,
+      "block_hours": 2.17
+    },
+    {
+      "origen": "FLN",
+      "destino": "GRU",
+      "distancia_km": 775.0,
+      "block_hours": 1.33
+    },
+    {
+      "origen": "FLN",
+      "destino": "SCL",
+      "distancia_km": 2525.0,
+      "block_hours": 3.67
+    },
+    {
+      "origen": "FLN",
+      "destino": "VCP",
+      "distancia_km": 712.0,
+      "block_hours": 1.25
+    },
+    {
+      "origen": "FRA",
+      "destino": "SID",
+      "distancia_km": 4588.0,
+      "block_hours": 6.42
+    },
+    {
+      "origen": "GEO",
+      "destino": "MAO",
+      "distancia_km": 1212.0,
+      "block_hours": 1.92
+    },
+    {
+      "origen": "GEO",
+      "destino": "UIO",
+      "distancia_km": 2338.0,
+      "block_hours": 3.42
+    },
+    {
+      "origen": "GIG",
+      "destino": "NVT",
+      "distancia_km": 900.0,
+      "block_hours": 1.5
+    },
+    {
+      "origen": "GIG",
+      "destino": "VCP",
+      "distancia_km": 650.0,
+      "block_hours": 1.17
+    },
+    {
+      "origen": "GRU",
+      "destino": "BOG",
+      "distancia_km": 5435.0,
+      "block_hours": 6.42
+    },
+    {
+      "origen": "GRU",
+      "destino": "MAO",
+      "distancia_km": 2650.0,
+      "block_hours": 3.83
+    },
+    {
+      "origen": "GRU",
+      "destino": "POA",
+      "distancia_km": 1150.0,
+      "block_hours": 1.83
+    },
+    {
+      "origen": "GRU",
+      "destino": "UIO",
+      "distancia_km": 4275.0,
+      "block_hours": 6.0
+    },
+    {
+      "origen": "GRU",
+      "destino": "VCP",
+      "distancia_km": 74.0,
+      "block_hours": 0.67
+    },
+    {
+      "origen": "GUA",
+      "destino": "MIA",
+      "distancia_km": 2870.0,
+      "block_hours": 2.5
+    },
+    {
+      "origen": "GUA",
+      "destino": "SJO",
+      "distancia_km": 963.0,
+      "block_hours": 1.58
+    },
+    {
+      "origen": "GYE",
+      "destino": "UIO",
+      "distancia_km": 400.0,
+      "block_hours": 0.83
+    },
+    {
+      "origen": "LAX",
+      "destino": "BOG",
+      "distancia_km": 5275.0,
+      "block_hours": 7.33
+    },
+    {
+      "origen": "LAX",
+      "destino": "MIA",
+      "distancia_km": 4815.0,
+      "block_hours": 5.25
+    },
+    {
+      "origen": "LAX",
+      "destino": "SEA",
+      "distancia_km": 1838.0,
+      "block_hours": 2.75
+    },
+    {
+      "origen": "LIM",
+      "destino": "BOG",
+      "distancia_km": 3330.0,
+      "block_hours": 3.08
+    },
+    {
+      "origen": "LIM",
+      "destino": "SCL",
+      "distancia_km": 3330.0,
+      "block_hours": 3.25
+    },
+    {
+      "origen": "LIM",
+      "destino": "UIO",
+      "distancia_km": 1525.0,
+      "block_hours": 2.33
+    },
+    {
+      "origen": "MAD",
+      "destino": "SID",
+      "distancia_km": 3275.0,
+      "block_hours": 4.67
+    },
+    {
+      "origen": "MAO",
+      "destino": "ASU",
+      "distancia_km": 2400.0,
+      "block_hours": 3.5
+    },
+    {
+      "origen": "MAO",
+      "destino": "BOG",
+      "distancia_km": 1900.0,
+      "block_hours": 2.83
+    },
+    {
+      "origen": "MAO",
+      "destino": "GRU",
+      "distancia_km": 2588.0,
+      "block_hours": 3.75
+    },
+    {
+      "origen": "MAO",
+      "destino": "UIO",
+      "distancia_km": 2212.0,
+      "block_hours": 3.25
+    },
+    {
+      "origen": "MDE",
+      "destino": "MIA",
+      "distancia_km": 2990.0,
+      "block_hours": 3.33
+    },
+    {
+      "origen": "MEX",
+      "destino": "MIA",
+      "distancia_km": 4255.0,
+      "block_hours": 3.08
+    },
+    {
+      "origen": "MIA",
+      "destino": "AGT",
+      "distancia_km": 3885.0,
+      "block_hours": 8.08
+    },
+    {
+      "origen": "MIA",
+      "destino": "ANF",
+      "distancia_km": 6660.0,
+      "block_hours": 7.29
+    },
+    {
+      "origen": "MIA",
+      "destino": "ASU",
+      "distancia_km": 7400.0,
+      "block_hours": 7.92
+    },
+    {
+      "origen": "MIA",
+      "destino": "BAQ",
+      "distancia_km": 2500.0,
+      "block_hours": 2.67
+    },
+    {
+      "origen": "MIA",
+      "destino": "BOG",
+      "distancia_km": 3500.0,
+      "block_hours": 3.5
+    },
+    {
+      "origen": "MIA",
+      "destino": "BRU",
+      "distancia_km": 9620.0,
+      "block_hours": 8.83
+    },
+    {
+      "origen": "MIA",
+      "destino": "CLO",
+      "distancia_km": 962.0,
+      "block_hours": 3.58
+    },
+    {
+      "origen": "MIA",
+      "destino": "CNF",
+      "distancia_km": 5900.0,
+      "block_hours": 8.17
+    },
+    {
+      "origen": "MIA",
+      "destino": "CWB",
+      "distancia_km": 7775.0,
+      "block_hours": 8.42
+    },
+    {
+      "origen": "MIA",
+      "destino": "EZE",
+      "distancia_km": 10000.0,
+      "block_hours": 9.0
+    },
+    {
+      "origen": "MIA",
+      "destino": "FLN",
+      "distancia_km": 7960.0,
+      "block_hours": 8.83
+    },
+    {
+      "origen": "MIA",
+      "destino": "GEO",
+      "distancia_km": 4075.0,
+      "block_hours": 4.42
+    },
+    {
+      "origen": "MIA",
+      "destino": "GIG",
+      "distancia_km": 7960.0,
+      "block_hours": 8.58
+    },
+    {
+      "origen": "MIA",
+      "destino": "GRU",
+      "distancia_km": 9240.0,
+      "block_hours": 8.5
+    },
+    {
+      "origen": "MIA",
+      "destino": "GUA",
+      "distancia_km": 2870.0,
+      "block_hours": 2.58
+    },
+    {
+      "origen": "MIA",
+      "destino": "GYE",
+      "distancia_km": 4165.0,
+      "block_hours": 5.0
+    },
+    {
+      "origen": "MIA",
+      "destino": "LIM",
+      "distancia_km": 5180.0,
+      "block_hours": 5.58
+    },
+    {
+      "origen": "MIA",
+      "destino": "MAO",
+      "distancia_km": 4630.0,
+      "block_hours": 5.17
+    },
+    {
+      "origen": "MIA",
+      "destino": "MDE",
+      "distancia_km": 2990.0,
+      "block_hours": 3.33
+    },
+    {
+      "origen": "MIA",
+      "destino": "MEX",
+      "distancia_km": 4255.0,
+      "block_hours": 3.58
+    },
+    {
+      "origen": "MIA",
+      "destino": "MVD",
+      "distancia_km": 8335.0,
+      "block_hours": 9.08
+    },
+    {
+      "origen": "MIA",
+      "destino": "NVT",
+      "distancia_km": 5370.0,
+      "block_hours": 8.58
+    },
+    {
+      "origen": "MIA",
+      "destino": "PTY",
+      "distancia_km": 2500.0,
+      "block_hours": 2.92
+    },
+    {
+      "origen": "MIA",
+      "destino": "SCL",
+      "distancia_km": 9620.0,
+      "block_hours": 8.33
+    },
+    {
+      "origen": "MIA",
+      "destino": "SDQ",
+      "distancia_km": 2960.0,
+      "block_hours": 2.25
+    },
+    {
+      "origen": "MIA",
+      "destino": "SJK",
+      "distancia_km": 8145.0,
+      "block_hours": 8.75
+    },
+    {
+      "origen": "MIA",
+      "destino": "SJO",
+      "distancia_km": 2590.0,
+      "block_hours": 2.83
+    },
+    {
+      "origen": "MIA",
+      "destino": "UIO",
+      "distancia_km": 5330.0,
+      "block_hours": 4.17
+    },
+    {
+      "origen": "MIA",
+      "destino": "VCP",
+      "distancia_km": 9620.0,
+      "block_hours": 8.33
+    },
+    {
+      "origen": "MIA",
+      "destino": "VIX",
+      "distancia_km": 6150.0,
+      "block_hours": 8.5
+    },
+    {
+      "origen": "MTY",
+      "destino": "BOG",
+      "distancia_km": 3775.0,
+      "block_hours": 5.33
+    },
+    {
+      "origen": "MVD",
+      "destino": "BOG",
+      "distancia_km": 4650.0,
+      "block_hours": 6.5
+    },
+    {
+      "origen": "MVD",
+      "destino": "EZE",
+      "distancia_km": 462.0,
+      "block_hours": 0.92
+    },
+    {
+      "origen": "MVD",
+      "destino": "SCL",
+      "distancia_km": 1713.0,
+      "block_hours": 2.58
+    },
+    {
+      "origen": "MVD",
+      "destino": "UIO",
+      "distancia_km": 4650.0,
+      "block_hours": 6.5
+    },
+    {
+      "origen": "MVD",
+      "destino": "VCP",
+      "distancia_km": 1525.0,
+      "block_hours": 2.33
+    },
+    {
+      "origen": "NVT",
+      "destino": "EZE",
+      "distancia_km": 1650.0,
+      "block_hours": 2.5
+    },
+    {
+      "origen": "NVT",
+      "destino": "VCP",
+      "distancia_km": 650.0,
+      "block_hours": 1.17
+    },
+    {
+      "origen": "POA",
+      "destino": "SAL",
+      "distancia_km": 6462.0,
+      "block_hours": 8.92
+    },
+    {
+      "origen": "PTY",
+      "destino": "LAX",
+      "distancia_km": 4588.0,
+      "block_hours": 6.42
+    },
+    {
+      "origen": "PTY",
+      "destino": "UIO",
+      "distancia_km": 1212.0,
+      "block_hours": 1.92
+    },
+    {
+      "origen": "REC",
+      "destino": "SID",
+      "distancia_km": 2962.0,
+      "block_hours": 4.25
+    },
+    {
+      "origen": "SAL",
+      "destino": "BOG",
+      "distancia_km": 1962.0,
+      "block_hours": 2.92
+    },
+    {
+      "origen": "SAL",
+      "destino": "MIA",
+      "distancia_km": 1838.0,
+      "block_hours": 2.75
+    },
+    {
+      "origen": "SCL",
+      "destino": "BOG",
+      "distancia_km": 6660.0,
+      "block_hours": 6.08
+    },
+    {
+      "origen": "SCL",
+      "destino": "EZE",
+      "distancia_km": 2220.0,
+      "block_hours": 1.92
+    },
+    {
+      "origen": "SCL",
+      "destino": "GRU",
+      "distancia_km": 4165.0,
+      "block_hours": 3.75
+    },
+    {
+      "origen": "SCL",
+      "destino": "LIM",
+      "distancia_km": 3330.0,
+      "block_hours": 3.75
+    },
+    {
+      "origen": "SCL",
+      "destino": "MDE",
+      "distancia_km": 4525.0,
+      "block_hours": 6.33
+    },
+    {
+      "origen": "SCL",
+      "destino": "MIA",
+      "distancia_km": 9620.0,
+      "block_hours": 8.67
+    },
+    {
+      "origen": "SCL",
+      "destino": "UIO",
+      "distancia_km": 6100.0,
+      "block_hours": 5.5
+    },
+    {
+      "origen": "SDQ",
+      "destino": "UIO",
+      "distancia_km": 2463.0,
+      "block_hours": 3.58
+    },
+    {
+      "origen": "SEA",
+      "destino": "MIA",
+      "distancia_km": 5740.0,
+      "block_hours": 6.0
+    },
+    {
+      "origen": "SID",
+      "destino": "BRU",
+      "distancia_km": 4212.0,
+      "block_hours": 5.92
+    },
+    {
+      "origen": "SID",
+      "destino": "BSB",
+      "distancia_km": 4275.0,
+      "block_hours": 6.0
+    },
+    {
+      "origen": "SID",
+      "destino": "CWB",
+      "distancia_km": 5588.0,
+      "block_hours": 7.75
+    },
+    {
+      "origen": "SID",
+      "destino": "EZE",
+      "distancia_km": 6900.0,
+      "block_hours": 9.5
+    },
+    {
+      "origen": "SID",
+      "destino": "FLN",
+      "distancia_km": 5588.0,
+      "block_hours": 7.75
+    },
+    {
+      "origen": "SID",
+      "destino": "MVD",
+      "distancia_km": 6712.0,
+      "block_hours": 9.25
+    },
+    {
+      "origen": "SID",
+      "destino": "SJK",
+      "distancia_km": 4650.0,
+      "block_hours": 6.5
+    },
+    {
+      "origen": "SID",
+      "destino": "VCP",
+      "distancia_km": 4650.0,
+      "block_hours": 6.5
+    },
+    {
+      "origen": "SJK",
+      "destino": "GRU",
+      "distancia_km": 712.0,
+      "block_hours": 1.25
+    },
+    {
+      "origen": "SJK",
+      "destino": "VCP",
+      "distancia_km": 650.0,
+      "block_hours": 1.17
+    },
+    {
+      "origen": "SJO",
+      "destino": "GUA",
+      "distancia_km": 963.0,
+      "block_hours": 1.58
+    },
+    {
+      "origen": "SJO",
+      "destino": "MIA",
+      "distancia_km": 2590.0,
+      "block_hours": 2.75
+    },
+    {
+      "origen": "UIO",
+      "destino": "BEL",
+      "distancia_km": 3525.0,
+      "block_hours": 5.0
+    },
+    {
+      "origen": "UIO",
+      "destino": "MIA",
+      "distancia_km": 5330.0,
+      "block_hours": 4.0
+    },
+    {
+      "origen": "UIO",
+      "destino": "PTY",
+      "distancia_km": 1338.0,
+      "block_hours": 2.08
+    },
+    {
+      "origen": "VCP",
+      "destino": "ASU",
+      "distancia_km": 1275.0,
+      "block_hours": 2.0
+    },
+    {
+      "origen": "VCP",
+      "destino": "BOG",
+      "distancia_km": 6570.0,
+      "block_hours": 5.92
+    },
+    {
+      "origen": "VCP",
+      "destino": "CCS",
+      "distancia_km": 4275.0,
+      "block_hours": 6.0
+    },
+    {
+      "origen": "VCP",
+      "destino": "CWB",
+      "distancia_km": 525.0,
+      "block_hours": 1.0
+    },
+    {
+      "origen": "VCP",
+      "destino": "EZE",
+      "distancia_km": 1900.0,
+      "block_hours": 2.83
+    },
+    {
+      "origen": "VCP",
+      "destino": "FLN",
+      "distancia_km": 1275.0,
+      "block_hours": 2.0
+    },
+    {
+      "origen": "VCP",
+      "destino": "GRU",
+      "distancia_km": 74.0,
+      "block_hours": 0.67
+    },
+    {
+      "origen": "VCP",
+      "destino": "LIM",
+      "distancia_km": 3588.0,
+      "block_hours": 5.08
+    },
+    {
+      "origen": "VCP",
+      "destino": "MAO",
+      "distancia_km": 2525.0,
+      "block_hours": 3.67
+    },
+    {
+      "origen": "VCP",
+      "destino": "MDE",
+      "distancia_km": 4150.0,
+      "block_hours": 5.83
+    },
+    {
+      "origen": "VCP",
+      "destino": "MVD",
+      "distancia_km": 1713.0,
+      "block_hours": 2.58
+    },
+    {
+      "origen": "VCP",
+      "destino": "POA",
+      "distancia_km": 963.0,
+      "block_hours": 1.58
+    },
+    {
+      "origen": "VCP",
+      "destino": "REC",
+      "distancia_km": 2025.0,
+      "block_hours": 3.0
+    },
+    {
+      "origen": "VCP",
+      "destino": "SCL",
+      "distancia_km": 4535.0,
+      "block_hours": 4.08
+    },
+    {
+      "origen": "VCP",
+      "destino": "SID",
+      "distancia_km": 4650.0,
+      "block_hours": 6.5
+    },
+    {
+      "origen": "VCP",
+      "destino": "UIO",
+      "distancia_km": 6570.0,
+      "block_hours": 5.92
+    },
+    {
+      "origen": "VIX",
+      "destino": "FLN",
+      "distancia_km": 1338.0,
+      "block_hours": 2.08
+    },
+    {
+      "origen": "ZAZ",
+      "destino": "SID",
+      "distancia_km": 3338.0,
+      "block_hours": 4.75
+    }
+  ],
+  "demanda_servida": [
+    {
+      "origen": "BAQ",
+      "destino": "UIO",
+      "toneladas_disponibles": 34.1,
+      "toneladas_servidas": 30.1,
+      "tarifa_usd_kg": 1.39
+    },
+    {
+      "origen": "BOG",
+      "destino": "MDE",
+      "toneladas_disponibles": 22.7,
+      "toneladas_servidas": 12.4,
+      "tarifa_usd_kg": 1.33
+    },
+    {
+      "origen": "BOG",
+      "destino": "MIA",
+      "toneladas_disponibles": 4307.1,
+      "toneladas_servidas": 3830.5,
+      "tarifa_usd_kg": 1.37
+    },
+    {
+      "origen": "BOG",
+      "destino": "UIO",
+      "toneladas_disponibles": 12.5,
+      "toneladas_servidas": 10.1,
+      "tarifa_usd_kg": 1.56
+    },
+    {
+      "origen": "BOG",
+      "destino": "VCP",
+      "toneladas_disponibles": 20.2,
+      "toneladas_servidas": 9.8,
+      "tarifa_usd_kg": 1.37
+    },
+    {
+      "origen": "BRU",
+      "destino": "FRA",
+      "toneladas_disponibles": 120.2,
+      "toneladas_servidas": 66.7,
+      "tarifa_usd_kg": 4.49
+    },
+    {
+      "origen": "BRU",
+      "destino": "MIA",
+      "toneladas_disponibles": 24.4,
+      "toneladas_servidas": 12.6,
+      "tarifa_usd_kg": 4.22
+    },
+    {
+      "origen": "BRU",
+      "destino": "SCL",
+      "toneladas_disponibles": 16.8,
+      "toneladas_servidas": 9.9,
+      "tarifa_usd_kg": 3.62
+    },
+    {
+      "origen": "BRU",
+      "destino": "VCP",
+      "toneladas_disponibles": 29.2,
+      "toneladas_servidas": 22.7,
+      "tarifa_usd_kg": 3.85
+    },
+    {
+      "origen": "CLO",
+      "destino": "UIO",
+      "toneladas_disponibles": 31.8,
+      "toneladas_servidas": 27.6,
+      "tarifa_usd_kg": 1.56
+    },
+    {
+      "origen": "EZE",
+      "destino": "MIA",
+      "toneladas_disponibles": 18.5,
+      "toneladas_servidas": 12.5,
+      "tarifa_usd_kg": 1.55
+    },
+    {
+      "origen": "EZE",
+      "destino": "SCL",
+      "toneladas_disponibles": 95.9,
+      "toneladas_servidas": 51.6,
+      "tarifa_usd_kg": 1.52
+    },
+    {
+      "origen": "FRA",
+      "destino": "VCP",
+      "toneladas_disponibles": 29.2,
+      "toneladas_servidas": 26.3,
+      "tarifa_usd_kg": 3.65
+    },
+    {
+      "origen": "GRU",
+      "destino": "BOG",
+      "toneladas_disponibles": 43.9,
+      "toneladas_servidas": 18.8,
+      "tarifa_usd_kg": 1.32
+    },
+    {
+      "origen": "GRU",
+      "destino": "MAO",
+      "toneladas_disponibles": 596.1,
+      "toneladas_servidas": 446.4,
+      "tarifa_usd_kg": 1.26
+    },
+    {
+      "origen": "GUA",
+      "destino": "MIA",
+      "toneladas_disponibles": 280.4,
+      "toneladas_servidas": 240.1,
+      "tarifa_usd_kg": 1.56
+    },
+    {
+      "origen": "LAX",
+      "destino": "BOG",
+      "toneladas_disponibles": 122.3,
+      "toneladas_servidas": 51.9,
+      "tarifa_usd_kg": 1.8
+    },
+    {
+      "origen": "LAX",
+      "destino": "MIA",
+      "toneladas_disponibles": 10.2,
+      "toneladas_servidas": 6.0,
+      "tarifa_usd_kg": 1.91
+    },
+    {
+      "origen": "LIM",
+      "destino": "BOG",
+      "toneladas_disponibles": 157.3,
+      "toneladas_servidas": 74.2,
+      "tarifa_usd_kg": 1.57
+    },
+    {
+      "origen": "LIM",
+      "destino": "MIA",
+      "toneladas_disponibles": 12.2,
+      "toneladas_servidas": 11.5,
+      "tarifa_usd_kg": 1.5
+    },
+    {
+      "origen": "MAO",
+      "destino": "GRU",
+      "toneladas_disponibles": 543.4,
+      "toneladas_servidas": 265.7,
+      "tarifa_usd_kg": 1.15
+    },
+    {
+      "origen": "MDE",
+      "destino": "BOG",
+      "toneladas_disponibles": 27.8,
+      "toneladas_servidas": 17.9,
+      "tarifa_usd_kg": 1.52
+    },
+    {
+      "origen": "MDE",
+      "destino": "MIA",
+      "toneladas_disponibles": 496.7,
+      "toneladas_servidas": 391.5,
+      "tarifa_usd_kg": 1.43
+    },
+    {
+      "origen": "MIA",
+      "destino": "BOG",
+      "toneladas_disponibles": 589.8,
+      "toneladas_servidas": 417.9,
+      "tarifa_usd_kg": 2.02
+    },
+    {
+      "origen": "MIA",
+      "destino": "BRU",
+      "toneladas_disponibles": 61.9,
+      "toneladas_servidas": 28.6,
+      "tarifa_usd_kg": 4.4
+    },
+    {
+      "origen": "MIA",
+      "destino": "EZE",
+      "toneladas_disponibles": 14.1,
+      "toneladas_servidas": 13.0,
+      "tarifa_usd_kg": 1.87
+    },
+    {
+      "origen": "MIA",
+      "destino": "FRA",
+      "toneladas_disponibles": 24.4,
+      "toneladas_servidas": 19.0,
+      "tarifa_usd_kg": 4.36
+    },
+    {
+      "origen": "MIA",
+      "destino": "GIG",
+      "toneladas_disponibles": 41.7,
+      "toneladas_servidas": 20.1,
+      "tarifa_usd_kg": 2.11
+    },
+    {
+      "origen": "MIA",
+      "destino": "GRU",
+      "toneladas_disponibles": 41.3,
+      "toneladas_servidas": 17.3,
+      "tarifa_usd_kg": 2.03
+    },
+    {
+      "origen": "MIA",
+      "destino": "GUA",
+      "toneladas_disponibles": 26.3,
+      "toneladas_servidas": 15.9,
+      "tarifa_usd_kg": 1.89
+    },
+    {
+      "origen": "MIA",
+      "destino": "LAX",
+      "toneladas_disponibles": 14.1,
+      "toneladas_servidas": 9.9,
+      "tarifa_usd_kg": 2.18
+    },
+    {
+      "origen": "MIA",
+      "destino": "LIM",
+      "toneladas_disponibles": 28.5,
+      "toneladas_servidas": 18.1,
+      "tarifa_usd_kg": 2.19
+    },
+    {
+      "origen": "MIA",
+      "destino": "MDE",
+      "toneladas_disponibles": 160.2,
+      "toneladas_servidas": 67.8,
+      "tarifa_usd_kg": 2.01
+    },
+    {
+      "origen": "MIA",
+      "destino": "SCL",
+      "toneladas_disponibles": 170.4,
+      "toneladas_servidas": 102.3,
+      "tarifa_usd_kg": 2.11
+    },
+    {
+      "origen": "MIA",
+      "destino": "SDQ",
+      "toneladas_disponibles": 104.1,
+      "toneladas_servidas": 95.1,
+      "tarifa_usd_kg": 1.82
+    },
+    {
+      "origen": "MIA",
+      "destino": "SJO",
+      "toneladas_disponibles": 123.9,
+      "toneladas_servidas": 115.8,
+      "tarifa_usd_kg": 2.14
+    },
+    {
+      "origen": "MIA",
+      "destino": "UIO",
+      "toneladas_disponibles": 717.3,
+      "toneladas_servidas": 302.7,
+      "tarifa_usd_kg": 1.83
+    },
+    {
+      "origen": "MIA",
+      "destino": "VCP",
+      "toneladas_disponibles": 509.0,
+      "toneladas_servidas": 303.8,
+      "tarifa_usd_kg": 1.92
+    },
+    {
+      "origen": "MVD",
+      "destino": "BOG",
+      "toneladas_disponibles": 19.7,
+      "toneladas_servidas": 15.3,
+      "tarifa_usd_kg": 1.5
+    },
+    {
+      "origen": "SCL",
+      "destino": "BOG",
+      "toneladas_disponibles": 27.7,
+      "toneladas_servidas": 21.2,
+      "tarifa_usd_kg": 1.44
+    },
+    {
+      "origen": "SCL",
+      "destino": "LIM",
+      "toneladas_disponibles": 144.6,
+      "toneladas_servidas": 86.0,
+      "tarifa_usd_kg": 1.25
+    },
+    {
+      "origen": "SCL",
+      "destino": "MIA",
+      "toneladas_disponibles": 350.3,
+      "toneladas_servidas": 248.0,
+      "tarifa_usd_kg": 1.34
+    },
+    {
+      "origen": "SCL",
+      "destino": "VCP",
+      "toneladas_disponibles": 10.1,
+      "toneladas_servidas": 8.9,
+      "tarifa_usd_kg": 1.3
+    },
+    {
+      "origen": "SDQ",
+      "destino": "MIA",
+      "toneladas_disponibles": 9.2,
+      "toneladas_servidas": 8.6,
+      "tarifa_usd_kg": 1.39
+    },
+    {
+      "origen": "SDQ",
+      "destino": "UIO",
+      "toneladas_disponibles": 99.2,
+      "toneladas_servidas": 80.6,
+      "tarifa_usd_kg": 1.29
+    },
+    {
+      "origen": "SJO",
+      "destino": "GUA",
+      "toneladas_disponibles": 128.9,
+      "toneladas_servidas": 117.2,
+      "tarifa_usd_kg": 1.27
+    },
+    {
+      "origen": "SJO",
+      "destino": "MIA",
+      "toneladas_disponibles": 28.3,
+      "toneladas_servidas": 15.0,
+      "tarifa_usd_kg": 1.39
+    },
+    {
+      "origen": "UIO",
+      "destino": "BOG",
+      "toneladas_disponibles": 7.5,
+      "toneladas_servidas": 3.7,
+      "tarifa_usd_kg": 1.37
+    },
+    {
+      "origen": "UIO",
+      "destino": "LAX",
+      "toneladas_disponibles": 16.6,
+      "toneladas_servidas": 13.9,
+      "tarifa_usd_kg": 1.44
+    },
+    {
+      "origen": "UIO",
+      "destino": "MIA",
+      "toneladas_disponibles": 2202.4,
+      "toneladas_servidas": 1095.4,
+      "tarifa_usd_kg": 1.4
+    },
+    {
+      "origen": "UIO",
+      "destino": "VCP",
+      "toneladas_disponibles": 17.6,
+      "toneladas_servidas": 11.0,
+      "tarifa_usd_kg": 1.33
+    },
+    {
+      "origen": "VCP",
+      "destino": "BOG",
+      "toneladas_disponibles": 416.3,
+      "toneladas_servidas": 207.6,
+      "tarifa_usd_kg": 1.44
+    },
+    {
+      "origen": "VCP",
+      "destino": "EZE",
+      "toneladas_disponibles": 109.7,
+      "toneladas_servidas": 99.7,
+      "tarifa_usd_kg": 1.48
+    },
+    {
+      "origen": "VCP",
+      "destino": "LIM",
+      "toneladas_disponibles": 21.6,
+      "toneladas_servidas": 17.9,
+      "tarifa_usd_kg": 1.54
+    },
+    {
+      "origen": "VCP",
+      "destino": "MIA",
+      "toneladas_disponibles": 9.5,
+      "toneladas_servidas": 6.0,
+      "tarifa_usd_kg": 1.46
+    },
+    {
+      "origen": "VCP",
+      "destino": "SCL",
+      "toneladas_disponibles": 69.3,
+      "toneladas_servidas": 53.3,
+      "tarifa_usd_kg": 1.35
+    },
+    {
+      "origen": "VCP",
+      "destino": "UIO",
+      "toneladas_disponibles": 8.4,
+      "toneladas_servidas": 6.8,
+      "tarifa_usd_kg": 1.45
+    }
+  ],
+  "colores_operador": {
+    "AND": "#3b82f6",
+    "SUR": "#22c55e",
+    "BRA": "#eab308",
+    "PAC": "#ef4444"
+  },
+  "kpis": {
+    "funcion_objetivo": 11363634.0,
+    "total_vuelos": 83,
+    "costo_total_semanal": 2862096.0,
+    "ingreso_total_semanal": 14225730.0,
+    "carga_total_transportada": 2701.3,
+    "gap_mip": 0.42,
+    "tiempo_resolucion": 38.7
+  }
+}
