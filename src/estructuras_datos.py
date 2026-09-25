@@ -21,11 +21,18 @@ def cargar_estructuras_funcionales(ruta_bd: str) -> Dict[str, Any]:
             'aeropuertos': leer_tabla(conexion, 'airports').to_dict('records'),
             'flota': leer_tabla(conexion, 'fleet').to_dict('records'),
             'tramos': leer_tabla(conexion, 'legs_catalog').to_dict('records'),
-            'demanda': leer_tabla(conexion, 'demand_daily').to_dict('records')
+            'demanda': leer_tabla(conexion, 'demand_daily').to_dict('records'),
+            'derechos': leer_tabla(conexion, 'traffic_rights').to_dict('records')
         }
 
     # Aeropuertos
     A = list(map(lambda fila: fila['iata'], dfs['aeropuertos']))
+
+    # País de cada aeropuerto
+    pais_de = dict(map(lambda fila: (fila['iata'], fila['country']), dfs['aeropuertos']))
+
+    #pares operador-pais donde operador tiene derefcho de tráfico
+    permitido = set(map(lambda fila: (fila['operator'], fila['country']), filter(lambda fila: fila['allowed'] == 1, dfs['derechos'])))
 
     # Flota
     K = list(map(lambda fila: fila['aircraft_id'], dfs['flota']))
@@ -41,6 +48,19 @@ def cargar_estructuras_funcionales(ruta_bd: str) -> Dict[str, Any]:
 
     # Distancia entre tramos
     dist_e = dict(map(lambda fila: ((fila['origin'], fila['dest']), fila['distance_km']), dfs['tramos']))
+
+    #tramos factibles por avión (considerando derechos trafico y autonomia max)
+    Ek = dict(map(lambda avion: (avion['aircraft_id'],list(filter(lambda tramo: tau_e[tramo] <= 9.0
+                                                                  and (avion['operator'], pais_de[tramo[0]]) in permitido
+                                                                  and (avion['operator'], pais_de[tramo[1]]) in permitido, E))),dfs['flota']))
+    
+    #duración del tramo más corto 
+    tau_e_min_k = dict(map(lambda avion: (avion['aircraft_id'], min(map(lambda tramo: tau_e[tramo], Ek[avion['aircraft_id']]))), dfs['flota']))
+
+    #cuántos vuelos como máximo podría hacer en la semana
+    H = 168
+    T_min = 50/60
+    S_max_k = dict(map(lambda avion: (avion['aircraft_id'], int(H/(tau_e_min_k[avion['aircraft_id']] + T_min))), dfs['flota']))
 
     # Conexiones validas C: Filtro sobre producto cartesiano de tramos (Destino == Origen)
     C_consecutivos = list(filter(lambda par: par[0][1] == par[1][0], itertools.product(E, E)))
@@ -70,8 +90,9 @@ def cargar_estructuras_funcionales(ruta_bd: str) -> Dict[str, Any]:
     ))
 
     return {
-        'A': A, 'K': K, 'E': E, 'Q': Q, 'C': C_consecutivos,
+        'A': A, 'K': K, 'E': E, 'Ek': Ek, 'Q': Q, 'C': C_consecutivos,
         'tau_e': tau_e, 'Q_ke': Q_ke, 'c_ke': c_ke,
         'D_q': D_q, 'r_q': r_q,
-        'S_max': 5, 'H': 168, 'T_TAT': 2.0, 'T_TR': 4.0, 'BigM': 1000
+        'S_max_k': S_max_k, 'H': H, 'T_TAT': 2.0, 'T_TR': 4.0, 'BigM': 1000
     }
+
