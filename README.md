@@ -81,3 +81,9 @@ Nota: quedaron todas las restricciones comentadas.
 - **Fecha**: 14 de Septiembre.
 - **Desarrollo**: Con el apoyo de inteligencia artificial, se desarrolló un visualizador web (`index.html`) que permite observar los resultados geográficos y logísticos del modelo. La ejecución matemática quedó delegada de manera nativa y eficiente a la terminal mediante los scripts correspondientes.
 
+**Hito 3**
+- **Integrante**: Agustina Caneo
+- **Fecha**: 22 al 25 de Septiembre.
+- **Desarrollo**: Se conectó `estructuras_datos.py` con la guía de modelo nueva (posición-indexada, transbordo general): se agregó `Ek` (tramos factibles por avión, filtrado por derechos de tráfico y autonomía de 9h), `S_max_k` (cota de posiciones por avión, reemplazando el `S_max=5` fijo), y se reconstruyó `Q`/`D_q`/`r_q` como commodities diarios `(origen, destino, día)` con tarifa real de `demand_weekly` (antes `r_q=1.5` fijo para todos). Se conectó `gurobi_model.py` con estas estructuras usando índices dispersos (`KS`, `KS_menos`, `KSE`, `QKS`) en vez de `itertools.product` sobre listas globales, y se activaron las restricciones núcleo de programación de aeronaves y flujo básico de carga (R1, R2, R3a/b, R4 simplificado, R5, R6a/b, R11, R8, R20a/b, R21a/b, R23, R25, R26a/b/c). Se corrigió además un bug de `gurobipy` (`.sum()`/`.select()` no encuentra coincidencias cuando se le pasa una tupla como argumento exacto, en vez de comodín) que dejaba `s_q` siempre en 0. Se validó el modelo con una instancia reducida (1 avión, 1 commodity) con resultado óptimo correcto.
+
+
