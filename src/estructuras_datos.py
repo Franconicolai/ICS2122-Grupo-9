@@ -22,7 +22,8 @@ def cargar_estructuras_funcionales(ruta_bd: str) -> Dict[str, Any]:
             'flota': leer_tabla(conexion, 'fleet').to_dict('records'),
             'tramos': leer_tabla(conexion, 'legs_catalog').to_dict('records'),
             'demanda': leer_tabla(conexion, 'demand_daily').to_dict('records'),
-            'derechos': leer_tabla(conexion, 'traffic_rights').to_dict('records')
+            'derechos': leer_tabla(conexion, 'traffic_rights').to_dict('records'),
+            'demanda_semanal': leer_tabla(conexion, 'demand_weekly').to_dict('records')
         }
 
     # Aeropuertos
@@ -40,8 +41,17 @@ def cargar_estructuras_funcionales(ruta_bd: str) -> Dict[str, Any]:
     # Tramos
     E = list(map(lambda fila: (fila['origin'], fila['dest']), dfs['tramos']))
 
+    #tarifa real por kg, por par origen-destino
+    tarifa_origdest = dict(map(lambda fila: ((fila['origin'], fila['dest']), fila['tariff_usd_per_kg']), dfs['demanda_semanal']))
+
+    dias = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+
+    #expansión cada fila origen-destino en una entrada por cada día con demanda positiva
+    filas_expandidas = list(filter(lambda t: t[3]>0, itertools.chain.from_iterable(map(lambda fila: map(
+        lambda item: (fila['origin'], fila['dest'], item[0], fila[item[1]]), enumerate(dias, start=1)),dfs['demanda']))))
+
     # Demanda
-    Q = list(map(lambda fila: (fila['origin'], fila['dest']), dfs['demanda']))
+    Q = list(map(lambda t: (t[0], t[1], t[2]), filas_expandidas))
 
     # Tiempo de vuelo
     tau_e = dict(map(lambda fila: ((fila['origin'], fila['dest']), fila['block_hours']), dfs['tramos']))
@@ -66,16 +76,10 @@ def cargar_estructuras_funcionales(ruta_bd: str) -> Dict[str, Any]:
     C_consecutivos = list(filter(lambda par: par[0][1] == par[1][0], itertools.product(E, E)))
 
     # Demanda diaria
-    D_q = dict(map(
-        lambda fila: (
-            (fila['origin'], fila['dest']), 
-            sum(map(lambda dia: fila[dia], ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']))
-        ),
-        dfs['demanda']
-    ))
+    D_q = dict(map(lambda t: ((t[0], t[1], t[2]), t[3]), filas_expandidas))
     
-    # Ingreso constante para prueba
-    r_q = dict(map(lambda q: (q, 1.5), Q)) # Ingreso constante para prueba
+    # Tarifa real por commodity
+    r_q = dict(map(lambda t: ((t[0], t[1], t[2]), tarifa_origdest[(t[0], t[1])]), filas_expandidas))
 
     # Capacidad Q_ke: Cruzar flota con tramos
     Q_ke = dict(map(
