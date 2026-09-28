@@ -86,4 +86,20 @@ Nota: quedaron todas las restricciones comentadas.
 - **Fecha**: 22 al 25 de Septiembre.
 - **Desarrollo**: Se conectó `estructuras_datos.py` con la guía de modelo nueva (posición-indexada, transbordo general): se agregó `Ek` (tramos factibles por avión, filtrado por derechos de tráfico y autonomía de 9h), `S_max_k` (cota de posiciones por avión, reemplazando el `S_max=5` fijo), y se reconstruyó `Q`/`D_q`/`r_q` como commodities diarios `(origen, destino, día)` con tarifa real de `demand_weekly` (antes `r_q=1.5` fijo para todos). Se conectó `gurobi_model.py` con estas estructuras usando índices dispersos (`KS`, `KS_menos`, `KSE`, `QKS`) en vez de `itertools.product` sobre listas globales, y se activaron las restricciones núcleo de programación de aeronaves y flujo básico de carga (R1, R2, R3a/b, R4 simplificado, R5, R6a/b, R11, R8, R20a/b, R21a/b, R23, R25, R26a/b/c). Se corrigió además un bug de `gurobipy` (`.sum()`/`.select()` no encuentra coincidencias cuando se le pasa una tupla como argumento exacto, en vez de comodín) que dejaba `s_q` siempre en 0. Se validó el modelo con una instancia reducida (1 avión, 1 commodity) con resultado óptimo correcto.
 
+**Hito 5**
+- **Integrante**: Sara Kita
+- **Fecha**: 28 de Septiembre.
+- **Desarrollo**: Se cambió la metodología de solución, dado que el MILP posición-indexado no escala a la flota completa (19 aviones, 44 aeropuertos): su relajación lineal es débil por las restricciones de tiempo con "M grande" y la simetría entre aviones. El MILP integrado se reformuló como una **red de flujo espacio-tiempo** (semana cíclica discretizada en bloques de `DT` horas; el tiempo mínimo en tierra queda incluido en el largo de cada arco de vuelo), resuelta en dos pasos. Se agregaron a `src/`:
+  - `red_espacio_tiempo.py`: paso 1, red agregada por operador con flujo de aviones, carga directa, demanda diaria, mínimo de 10 t por vuelo, frecuencias mínimas y mantenimiento como conteo.
+  - `reoptimizacion_por_avion.py`: paso 2, reoptimiza operador por operador con aviones individuales, exigiendo rotación semanal cerrada por avión, ventana de mantenimiento exacta y payload propio. Luego valida el itinerario completo.
+  - `asignacion_aviones.py`: primer intento del paso 2 (repartir la solución agregada entre aviones sin reoptimizar), que resultó infactible. Se conserva como evidencia y porque contiene funciones auxiliares que usa el paso 2.
+  - `solver_util.py`: permite elegir el solver con la variable `SOLVER` (`gurobi` o `highs`).
+  - `validador.py`: validador independiente desarrollado por Jose en el Hito 4. Se subió porque el paso 2 lo necesita.
+
+  Se creó la carpeta `results/` con los resultados de la corrida con Gurobi (`sol_dt2_poravion_kpis.json`, `sol_dt2_poravion_itinerario.csv` y las soluciones en `.pkl`), además de `results/highs_referencia/` con la misma corrida hecha con HiGHS, para comparar solvers. No se modificó ningún archivo existente. Con bloques de 2 h y Gurobi se obtuvo un itinerario completo de los 19 aviones, aprobado por el validador sin violaciones, con un margen semanal de 5.779.750 USD (+129,9 % sobre el caso base), 84,4 % de la demanda servida y las 25 frecuencias mínimas cumplidas.
+
+  **Todos los detalle de la formulación, los resultados por operador, los supuestos, las limitaciones y las instrucciones de ejecución está en `docs/README_red_espacio_tiempo.md`.**
+
+Nota: el método actual solo considera carga en vuelo directo (97,7 % de las toneladas). Queda pendiente incorporar el transbordo en MIA, que la ayudante confirmó que está permitido, y la distribución equilibrada de frecuencias (Etapa 3).
+
 
