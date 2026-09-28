@@ -1,0 +1,64 @@
+{
+  "kpis": {
+    "margen_usd": 5647600.994000005,
+    "ingresos_usd": 17556012.99999998,
+    "costo_vuelos_usd": 11430203.205999978,
+    "costo_handling_usd": 478208.79999999935,
+    "toneladas": 11388.09999999998,
+    "pct_demanda": 85.1332157167632,
+    "vuelos": 338,
+    "aviones_usados": 18,
+    "horas_bloque": 1332.0599999999995,
+    "factor_ocupacion_pct": 64.69041127016577,
+    "frecuencias_cumplidas": "25/25",
+    "toneladas_recortadas_regla_90min": 0.0
+  },
+  "validador_ok": true,
+  "violaciones": [],
+  "por_operador": [
+    {
+      "operador": "BRA",
+      "aviones": 2,
+      "tramos_candidatos": 127,
+      "enteras": 22592,
+      "estado": "Optimal",
+      "objetivo": 834870.3220000024,
+      "cota": 835193.5779926181,
+      "gap": 0.00038719305752937154,
+      "tiempo_s": 12.15922737121582
+    },
+    {
+      "operador": "PAC",
+      "aviones": 2,
+      "tramos_candidatos": 105,
+      "enteras": 18978,
+      "estado": "Optimal",
+      "objetivo": 739205.5220000022,
+      "cota": 742838.787379847,
+      "gap": 0.004915095019872978,
+      "tiempo_s": 7.93305230140686
+    },
+    {
+      "operador": "SUR",
+      "aviones": 7,
+      "tramos_candidatos": 115,
+      "enteras": 74417,
+      "estado": "Time limit reached",
+      "objetivo": 3693009.6609999957,
+      "cota": 3917613.907653285,
+      "gap": 0.06081875415199186,
+      "tiempo_s": 420.0789861679077
+    },
+    {
+      "operador": "AND",
+      "aviones": 8,
+      "tramos_candidatos": 112,
+      "enteras": 79520,
+      "estado": "Time limit reached",
+      "objetivo": 380515.4890000165,
+      "cota": 393856.34020196775,
+      "gap": 0.035059942597896965,
+      "tiempo_s": 420.2759213447571
+    }
+  ]
+}
