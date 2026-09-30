@@ -23,11 +23,13 @@ from scipy.sparse import csc_matrix
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))   # validador.py de José está en esta misma carpeta
 from validador import validar
-from asignacion_aviones import corregir_90min, a_formato_validador
+from asignacion_carga_multitramos import asignar_carga_multitramos
 
 RAW = os.environ.get('RAW', os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data', 'raw data'))
 TLIM_OP = float(os.environ.get('TLIM_OP', 300))
 AMPLIAR = os.environ.get('AMPLIAR', '0') == '1'   # 1: usar todos los tramos del operador (modelo completo por avión)
+TTR_H = float(os.environ.get('TTR_H', 2.0))       # provisional; debe confirmarse con el mandante
+TLIM_CARGA = float(os.environ.get('TLIM_CARGA', 300))
 
 
 def resolver_mip(lb, ub, obj, integ, rows, tlim, gap=0.01, log=False):
@@ -175,10 +177,22 @@ def main(pkl):
                 vuelos[op][(e, t)] += 1; carga[op][(e, t)] += xv
             itinerario[k] = legs
 
-    perd = corregir_90min(itinerario, cargas, payload, reglas)
-    s = a_formato_validador(itinerario, cargas)
+    # Asignación global: ve simultáneamente todos los vuelos individuales y permite
+    # carga directa, through y transbordos entre aeronaves u operadores.
+    multi = asignar_carga_multitramos(
+        itinerario, ruta_raw=RAW, ttr_h=TTR_H, tlim=TLIM_CARGA,
+        log=os.environ.get('LOG_CARGA') == '1')
+    print(f"Carga multitramos: {multi['estado']} | tamaño={multi['tamano']}", flush=True)
+    if not multi['ok']:
+        print('No se pudo obtener una asignación global de carga'); return
+    s = multi['solucion']
+    cargas = defaultdict(float)
+    for registro in s['cargas']:
+        cargas[(registro['k'], registro['s'])] += registro['x']
+    perd = 0.0  # la incompatibilidad lleno-lleno se impone dentro del submodelo de carga
     cfg = {'ciclico': True, 'tat_variable': True, 'min_ton_escala': True, 'mantenimiento': True,
-           'frecuencias': True, 'demanda_diaria': True, 'dist_frecuencias': False}
+           'frecuencias': True, 'demanda_diaria': True, 'dist_frecuencias': False,
+           'transferencias': True, 'ttr_h': TTR_H}
     v = validar(s, cfg, ruta_raw=RAW)
     dem_tot = pd.read_csv(os.path.join(RAW, 'demand_weekly.csv')).tons_week.sum()
     horas = sum(l['t_arr'] - l['t_dep'] for legs in itinerario.values() for l in legs)
@@ -192,19 +206,36 @@ def main(pkl):
           'aviones_usados': sum(1 for l in itinerario.values() if l), 'horas_bloque': horas,
           'factor_ocupacion_pct': 100 * v['toneladas_entregadas'] / cap if cap else 0,
           'frecuencias_cumplidas': f"{sum(freq_real[od] >= f for od, f in fmin.items())}/{len(fmin)}",
-          'toneladas_recortadas_regla_90min': perd}
+          'toneladas_recortadas_regla_90min': perd,
+          'flujo_through_t': multi['estadisticas']['flujo_through_t'],
+          'flujo_transferido_t': multi['estadisticas']['flujo_transferido_t'],
+          'conexiones_transferencia_usadas': multi['estadisticas']['conexiones_transferencia_usadas'],
+          'transferencias_entre_operadores': multi['estadisticas']['transferencias_entre_operadores'],
+          'ttr_h': TTR_H}
     print('Validador OK:', v['ok'], '| violaciones:', len(v['violaciones']))
     for w in v['violaciones'][:25]: print('  -', w)
     for k2, x in kp.items(): print(f'  {k2}: {x}')
     base = pkl.replace('.pkl', '') + ('_poravion_amp' if AMPLIAR else '_poravion')
-    json.dump({'kpis': kp, 'validador_ok': v['ok'], 'violaciones': v['violaciones'], 'por_operador': resumen},
+    json.dump({'kpis': kp, 'validador_ok': v['ok'], 'violaciones': v['violaciones'], 'por_operador': resumen,
+               'modelo_carga': {k: x for k, x in multi.items() if k != 'solucion'}},
               open(base + '_kpis.json', 'w'), indent=2, ensure_ascii=False, default=str)
     filas = [{'avion': k, 'operador': fl.set_index('aircraft_id').operator[k], 'pos': l['pos'],
               'origen': l['tramo'][0], 'destino': l['tramo'][1], 't_dep_h': l['t_dep'], 't_arr_h': l['t_arr'],
               'dia': int(l['t_dep'] // 24) + 1, 'carga_t': round(cargas.get((k, l['pos']), 0.0), 3)}
              for k, legs in itinerario.items() for l in legs]
     pd.DataFrame(filas).to_csv(base + '_itinerario.csv', index=False)
-    pickle.dump({'itinerario': itinerario, 'cargas': cargas}, open(base + '.pkl', 'wb'))
+    filas_carga = []
+    for registro in s['cargas']:
+        q = tuple(registro['q'])
+        filas_carga.append({
+            'avion': registro['k'], 'pos': registro['s'], 'origen_q': q[0], 'destino_q': q[1], 'dia_q': q[2],
+            'a_bordo_t': registro['x'], 'embarque_inicial_t': registro['b'], 'entrega_t': registro['a'],
+            'through_t': registro['w'], 'transfer_in_t': registro.get('transfer_in', 0.0),
+            'transfer_out_t': registro.get('transfer_out', 0.0)})
+    pd.DataFrame(filas_carga).to_csv(base + '_carga_multitramos.csv', index=False)
+    pd.DataFrame(s['transferencias']).to_csv(base + '_transferencias.csv', index=False)
+    pickle.dump({'itinerario': itinerario, 'cargas': dict(cargas), 'solucion_carga': s,
+                 'transferencias': s['transferencias'], 'ttr_h': TTR_H}, open(base + '.pkl', 'wb'))
     print('Exportado', base)
 
 

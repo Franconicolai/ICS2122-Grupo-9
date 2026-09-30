@@ -100,6 +100,24 @@ Nota: quedaron todas las restricciones comentadas.
 
   **Todos los detalle de la formulación, los resultados por operador, los supuestos, las limitaciones y las instrucciones de ejecución está en `docs/README_red_espacio_tiempo.md`.**
 
-Nota: el método actual solo considera carga en vuelo directo (97,7 % de las toneladas). Queda pendiente incorporar el transbordo en MIA, que la ayudante confirmó que está permitido, y la distribución equilibrada de frecuencias (Etapa 3).
+**Hito 6**
+- **Integrante**: Vicente Alvarado
+- **Fecha**: 29 de Septiembre.
+- **Desarrollo**: Se extendió la segunda etapa de la red espacio-tiempo para incorporar una asignación global de carga multitramos sobre los itinerarios individuales. Se agregó `src/asignacion_carga_multitramos.py`, que observa simultáneamente los vuelos de todos los operadores y permite vuelo directo, continuación `through` en vuelos consecutivos del mismo avión, transbordos entre aeronaves del mismo operador y transbordos entre operadores. Se implementaron las siguientes reglas:
+  - conservación de carga por commodity diario en cada vuelo;
+  - capacidad individual por aeronave y mínimo de 10 t por vuelo cargado;
+  - embarque inicial únicamente en el origen y día correspondiente, e ingreso solamente al entregar en el destino;
+  - continuación `through` sin nuevo costo de handling ni tiempo de transbordo;
+  - transbordos con coincidencia de aeropuerto, soporte de ambos operadores según `interchange_airports.csv` y tiempo mínimo configurable mediante `TTR_H`;
+  - prohibición de carga, descarga y transbordo comercial en PTY y SID;
+  - cobro de handling al operador receptor cuando la carga cambia de avión;
+  - cumplimiento del TAT de 90 min cuando dos vuelos consecutivos se encuentran llenos.
 
+  También se modificaron:
+  - `reoptimizacion_por_avion.py`: ejecuta automáticamente la asignación global después de construir los itinerarios individuales y exporta el detalle de carga y transferencias;
+  - `validador.py`: valida independientemente los balances de transferencia, ubicación, soporte operacional, `TTR_H`, costos de handling y cierre semanal lleno–lleno;
+  - `tests/`: se agregaron 8 pruebas automáticas para vuelos directos, conexiones `through`, transbordos entre operadores y casos inválidos por tiempo, soporte o escala técnica.
 
+  Se ejecutó nuevamente el pipeline completo con bloques de 2 h y Gurobi. El paso 1 finalizó por límite de tiempo con un margen agregado de 5.454.147 USD, 332 vuelos, 82,4 % de la demanda, las 25 frecuencias mínimas cumplidas y un gap de 3,16 %. En el paso 2, BRA y PAC terminaron dentro del criterio de optimalidad; SUR terminó con gap de 1,02 % y AND con gap de 11,64 %. La asignación multitramos final generó 340 vuelos utilizando 17 de 19 aviones, entregó 11.659,0 t (87,2 % de la demanda) y obtuvo un margen semanal validado de **6.260.460 USD**, con 25 de 25 frecuencias, 26 conexiones de transbordo utilizadas, 16 de ellas entre operadores, y **0 violaciones** en el validador independiente.
+
+  Los resultados se guardaron en `results/verificacion_sol_dt2*`, incluyendo el itinerario, KPIs, carga por commodity, transferencias y soluciones `.pkl`, sin reemplazar los resultados anteriores. El valor `TTR_H=2` h y la interpretación de `interchange_airports.csv` como soporte operacional se mantienen como supuestos provisionales que deben confirmarse con el mandante. Los itinerarios de los pasos 1 y 2 todavía se construyen inicialmente con una aproximación de carga directa; la carga multitramos se optimiza globalmente sobre los vuelos resultantes.

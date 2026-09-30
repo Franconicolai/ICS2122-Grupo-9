@@ -32,6 +32,7 @@ def _cargar_raw(ruta_raw: str) -> Dict[str, Any]:
                                (datetime.fromisoformat(r.start_datetime) - inicio).total_seconds() / 3600.0,
                                (datetime.fromisoformat(r.end_datetime) - inicio).total_seconds() / 3600.0)
     dw = rd('demand_weekly.csv')
+    intercambio = rd('interchange_airports.csv')
     return {
         'reglas': reglas,
         'op': dict(zip(fleet.aircraft_id, fleet.operator)),
@@ -47,11 +48,14 @@ def _cargar_raw(ruta_raw: str) -> Dict[str, Any]:
         'demanda_diaria': {(r.origin, r.dest, d): float(getattr(r, c))
                            for r in rd('demand_daily.csv').itertuples()
                            for d, c in enumerate(['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'], start=1)},
+        'soporte': {(r.airport, operador): bool(getattr(r, operador))
+                    for r in intercambio.itertuples()
+                    for operador in intercambio.columns if operador != 'airport'},
         'inicio': inicio,
     }
 
 
-def validar(solucion: Dict[str, Any], config: Optional[Dict[str, bool]] = None,
+def validar(solucion: Dict[str, Any], config: Optional[Dict[str, Any]] = None,
             ruta_raw: Optional[str] = None, aviones: Optional[List[str]] = None,
             freq_exigibles: Optional[Dict] = None) -> Dict[str, Any]:
     """
@@ -63,7 +67,7 @@ def validar(solucion: Dict[str, Any], config: Optional[Dict[str, bool]] = None,
     freq_exigibles : {(o,d): f} frecuencias exigidas en la instancia (por defecto todas las de la base).
     """
     cfg = {'ciclico': True, 'tat_variable': True, 'min_ton_escala': True, 'mantenimiento': True, 'frecuencias': True,
-           'demanda_diaria': False, 'dist_frecuencias': False}
+           'demanda_diaria': False, 'dist_frecuencias': False, 'transferencias': True}
     cfg.update(config or {})
     ruta_raw = ruta_raw or os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data', 'raw data')
     R = _cargar_raw(ruta_raw)
@@ -82,10 +86,53 @@ def validar(solucion: Dict[str, Any], config: Optional[Dict[str, bool]] = None,
     # carga por (k, s) y por commodity
     carga = {}
     for c in solucion['cargas']:
-        carga[(c['k'], c['s'], c['q'])] = c
+        q = tuple(c['q'])
+        c = dict(c, q=q)
+        carga[(c['k'], c['s'], q)] = c
     carga_vuelo = {}
     for (k, s, q), c in carga.items():
         carga_vuelo[(k, s)] = carga_vuelo.get((k, s), 0.0) + c['x']
+
+    # Índice de vuelos para validar conexiones entre aeronaves.
+    vuelo_pos = {(k, l['pos']): l for k, legs in it.items() for l in legs}
+    transfer_in = {}
+    transfer_out = {}
+    transferencias = solucion.get('transferencias', [])
+    ttr_h = solucion.get('ttr_h', cfg.get('ttr_h'))
+    for tr in transferencias:
+        q = tuple(tr['q'])
+        toneladas = float(tr['tons'])
+        origen = (tr['from_k'], int(tr['from_s']))
+        receptor = (tr['to_k'], int(tr['to_s']))
+        clave_salida = (origen[0], origen[1], q)
+        clave_entrada = (receptor[0], receptor[1], q)
+        if toneladas <= TOL:
+            viol.append(f"transferencia {origen}->{receptor} de {q}: toneladas no positivas")
+            continue
+        if not cfg['transferencias']:
+            viol.append(f"transferencia {origen}->{receptor} de {q}: transferencias desactivadas")
+        if origen[0] == receptor[0]:
+            viol.append(f"transferencia {origen}->{receptor} de {q}: no cambia de avión")
+        if origen not in vuelo_pos or receptor not in vuelo_pos:
+            viol.append(f"transferencia {origen}->{receptor} de {q}: vuelo inexistente")
+            continue
+        llega, sale = vuelo_pos[origen], vuelo_pos[receptor]
+        aeropuerto = llega['tramo'][1]
+        if aeropuerto != sale['tramo'][0] or tr.get('airport', aeropuerto) != aeropuerto:
+            viol.append(f"transferencia {origen}->{receptor} de {q}: aeropuertos no coinciden")
+        if aeropuerto in tecnicos:
+            viol.append(f"transferencia {origen}->{receptor} de {q}: aeropuerto técnico {aeropuerto}")
+        op_origen, op_receptor = R['op'][origen[0]], R['op'][receptor[0]]
+        if not R['soporte'].get((aeropuerto, op_origen), False):
+            viol.append(f"transferencia {origen}->{receptor} de {q}: {op_origen} sin soporte en {aeropuerto}")
+        if not R['soporte'].get((aeropuerto, op_receptor), False):
+            viol.append(f"transferencia {origen}->{receptor} de {q}: {op_receptor} sin soporte en {aeropuerto}")
+        if ttr_h is None:
+            viol.append(f"transferencia {origen}->{receptor} de {q}: falta definir Ttr")
+        elif sale['t_dep'] < llega['t_arr'] + float(ttr_h) - TOL:
+            viol.append(f"transferencia {origen}->{receptor} de {q}: no cumple Ttr={float(ttr_h):.2f} h")
+        transfer_out[clave_salida] = transfer_out.get(clave_salida, 0.0) + toneladas
+        transfer_in[clave_entrada] = transfer_in.get(clave_entrada, 0.0) + toneladas
 
     costo_vuelos = 0.0
     freq_real = {}
@@ -139,8 +186,18 @@ def validar(solucion: Dict[str, Any], config: Optional[Dict[str, bool]] = None,
         if cfg['ciclico']:
             if legs[-1]['tramo'][1] != legs[0]['tramo'][0]:
                 viol.append(f"{k}: rotación no cierra ({legs[0]['tramo'][0]} ... {legs[-1]['tramo'][1]})")
-            if legs[0]['t_dep'] + H - legs[-1]['t_arr'] < tat['default'] - TOL:
-                viol.append(f"{k}: cierre temporal sin TAT suficiente")
+            if cfg['tat_variable']:
+                lleno = lambda s_: carga_vuelo.get((k, s_), 0.0) >= UMBRAL_LLENO * R['payload'][k] - 0.005
+                if legs[-1]['tramo'][1] in tecnicos:
+                    req_cierre = tat['technical_stop']
+                elif lleno(legs[-1]['pos']) and lleno(legs[0]['pos']):
+                    req_cierre = tat['full_in_full_out']
+                else:
+                    req_cierre = tat['default']
+            else:
+                req_cierre = tat['default']
+            if legs[0]['t_dep'] + H - legs[-1]['t_arr'] < req_cierre - TOL:
+                viol.append(f"{k}: cierre temporal sin TAT suficiente ({req_cierre:.3f} h)")
         # mantenimiento
         if cfg['mantenimiento']:
             ap, ini, fin = R['mant'][k]
@@ -167,10 +224,11 @@ def validar(solucion: Dict[str, Any], config: Optional[Dict[str, bool]] = None,
                 continue
             o, de = legs[s]
             prev = d.get(s - 1)
-            entra = c['b'] + (prev['w'] if prev else 0.0)
+            entra = c['b'] + (prev['w'] if prev else 0.0) + transfer_in.get((k, s, q), 0.0)
             if abs(c['x'] - entra) > 1e-5:
                 viol.append(f"{k}: balance de entrada roto {q} pos {s}")
-            if abs(c['x'] - c['a'] - c['w']) > 1e-5:
+            sale_transferido = transfer_out.get((k, s, q), 0.0)
+            if abs(c['x'] - c['a'] - c['w'] - sale_transferido) > 1e-5:
                 viol.append(f"{k}: balance de salida roto {q} pos {s}")
             if c['b'] > 1e-6 and o != q[0]:
                 viol.append(f"{k}: embarca {q} en {o} (origen {q[0]})")
@@ -185,8 +243,18 @@ def validar(solucion: Dict[str, Any], config: Optional[Dict[str, bool]] = None,
                 viol.append(f"{k}: carga en escala técnica {o}")
             if c['a'] > 1e-6 and de in tecnicos:
                 viol.append(f"{k}: descarga en escala técnica {de}")
+            if c['w'] > 1e-6:
+                siguiente = d.get(s + 1)
+                if siguiente is None or s + 1 not in legs:
+                    viol.append(f"{k}: carga through {q} sale de pos {s} sin vuelo consecutivo")
+                elif de != legs[s + 1][0]:
+                    viol.append(f"{k}: carga through {q} no continúa en el mismo aeropuerto desde pos {s}")
             entregado[q] = entregado.get(q, 0.0) + c['a']
             handling += R['cp'][('handling_usd_per_ton', R['op'][k])] * c['b']
+    # Cada transbordo paga handling al operador que recibe la carga.
+    for tr in transferencias:
+        handling += (R['cp'][('handling_usd_per_ton', R['op'][tr['to_k']])]
+                     * float(tr['tons']))
     for q, ton in entregado.items():
         if ton > R['demanda_diaria'][q] + 1e-5:
             viol.append(f"commodity {q}: entregado {ton:.2f} > demanda {R['demanda_diaria'][q]}")
