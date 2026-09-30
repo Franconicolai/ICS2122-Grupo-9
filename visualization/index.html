@@ -185,6 +185,10 @@
 
 <script>
 window.onerror = function(msg, url, line, col, error) {
+    const errDiv = document.createElement('div');
+    errDiv.style.cssText = 'position:fixed;top:0;left:0;z-index:999999;background:red;color:white;padding:20px;font-family:monospace;width:100%;';
+    errDiv.innerHTML = `<strong>Error crítico JS:</strong> ${msg} (Línea: ${line})<br><pre>${error ? error.stack : ''}</pre>`;
+    document.body.appendChild(errDiv);
     console.error(`Error crítico: ${msg} en Línea: ${line}`);
 };
 
@@ -260,7 +264,7 @@ function isMatch(v, ratio) {
 async function initMap() {
     try { 
         // Agregamos un timestamp (cache buster) para asegurar que siempre traiga los datos nuevos
-        const r = await fetch('../data/resources/resultados.json?_t=' + new Date().getTime()); 
+        const r = await fetch('../data/results/visualizacion_actual.json?_t=' + new Date().getTime()); 
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         D = await r.json(); 
     } 
@@ -290,25 +294,28 @@ async function initMap() {
         center: [-60, -15], zoom: 3, dragRotate: false 
     });
 
+    // Quitar loading screen apenas tengamos los datos tabulares listos, ANTES de renderizar
+    document.getElementById('loading').style.display = 'none';
+
+    setupCanvas(); 
+    setupUIEvents(); 
+    populateStaticTabs();
+    
+    setTimeout(() => { if(map) map.resize(); }, 600);
+    requestAnimationFrame(loop);
+    
+    map.on('render', render); 
+    map.on('move', render); 
+    map.on('zoom', render);
+
     map.on('load', () => {
         try {
             map.setPaintProperty('background', 'background-color', '#e2efe6'); 
             map.setPaintProperty('water', 'fill-color', '#ffffff');
-            
             map.setPaintProperty('boundary_country_inner', 'line-color', '#9eb0a4');
             map.setPaintProperty('boundary_country_inner', 'line-opacity', 0.8);
             map.setPaintProperty('boundary_country_outline', 'line-color', '#ffffff');
         } catch(e) { console.warn("No se pudo modificar la paleta", e); }
-
-        setupCanvas(); setupUIEvents(); populateStaticTabs();
-
-        document.getElementById('loading').style.display = 'none';
-        
-        // Forzar resize para evitar glitch de canvas
-        setTimeout(() => map.resize(), 600);
-        
-        requestAnimationFrame(loop);
-        map.on('render', render); map.on('move', render); map.on('zoom', render);
     });
 }
 
@@ -322,7 +329,11 @@ function setupCanvas() {
 }
 
 function render() {
-    if(!ctx || !D) return;
+    if(!ctx || !D || !map) return;
+    
+    // Check if map is ready for projection
+    try { map.project([0,0]); } catch(e) { return; }
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     window._drawnFlights = [];

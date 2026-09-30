@@ -154,6 +154,7 @@ def construir_conexiones(vuelos, por_avion_pos, datos, ttr_h):
 
 
 def _alcanzables(iniciales, adyacencia, campo_destino):
+    """Función _alcanzables: [Descripción pendiente]."""
     vistos = set(iniciales)
     cola = deque(iniciales)
     while cola:
@@ -214,6 +215,7 @@ def resolver_asignacion(itinerario, datos, ttr_h=TTR_H, tlim=TLIM_CARGA,
     idx_x, idx_b, idx_a, idx_c, idx_l, idx_pair = {}, {}, {}, {}, {}, {}
 
     def variable(lim_inf, lim_sup, coef_obj, entera=False):
+        """Función variable: [Descripción pendiente]."""
         indice = len(lb)
         lb.append(lim_inf); ub.append(lim_sup); obj.append(coef_obj); integ.append(bool(entera))
         return indice
@@ -424,11 +426,13 @@ def resolver_asignacion(itinerario, datos, ttr_h=TTR_H, tlim=TLIM_CARGA,
 
 def asignar_carga_multitramos(itinerario, ruta_raw=RAW, ttr_h=TTR_H,
                               tlim=TLIM_CARGA, gap=GAP_CARGA, log=False):
+    """Función asignar_carga_multitramos: [Descripción pendiente]."""
     datos = cargar_datos_carga(ruta_raw)
     return resolver_asignacion(itinerario, datos, ttr_h=ttr_h, tlim=tlim, gap=gap, log=log)
 
 
 def _main(ruta_pickle):
+    """Función _main: [Descripción pendiente]."""
     from validador import validar
 
     entrada = pickle.load(open(ruta_pickle, "rb"))

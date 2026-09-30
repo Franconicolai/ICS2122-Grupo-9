@@ -12,6 +12,7 @@ THREADS = int(os.environ.get('THREADS', 0))
 
 
 def resolver_matriz(lb, ub, obj, integ, A, lo, hi, tlim, gap=0.01, log=True, relax=False):
+    """Función resolver_matriz: [Descripción pendiente]."""
     lb, ub, obj = np.asarray(lb, float), np.asarray(ub, float), np.asarray(obj, float)
     lo, hi = np.asarray(lo, float), np.asarray(hi, float)
     integ = np.asarray(integ, bool) & (not relax)

@@ -19,6 +19,7 @@ UMBRAL_LLENO = 0.95  # supuesto: "lleno" = carga >= 95 % del payload (ver README
 
 
 def _cargar_raw(ruta_raw: str) -> Dict[str, Any]:
+    """Función _cargar_raw: [Descripción pendiente]."""
     rd = lambda f: pd.read_csv(os.path.join(ruta_raw, f))
     with open(os.path.join(ruta_raw, 'ops_rules.yaml'), encoding='utf-8') as f:
         reglas = yaml.safe_load(f)

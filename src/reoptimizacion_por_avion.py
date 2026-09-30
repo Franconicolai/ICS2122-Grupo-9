@@ -33,6 +33,7 @@ TLIM_CARGA = float(os.environ.get('TLIM_CARGA', 300))
 
 
 def resolver_mip(lb, ub, obj, integ, rows, tlim, gap=0.01, log=False):
+    """Función resolver_mip: [Descripción pendiente]."""
     from solver_util import resolver_matriz, filas_a_matriz
     A, lo, hi = filas_a_matriz(rows, len(lb))
     r = resolver_matriz(lb, ub, obj, integ, A, lo, hi, tlim, gap, log=log)
@@ -41,6 +42,7 @@ def resolver_mip(lb, ub, obj, integ, rows, tlim, gap=0.01, log=False):
 
 
 def main(pkl):
+    """Función main: [Descripción pendiente]."""
     P = pickle.load(open(pkl, 'rb'))
     info, sol, DT = P['info'], P['sol'], P['DT']
     T, dur, tau = info['T'], info['dur'], info['tau']
@@ -103,6 +105,7 @@ def main(pkl):
 
         lb, ub, obj, integ, idx = [], [], [], [], {}
         def var(key, l, u, o, i):
+            """Función var: [Descripción pendiente]."""
             idx[key] = len(lb); lb.append(l); ub.append(u); obj.append(o); integ.append(i)
         for k in K:
             var(('u', k), 0, 1, 0.0, 1)

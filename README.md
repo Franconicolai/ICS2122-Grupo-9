@@ -4,19 +4,22 @@
 
 ## Estructura del repositorio
 
-El proyecto está modularizado en cuatro ejes principales (datos, documentación, código fuente y configuración) para separar el procesamiento de la lógica matemática:
+El proyecto está modularizado para separar los datos, el motor matemático de la red espacio-tiempo y la visualización:
 
-- `data/`: Base de datos SQLite y datos de entrada originales.
+- `data/`: Contiene todos los datos requeridos e informados por el modelo.
   - `data.sqlite`: Base de datos principal de trabajo.
-  - `raw_data/`: Resguardo de los datos brutos de entrada.
-- `docs/`: Documentación del proyecto e informes en formato LaTeX (ej. `appendix1.tex`).
-- `src/`: Código fuente del modelo de optimización.
-  - `main.py`: Script para ejecutar exclusivamente el modelo Gurobi sin interfaz web.
-  - `estructuras_datos.py`: Carga y estructuración funcional de datos desde SQLite.
-  - `gurobi_model.py`: Construcción del modelo de optimización (variables, función objetivo y restricciones).
-  - `exportador_resultados.py`: Generación de reportes y extracción de indicadores clave (KPIs).
-- `visualization/`: Interfaz gráfica web interactiva que despliega los resultados del modelo geográficamente.
-  - `main.py`: Script que levanta el servidor web y abre automáticamente la plataforma visual en el navegador.
+  - `raw data/`: Resguardo de los datos brutos de entrada (`airports.csv`, `fleet.csv`, etc.).
+  - `results/`: Directorio donde se guardan las salidas de cada corrida (versionadas por carpeta), incluyendo los `.pkl` de la solución, indicadores KPI y archivos para la visualización.
+- `docs/`: Documentación del proyecto (ej. `README_red_espacio_tiempo.md`).
+- `src/`: Código fuente principal del modelo de optimización.
+  - `red_espacio_tiempo.py`: Primer paso (red agregada por operador).
+  - `reoptimizacion_por_avion.py`: Segundo paso (separación avión por avión).
+  - `asignacion_carga_multitramos.py`: Optimización final y rutero multicommodity de la carga.
+  - `validador.py`: Auditor independiente de reglas logísticas.
+  - `solver_util.py`: Herramientas de conectividad para solvers (HiGHS, Gurobi).
+- `main.py`: **Orquestador central e interactivo (CLI)**. Ejecuta el modelo guiado paso a paso, versiona los resultados y permite visualizar los datos.
+- `visualization/`: Interfaz gráfica web interactiva que despliega los resultados.
+  - `main.py`: Script que levanta el servidor web.
 - **Archivos de configuración**:
   - `.env`: Variables de entorno para configuración (conexión a base de datos, parámetros límite).
   - `.gitignore`: Exclusión de archivos temporales y entornos virtuales.
@@ -56,8 +59,6 @@ Para levantar el servidor web y visualizar los resultados recién exportados en 
 ```bash
 python visualization/main.py
 ```
-
-
 
 ## Bitácora de implementación
 
@@ -121,3 +122,8 @@ Nota: quedaron todas las restricciones comentadas.
   Se ejecutó nuevamente el pipeline completo con bloques de 2 h y Gurobi. El paso 1 finalizó por límite de tiempo con un margen agregado de 5.454.147 USD, 332 vuelos, 82,4 % de la demanda, las 25 frecuencias mínimas cumplidas y un gap de 3,16 %. En el paso 2, BRA y PAC terminaron dentro del criterio de optimalidad; SUR terminó con gap de 1,02 % y AND con gap de 11,64 %. La asignación multitramos final generó 340 vuelos utilizando 17 de 19 aviones, entregó 11.659,0 t (87,2 % de la demanda) y obtuvo un margen semanal validado de **6.260.460 USD**, con 25 de 25 frecuencias, 26 conexiones de transbordo utilizadas, 16 de ellas entre operadores, y **0 violaciones** en el validador independiente.
 
   Los resultados se guardaron en `results/verificacion_sol_dt2*`, incluyendo el itinerario, KPIs, carga por commodity, transferencias y soluciones `.pkl`, sin reemplazar los resultados anteriores. El valor `TTR_H=2` h y la interpretación de `interchange_airports.csv` como soporte operacional se mantienen como supuestos provisionales que deben confirmarse con el mandante. Los itinerarios de los pasos 1 y 2 todavía se construyen inicialmente con una aproximación de carga directa; la carga multitramos se optimiza globalmente sobre los vuelos resultantes.
+
+**Hito 7**
+- **Integrante**: Franco Nicolai
+- **Fecha**: 30 de Septiembre de 2026.
+- **Desarrollo**: Refactorización profunda de la base de código para establecer un flujo central unificado y limpio. Se eliminaron todos los archivos obsoletos o redundantes (como `gurobi_model.py`, `estructuras_datos.py`, `database.sqlite`, scripts de asignación sin uso, etc.) y se documentaron los archivos restantes en `src/` con docstrings completos. Se reescribió `main.py` transformándolo en un orquestador interactivo (CLI) que ejecuta secuencialmente los pasos de optimización y gestiona la exportación de resultados ordenados en versiones dentro de `data/results/`. Finalmente, se solucionó un problema crítico de vinculación entre los resultados generados y el entorno gráfico (`visualization/index.html`), inyectando de forma automatizada las coordenadas geográficas de los aeropuertos y corrigiendo los fallos en la animación de las rutas.

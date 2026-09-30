@@ -37,6 +37,7 @@ H = 168.0
 
 
 def cargar():
+    """Función cargar: [Descripción pendiente]."""
     rd = lambda f: pd.read_csv(os.path.join(RAW, f))
     ap, fl, lg = rd('airports.csv'), rd('fleet.csv'), rd('legs_catalog.csv')
     dw, dd, tr = rd('demand_weekly.csv'), rd('demand_daily.csv'), rd('traffic_rights.csv')
@@ -46,6 +47,7 @@ def cargar():
 
 
 def construir(DT=DT):
+    """Función construir: [Descripción pendiente]."""
     ap, fl, lg, dw, dd, tr, cp, lf, mt, reglas = cargar()
     T = int(round(H / DT))
     pais = dict(zip(ap.iata, ap.country))
@@ -84,6 +86,7 @@ def construir(DT=DT):
     # ---------------- variables ----------------
     cols_lb, cols_ub, cols_obj, cols_int, names = [], [], [], [], []
     def var(nombre, lb, ub, obj, entera):
+        """Función var: [Descripción pendiente]."""
         names.append(nombre); cols_lb.append(lb); cols_ub.append(ub); cols_obj.append(obj); cols_int.append(entera)
         return len(names) - 1
 
@@ -155,6 +158,7 @@ def construir(DT=DT):
 
 
 def resolver(modelo, info, tlim=TLIM, gap=GAP, relax=False):
+    """Función resolver: [Descripción pendiente]."""
     from solver_util import resolver_matriz, filas_a_matriz, SOLVER
     cols_lb, cols_ub, cols_obj, cols_int, rows = modelo
     A, lo, hi = filas_a_matriz(rows, len(cols_lb))
@@ -164,6 +168,7 @@ def resolver(modelo, info, tlim=TLIM, gap=GAP, relax=False):
 
 
 def kpis(info, sol):
+    """Función kpis: [Descripción pendiente]."""
     n, x, nl = info['n'], info['x'], info['nl']
     vuelos = sum(round(sol[j]) for j in n.values())
     ton = sum(sol[j] for j in x.values())
@@ -184,17 +189,23 @@ def kpis(info, sol):
             'frecuencias_cumplidas': f'{freq_ok}/{len(info["fmin"])}'}
 
 
-if __name__ == '__main__':
+def run_paso_1(salida_pkl=None):
     t0 = time.time()
     modelo, info = construir()
     print(f'Construcción: {time.time()-t0:.1f}s, DT={DT} h, T={info["T"]} bloques')
-    relax = '--lp' in sys.argv
-    r = resolver(modelo, info, relax=relax)
+    r = resolver(modelo, info, relax=False)
     print({k: v for k, v in r.items() if k != 'sol'})
     if r['sol'] is not None:
         for k, v in kpis(info, r['sol']).items(): print(f'  {k}: {v}')
         import pickle
-        salida = os.environ.get('OUT', f'sol_dt{DT:g}.pkl')
+        import os
+        salida = salida_pkl or os.environ.get('OUT', os.path.join('data', 'results', f'sol_dt{DT:g}.pkl'))
+        os.makedirs(os.path.dirname(salida), exist_ok=True)
         pickle.dump({'info': info, 'sol': list(r['sol']),
                      'res': {k: v for k, v in r.items() if k != 'sol'}, 'DT': DT}, open(salida, 'wb'))
         print('guardado', salida)
+        return True
+    return False
+
+if __name__ == '__main__':
+    run_paso_1()
