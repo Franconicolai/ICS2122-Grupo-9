@@ -30,14 +30,46 @@ TLIM_OP = float(os.environ.get('TLIM_OP', 300))
 AMPLIAR = os.environ.get('AMPLIAR', '0') == '1'   # 1: usar todos los tramos del operador (modelo completo por avión)
 TTR_H = float(os.environ.get('TTR_H', 2.0))       # provisional; debe confirmarse con el mandante
 TLIM_CARGA = float(os.environ.get('TLIM_CARGA', 300))
+START_PKL = os.environ.get('START_PKL')    # .pkl "_poravion.pkl" de un paso 2 previo
+SUFIJO = os.environ.get('SUFIJO', '')      # para no pisar resultados
+BONO_PKL = os.environ.get('BONO_PKL') 
 
 
-def resolver_mip(lb, ub, obj, integ, rows, tlim, gap=0.01, log=False):
+def resolver_mip(lb, ub, obj, integ, rows, tlim, gap=0.01, log=False, start=None):
     from solver_util import resolver_matriz, filas_a_matriz
     A, lo, hi = filas_a_matriz(rows, len(lb))
-    r = resolver_matriz(lb, ub, obj, integ, A, lo, hi, tlim, gap, log=log)
+    r = resolver_matriz(lb, ub, obj, integ, A, lo, hi, tlim, gap, log=log, start=start)
     r.update(nvars=len(lb), nint=sum(integ), nrows=len(rows))
     return r
+
+def armar_start(prev, K, idx, nvars, T, DT, dur, dem_res, minton, payload):
+    """Vector inicial (u, z, zl, x, g) desde un itinerario por avión previo."""
+    st = np.zeros(nvars)
+    restante = defaultdict(float, dem_res)
+    usados = descartados = 0
+    for k in K:
+        legs = sorted(prev['itinerario'].get(k, []), key=lambda l: l['t_dep'])
+        if not legs: continue
+        fl_k = [(int(round(l['t_dep'] / DT)), tuple(l['tramo']), l['pos']) for l in legs]
+        if any(('z', k, e, t) not in idx for t, e, _ in fl_k):
+            descartados += 1; continue
+        st[idx[('u', k)]] = 1
+        for t, e, p in fl_k:
+            st[idx[('z', k, e, t)]] = 1
+            if ('x', k, e, t) in idx:
+                q = (e[0], e[1], int(t * DT // 24))
+                v = min(prev['cargas'].get((k, p), 0.0), payload[k], max(restante[q], 0.0))
+                if v >= minton - 1e-6:
+                    st[idx[('x', k, e, t)]] = v
+                    st[idx[('zl', k, e, t)]] = 1
+                    restante[q] -= v
+        for i, (t, e, _) in enumerate(fl_k):
+            llegada = t + dur[e]
+            salida_sig = fl_k[i + 1][0] if i + 1 < len(fl_k) else fl_k[0][0] + T
+            for s in range(llegada, salida_sig):
+                st[idx[('g', k, e[1], s % T)]] = 1
+        usados += 1
+    return st, usados, descartados
 
 
 def main(pkl):
@@ -46,6 +78,10 @@ def main(pkl):
     T, dur, tau = info['T'], info['dur'], info['tau']
     c, fee, fuel_h, tarifa = info['c'], info['fee'], info['fuel_h'], info['tarifa']
     dem, fmin = info['dem'], info['fmin']
+
+    prev = pickle.load(open(START_PKL, 'rb')) if START_PKL else None
+    bono = pickle.load(open(BONO_PKL, 'rb')) if BONO_PKL else {}   # bono: solo nivel 2
+
     fl = pd.read_csv(os.path.join(RAW, 'fleet.csv'))
     mt = pd.read_csv(os.path.join(RAW, 'maintenance.csv'))
     reglas = yaml.safe_load(open(os.path.join(RAW, 'ops_rules.yaml'), encoding='utf-8'))
@@ -111,7 +147,7 @@ def main(pkl):
                 carga_ok = e in tarifa and e[0] not in tec and e[1] not in tec
                 for t in range(T):
                     if t + dur[e] > T: continue
-                    var(('z', k, e, t), 0, 1, -costo, 1)
+                    var(('z', k, e, t), 0, 1, -costo + bono.get((op, e, t), 0.0), 1)
                     if carga_ok and dem_res.get((e[0], e[1], int(t * DT // 24)), 0) > minton - 1e-6:
                         var(('zl', k, e, t), 0, 1, 0.0, 1)
                         var(('x', k, e, t), 0, payload[k], 1000 * tarifa[e] - c[('handling_usd_per_ton', op)], 0)
@@ -156,7 +192,11 @@ def main(pkl):
             if f > 0 and os.environ.get('SIN_FREQ') != '1':
                 rows.append(({j: 1 for j in por_od.get(od, [])}, f, np.inf))
         # romper simetría: aviones idénticos (mismo payload y aeropuerto de mantenimiento) se ordenan por uso
-        r = resolver_mip(lb, ub, obj, integ, rows, TLIM_OP, log=os.environ.get('LOG') == '1')
+        st = None
+        if prev is not None:
+            st, nu, nd = armar_start(prev, K, idx, len(lb), T, DT, dur, dem_res, minton, payload)
+            print(f'{op}: warm start con {nu} aviones ({nd} descartados)', flush=True)
+        r = resolver_mip(lb, ub, obj, integ, rows, TLIM_OP, log=os.environ.get('LOG') == '1', start=st)
         print(f"{op}: {len(K)} aviones, {len(cand)} tramos candidatos, {r['nint']} enteras, {r['nrows']} restr. "
               f"-> {r['estado']} obj={r['obj']} cota={(r['cota'] or 0):.0f} gap={r['gap']} t={r['tiempo']:.0f}s", flush=True)
         resumen.append({'operador': op, 'aviones': len(K), 'tramos_candidatos': len(cand), 'enteras': r['nint'],
@@ -215,7 +255,7 @@ def main(pkl):
     print('Validador OK:', v['ok'], '| violaciones:', len(v['violaciones']))
     for w in v['violaciones'][:25]: print('  -', w)
     for k2, x in kp.items(): print(f'  {k2}: {x}')
-    base = pkl.replace('.pkl', '') + ('_poravion_amp' if AMPLIAR else '_poravion')
+    base = pkl.replace('.pkl', '') + ('_poravion_amp' if AMPLIAR else '_poravion') + SUFIJO
     json.dump({'kpis': kp, 'validador_ok': v['ok'], 'violaciones': v['violaciones'], 'por_operador': resumen,
                'modelo_carga': {k: x for k, x in multi.items() if k != 'solucion'}},
               open(base + '_kpis.json', 'w'), indent=2, ensure_ascii=False, default=str)

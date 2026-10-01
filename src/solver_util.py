@@ -11,7 +11,7 @@ SOLVER = os.environ.get('SOLVER', 'highs').lower()
 THREADS = int(os.environ.get('THREADS', 0))
 
 
-def resolver_matriz(lb, ub, obj, integ, A, lo, hi, tlim, gap=0.01, log=True, relax=False):
+def resolver_matriz(lb, ub, obj, integ, A, lo, hi, tlim, gap=0.01, log=True, relax=False, start=None):
     lb, ub, obj = np.asarray(lb, float), np.asarray(ub, float), np.asarray(obj, float)
     lo, hi = np.asarray(lo, float), np.asarray(hi, float)
     integ = np.asarray(integ, bool) & (not relax)
@@ -34,6 +34,10 @@ def resolver_matriz(lb, ub, obj, integ, A, lo, hi, tlim, gap=0.01, log=True, rel
         if eq.any(): m.addConstr(A[eq] @ x == lo[eq])
         if ge.any(): m.addConstr(A[ge] @ x >= lo[ge])
         if le.any(): m.addConstr(A[le] @ x <= hi[le])
+
+        if start is not None:
+            x.Start = np.asarray(start, float)
+
         m.optimize()
         ok = m.SolCount > 0
         estados = {GRB.OPTIMAL: 'Optimal', GRB.TIME_LIMIT: 'Time limit reached', GRB.INFEASIBLE: 'Infeasible',
@@ -58,7 +62,12 @@ def resolver_matriz(lb, ub, obj, integ, A, lo, hi, tlim, gap=0.01, log=True, rel
     lp.sense_ = highspy.ObjSense.kMaximize
     if integ.any():
         lp.integrality_ = [highspy.HighsVarType.kInteger if z else highspy.HighsVarType.kContinuous for z in integ]
-    h.passModel(lp); h.run()
+    h.passModel(lp)
+    if start is not None:
+        sol0 = highspy.HighsSolution()
+        sol0.col_value = list(map(float, start))
+        h.setSolution(sol0)
+    h.run()
     inf = h.getInfo()
     ok = inf.primal_solution_status == 2
     return dict(estado=h.modelStatusToString(h.getModelStatus()), obj=inf.objective_function_value if ok else None,
