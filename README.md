@@ -127,3 +127,38 @@ Nota: quedaron todas las restricciones comentadas.
 - **Integrante**: Franco Nicolai
 - **Fecha**: 30 de Septiembre de 2026.
 - **Desarrollo**: Refactorización profunda de la base de código para establecer un flujo central unificado y limpio. Se eliminaron todos los archivos obsoletos o redundantes (como `gurobi_model.py`, `estructuras_datos.py`, `database.sqlite`, scripts de asignación sin uso, etc.) y se documentaron los archivos restantes en `src/` con docstrings completos. Se reescribió `main.py` transformándolo en un orquestador interactivo (CLI) que ejecuta secuencialmente los pasos de optimización y gestiona la exportación de resultados ordenados en versiones dentro de `data/results/`. Finalmente, se solucionó un problema crítico de vinculación entre los resultados generados y el entorno gráfico (`visualization/index.html`), inyectando de forma automatizada las coordenadas geográficas de los aeropuertos y corrigiendo los fallos en la animación de las rutas.
+
+
+
+**Hito 7**
+- **Integrante**: Fernando Mora 
+- **Fecha**: 30 de Septiembre de 2026
+- **Desarrollo**: Se exploraron dos de los "próximos pasos" que dejó Sara en `docs/README_red_espacio_tiempo.md`: la mejora del paso 2 mediante **vueltas adicionales que usen el valor de las conexiones** (punto 2) y la reducción de los gaps de los operadores SUR y AND, que quedaron sin cerrar (11,64 % en AND en el Hito 6). El objetivo era mejorar el margen sin rediseñar el modelo. Ninguna de las dos líneas dio un beneficio, y ambas quedan descartadas. Para no afectar el código actual ni agregar procesos que se demostraron ineficientes quedan los siguientes cambios guardados en la branch Intento-warm-start en caso de querer volver a probarlo o tener de evidencia a futuro.
+
+  **Modificaciones y archivos nuevos:**
+  - `src/solver_util.py`: se agregó el parámetro `start` a `resolver_matriz` para pasar una solución inicial (warm start) a Gurobi (`x.Start`) y a HiGHS (`setSolution`).
+  - `src/reoptimizacion_por_avion.py`: se agregaron las variables de entorno `START_PKL`, `SUFIJO` y `BONO_PKL`; la función `armar_start`, que construye el vector inicial (variables `u`, `z`, `zl`, `x`, `g`) a partir de un itinerario por avión previo; el parámetro `start` en `resolver_mip`; y un término de bonificación en el coeficiente objetivo de las variables de vuelo `z`. El sufijo permite no sobrescribir resultados anteriores.
+  - `src/iterar_conexiones.py` (nuevo): ejecuta el paso 2 de forma iterativa. En cada vuelta calcula, desde la asignación multitramos, una bonificación por vuelo que participa en conexiones (ingreso del commodity repartido por tonelada-hora, solo en vuelos que no son carga directa del tramo), la devuelve al objetivo del paso 2 y conserva siempre la mejor solución validada.
+
+  **Resultados.** Todos los márgenes son los recalculados por el validador independiente (0 violaciones y 25 de 25 frecuencias en todas las corridas):
+
+  | Corrida | Margen validado (USD) | Vuelos | Aviones |
+  |---|---:|---:|---:|
+  | Hito 6 (referencia, Vicente) | 6.260.460 | 340 | 17 |
+  | Warm start, corrida 1 | 6.240.421 | 327 | 17 |
+  | Warm start, corrida 2 (it0, bonificación 0,5) | 6.269.506 | 334 | 18 |
+  | Warm start, corrida 3 (it0, bonificación 0,2) | 6.245.734 | 329 | 16 |
+  | Bonificación 0,5 (it1) | 6.205.050 | 347 | 19 |
+  | Bonificación 0,2 (it1) | 6.231.180 | 331 | 16 |
+
+  **Por qué no hubo beneficio:**
+  1. **El warm start no supera el ruido.** Tres corridas equivalentes (mismo modelo, mismo start, sin bonificación) dieron 6.240.421, 6.269.506 y 6.245.734 USD: una variación de casi 30.000 USD sin cambiar nada del modelo. La diferencia con el Hito 6 (entre −20.000 y +9.000 USD) cae dentro de ese rango, por lo que no puede atribuirse al warm start. El start fue aceptado por Gurobi (`Loaded user MIP start`, 0 aviones descartados), de modo que el resultado no se debe a un start infactible.
+  2. **La bonificación por conexiones empeora el margen.** Con factor 0,5 el margen cayó 64.000 USD respecto de la corrida base: el modelo voló más (347 vuelos, 19 aviones), los ingresos subieron unos 284.000 USD, pero los costos de vuelo subieron unos 337.000 USD, porque el premio inflaba el objetivo sin que las conexiones se materializaran. Con factor 0,2 la caída fue de 14.600 USD, que ya es ruido; es decir, al reducir el premio el efecto negativo desaparece, pero tampoco aparece una mejora. La bonificación es exacta en `(tramo, bloque)`, por lo que cualquier cambio de horario rompe la conexión que se quería proteger. El aparente descenso del gap de AND en esa corrida (11,6 %) no es una mejora real: el premio infla el objetivo y la cota.
+  3. **Los gaps restantes valen poco.** Con los valores de la corrida completa, cerrar por completo los gaps de AND (~92.000 USD) y SUR (~41.000 USD) daría como máximo unos 140.000 USD, cerca del 2 % del margen. En la práctica sería bastante menos, porque las cotas son optimistas.
+
+  **Conclusión principal: el problema es la cota, no la solución encontrada.** En todas las corridas, la cota de AND se mantuvo prácticamente fija (≈ 680.000: 680.347, 679.867, 679.501 y 680.096) y su incumbente tampoco se movió (≈ 587.000–593.000), con un gap de 15–16 %. SUR se comportó igual, con un gap cercano a 1 %. Si el cuello de botella fuera la búsqueda de soluciones, un warm start habría movido la incumbente; como no lo hizo, el límite está en la relajación lineal del modelo por avión, que sigue siendo débil. Por lo tanto, cualquier mejora que actúe solo sobre la solución (warm start, premios en el objetivo, más tiempo de cómputo) no puede reducir el gap de forma significativa. Se descartó además romper la simetría entre aviones de AND: todos tienen distinta ventana de mantenimiento (de 6 a 12 h y en días distintos) y payload de 50, 52 o 54 t, por lo que no son intercambiables y ordenarlos por uso excluiría soluciones válidas.
+
+  **Decisión.** El warm start y `iterar_conexiones.py` (bonificación) quedan **descartados para uso futuro** como vía de mejora del margen: no aportaron beneficio medible y, en el caso de la bonificación, lo empeoraron. Los cambios se conservan en el código como evidencia, pero la solución de referencia sigue siendo la del Hito 6 (6.260.460 USD). Cabe señalar que la diferencia de gaps entre corridas no se traduce en diferencias de margen, pues el gap mide solo la optimización de los vuelos con carga directa, mientras que el margen final proviene de la asignación multitramos posterior (que por sí sola aportó unos 465.000 USD sin cambiar vuelos).
+
+  **Líneas que quedan abiertas** (cambios estructurales, no de ajuste): fortalecer la formulación del paso 2 para subir la cota (por ejemplo, acotar la variable de carga por la demanda residual, que no se llegó a probar de forma aislada), revisar si la regla de 10 t (`min_tons_per_extra_stop`) aplica a todo vuelo cargado o solo a ciertas escalas, e incorporar las conexiones dentro de la decisión de vuelos en lugar de tratarlas como posproceso.
+
