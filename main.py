@@ -113,12 +113,16 @@ def generar_json_visualizacion(results_dir):
         for _, row in itin.iterrows():
             resultados_vis["vuelos"].append({
                 "aeronave": row["avion"],
+                "pos": int(row["pos"]) if "pos" in row else None,
                 "operador": row["operador"] if "operador" in row else row["avion"][:3],
                 "origen": row["origen"],
                 "destino": row["destino"],
                 "hora_salida": row["t_dep_h"],
                 "hora_llegada": row["t_arr_h"],
-                "carga_tons": row["carga_t"]
+                "carga_tons": row["carga_t"],
+                "costo_usd": float(row["costo_usd"]) if "costo_usd" in row else 0.0,
+                "handling_usd": float(row["handling_usd"]) if "handling_usd" in row else 0.0,
+                "ingreso_usd": float(row["ingreso_usd"]) if "ingreso_usd" in row else 0.0
             })
             
         if 'origen_q' in carga.columns and 'destino_q' in carga.columns:

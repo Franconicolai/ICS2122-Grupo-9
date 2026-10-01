@@ -94,6 +94,13 @@
         .cargo-bar-fill { height: 100%; border-radius: 3px; transition: 0.3s; }
 
         .loading { position: fixed; inset: 0; background: #ffffff; z-index: 9999; display: flex; justify-content: center; align-items: center; font-size: 16px; font-weight: 500; color: var(--text-muted); text-align: center; line-height: 1.5; }
+
+        .kpi-panel { display:grid; grid-template-columns:repeat(2,minmax(130px,1fr)); gap:10px 22px; padding:14px 18px; border-radius:16px; border:1px solid var(--border); }
+        .kpi-label { font-size:11px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:.4px; }
+        .kpi-value { font-size:17px; font-weight:700; font-variant-numeric:tabular-nums; letter-spacing:-0.3px; }
+        .kpi-sub { font-size:11px; color:var(--text-muted); font-variant-numeric:tabular-nums; }
+        .kpi-pos { color:#34c759; } .kpi-neg { color:#ff3b30; }
+
     </style>
 </head>
 <body>
@@ -105,6 +112,17 @@
     <div id="map-view">
         <!-- Mapa Superior -->
         <div id="map-section">
+
+            <div class="map-top-left">
+                <div class="kpi-panel glass" id="kpi-panel">
+                    <div id="kpi-margen-wrap"><div class="kpi-label">Margen acumulado</div><div class="kpi-value" id="kpi-margen">-</div><div class="kpi-sub" id="kpi-margen-sub"></div></div>
+                    <div id="kpi-ing-wrap"><div class="kpi-label">Ingresos</div><div class="kpi-value" id="kpi-ing">-</div><div class="kpi-sub" id="kpi-ing-sub"></div></div>
+                    <div id="kpi-cos-wrap"><div class="kpi-label">Costos (vuelo + handling)</div><div class="kpi-value" id="kpi-cos">-</div><div class="kpi-sub" id="kpi-cos-sub"></div></div>
+                    <div><div class="kpi-label">Ocupación acumulada</div><div class="kpi-value" id="kpi-ocup">-</div></div>
+                    <div><div class="kpi-label">Vuelos completados</div><div class="kpi-value" id="kpi-comp">-</div><div class="kpi-sub" id="kpi-aire"></div></div>
+                    <div><div class="kpi-label">Horas de bloque</div><div class="kpi-value" id="kpi-horas">-</div><div class="kpi-sub" id="kpi-avs"></div></div>
+                </div>
+            </div>
 
             <!-- Controles (Arriba Derecha) -->
             <div class="map-top-right">
@@ -273,6 +291,9 @@ async function initMap() {
         return; 
     }
 
+    payloadDict = Object.fromEntries(D.flota.map(a => [a.aircraft_id, a.payload_tons]));
+    hayCostos = D.vuelos.some(v => v.costo_usd > 0);
+
     const oriSet = new Set(), desSet = new Set();
     D.aeropuertos.forEach(a => { apDict[a.iata] = a; airportStats[a.iata] = { out: 0, in: 0 }; });
 
@@ -300,6 +321,7 @@ async function initMap() {
     setupCanvas(); 
     setupUIEvents(); 
     populateStaticTabs();
+    updateTimeUI();
     
     setTimeout(() => { if(map) map.resize(); }, 600);
     requestAnimationFrame(loop);
@@ -446,6 +468,48 @@ function populateStaticTabs() {
     }).join('');
 }
 
+let payloadDict = {}, hayCostos = false;
+
+function calcKPIs() {
+    const k = { ing:0, cos:0, han:0, horas:0, ton:0, cap:0, comp:0, aire:0, usados:new Set() };
+    for (const v of D.vuelos) {
+        if (v.hora_salida > t) continue;
+        const dur = v.hora_llegada - v.hora_salida;
+        const frac = dur > 0 ? Math.min(1, (t - v.hora_salida) / dur) : 1;
+        k.usados.add(v.aeronave);
+        k.horas += dur * frac;
+        k.ton += v.carga_tons * frac;
+        k.cap += (payloadDict[v.aeronave] || 50) * frac;
+        k.ing += (v.ingreso_usd || 0) * frac;
+        k.cos += (v.costo_usd || 0) * frac;
+        k.han += (v.handling_usd || 0) * frac;
+        if (v.hora_llegada <= t) k.comp++; else k.aire++;
+    }
+    return k;
+}
+
+function updateKPIs() {
+    if (!D) return;
+    const k = calcKPIs(), T = D.kpis || {};
+    const costos = k.cos + k.han, margen = k.ing - costos;
+    const el = id => document.getElementById(id);
+    ['kpi-margen-wrap','kpi-ing-wrap','kpi-cos-wrap'].forEach(id => el(id).style.display = hayCostos ? '' : 'none');
+    if (hayCostos) {
+        el('kpi-margen').textContent = FMT_USD(margen);
+        el('kpi-margen').className = 'kpi-value ' + (margen >= 0 ? 'kpi-pos' : 'kpi-neg');
+        el('kpi-ing').textContent = FMT_USD(k.ing);
+        el('kpi-cos').textContent = FMT_USD(costos);
+        if (T.margen_usd != null) el('kpi-margen-sub').textContent = 'Total semana: ' + FMT_USD(T.margen_usd);
+        if (T.ingresos_usd != null) el('kpi-ing-sub').textContent = 'Total semana: ' + FMT_USD(T.ingresos_usd);
+        if (T.costo_vuelos_usd != null) el('kpi-cos-sub').textContent = 'Total semana: ' + FMT_USD(T.costo_vuelos_usd + T.costo_handling_usd);
+    }
+    el('kpi-ocup').textContent = k.cap ? (100 * k.ton / k.cap).toFixed(1) + ' %' : '-';
+    el('kpi-comp').textContent = `${k.comp} / ${D.vuelos.length}`;
+    el('kpi-aire').textContent = `${k.aire} en el aire`;
+    el('kpi-horas').textContent = k.horas.toFixed(0) + ' h';
+    el('kpi-avs').textContent = `${k.usados.size} aviones usados`;
+}
+
 function loop(ts) {
     if(!lastTs) lastTs = ts;
     const dt = ts - lastTs;
@@ -462,6 +526,7 @@ function updateTimeUI() {
     document.getElementById('slider').value = t;
     const di = Math.min(Math.floor(t / 24), 6), h = Math.floor(t % 24), m = Math.floor((t % 1) * 60);
     document.getElementById('time-display').textContent = `${DIAS[di]} ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+    updateKPIs();
 }
 
 function setupUIEvents() {
@@ -524,7 +589,8 @@ function setupUIEvents() {
                 <div class="tt-title"><span class="dot" style="background:${dispCol}; width:10px; height:10px;"></span> ${v.aeronave} <span style="color:var(--text-muted);font-weight:500;margin-left:4px">(${v.operador})</span></div>
                 <div class="tt-row"><span>Ruta</span><span>${v.origen} → ${v.destino}</span></div>
                 <div class="tt-row"><span>Carga</span><span>${FMT_NUM(v.carga_tons)} t</span></div>
-                <div class="tt-row"><span>Costo</span><span>${FMT_USD(v.costo_operacion)}</span></div>
+                <div class="tt-row"><span>Costo vuelo</span><span>${FMT_USD(v.costo_usd || 0)}</span></div>
+                <div class="tt-row"><span>Ingreso asignado</span><span>${FMT_USD(v.ingreso_usd || 0)}</span></div>
                 <div class="cargo-bar-wrapper" style="margin-top:12px;height:4px;background:rgba(0,0,0,0.1)"><div class="cargo-bar-fill" style="width:${pct}%;background:${dispCol}"></div></div>
             `;
         } else {

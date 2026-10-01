@@ -222,11 +222,35 @@ def main(pkl):
     json.dump({'kpis': kp, 'validador_ok': v['ok'], 'violaciones': v['violaciones'], 'por_operador': resumen,
                'modelo_carga': {k: x for k, x in multi.items() if k != 'solucion'}},
               open(base + '_kpis.json', 'w'), indent=2, ensure_ascii=False, default=str)
-    filas = [{'avion': k, 'operador': fl.set_index('aircraft_id').operator[k], 'pos': l['pos'],
+
+    
+    op_de = dict(zip(fl.aircraft_id, fl.operator))
+    leg = {(k, l['pos']): l for k, legs in itinerario.items() for l in legs}
+    costo_v = {(k, p): (fuel_h + c[('ex_fuel_usd_per_block_hour', op_de[k])]) * tau[tuple(l['tramo'])]
+                       + fee[tuple(l['tramo'])[1]] for (k, p), l in leg.items()}
+    hand_v, ing_v, por_q = defaultdict(float), defaultdict(float), defaultdict(list)
+    for reg in s['cargas']:
+        hand_v[(reg['k'], reg['s'])] += (reg['b'] + reg.get('transfer_in', 0.0)) * c[('handling_usd_per_ton', op_de[reg['k']])]
+        por_q[tuple(reg['q'])].append(reg)
+    for q, regs in por_q.items():
+        total = 1000 * tarifa[(q[0], q[1])] * sum(reg['a'] for reg in regs)
+        pesos = [reg['x'] * (leg[(reg['k'], reg['s'])]['t_arr'] - leg[(reg['k'], reg['s'])]['t_dep']) for reg in regs]
+        Wq = sum(pesos)
+        if total <= 0 or Wq <= 0: continue
+        for reg, w in zip(regs, pesos): ing_v[(reg['k'], reg['s'])] += total * w / Wq
+    print(f"[costos por vuelo] vuelos {sum(costo_v.values()):,.0f} vs {v['costo_vuelos']:,.0f} | "
+          f"handling {sum(hand_v.values()):,.0f} vs {v['handling']:,.0f} | "
+          f"ingresos {sum(ing_v.values()):,.0f} vs {v['ingresos']:,.0f}")
+    filas = [{'avion': k, 'operador': op_de[k], 'pos': l['pos'],
               'origen': l['tramo'][0], 'destino': l['tramo'][1], 't_dep_h': l['t_dep'], 't_arr_h': l['t_arr'],
-              'dia': int(l['t_dep'] // 24) + 1, 'carga_t': round(cargas.get((k, l['pos']), 0.0), 3)}
+              'dia': int(l['t_dep'] // 24) + 1, 'carga_t': round(cargas.get((k, l['pos']), 0.0), 3),
+              'costo_usd': round(costo_v[(k, l['pos'])], 2),
+              'handling_usd': round(hand_v[(k, l['pos'])], 2),
+              'ingreso_usd': round(ing_v[(k, l['pos'])], 2)}
              for k, legs in itinerario.items() for l in legs]
     pd.DataFrame(filas).to_csv(base + '_itinerario.csv', index=False)
+
+
     filas_carga = []
     for registro in s['cargas']:
         q = tuple(registro['q'])
