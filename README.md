@@ -162,3 +162,9 @@ Nota: quedaron todas las restricciones comentadas.
 
   **Líneas que quedan abiertas** (cambios estructurales, no de ajuste): fortalecer la formulación del paso 2 para subir la cota (por ejemplo, acotar la variable de carga por la demanda residual, que no se llegó a probar de forma aislada), revisar si la regla de 10 t (`min_tons_per_extra_stop`) aplica a todo vuelo cargado o solo a ciertas escalas, e incorporar las conexiones dentro de la decisión de vuelos en lugar de tratarlas como posproceso.
 
+
+**Hito 8**
+- **Integrante**: Fernando Mora 
+- **Fecha**: 1 de Octubre de 2026
+- **Desarrollo**: Se hicieron un par de cambios en las funciones que producen los resultados json y el html de la animación para añadir los KPI en el tiempo y como evolucionan. Para correrlo se usa el main pero seleccionar NUEVA BASE para ver los KPI porque la vieja no tiene todos los datos necesarios. No está relacionado a los filtros eso si.
+
