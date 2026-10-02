@@ -1,0 +1,8 @@
+{
+  "version": "NUEVA_BASE",
+  "descripcion": "costos_y_kpi",
+  "fecha": "2026-10-01 00:16:27",
+  "solver": "gurobi",
+  "dt": "2",
+  "tlim": "1500"
+}

@@ -9,7 +9,7 @@ from pathlib import Path
 
 # Configuración de variables de entorno por defecto
 os.environ['SOLVER'] = os.environ.get('SOLVER', 'gurobi')
-os.environ['DT'] = os.environ.get('DT', '2')
+os.environ['DT'] = os.environ.get('DT', '1')
 os.environ['TLIM'] = os.environ.get('TLIM', '1500')
 os.environ['TLIM_OP'] = os.environ.get('TLIM_OP', '420')
 

@@ -1,0 +1,8 @@
+{
+  "version": "Ejecución con intervalos de 30 minutos",
+  "descripcion": "Ejecución con intervalos de 30 minutos",
+  "fecha": "2026-10-02 11:26:10",
+  "solver": "gurobi",
+  "dt": "0.5",
+  "tlim": "1500"
+}

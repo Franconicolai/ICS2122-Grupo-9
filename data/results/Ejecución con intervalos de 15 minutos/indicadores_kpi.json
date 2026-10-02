@@ -1,0 +1,93 @@
+{
+  "kpis": {
+    "margen_usd": 6084417.544999846,
+    "ingresos_usd": 17829815.59999984,
+    "costo_vuelos_usd": 11257281.224999996,
+    "costo_handling_usd": 488116.82999999897,
+    "toneladas": 11587.909999999882,
+    "pct_demanda": 86.62692123676725,
+    "vuelos": 335,
+    "aviones_usados": 15,
+    "horas_bloque": 1317.2499999999989,
+    "factor_ocupacion_pct": 66.26206541628477,
+    "frecuencias_cumplidas": "25/25",
+    "toneladas_recortadas_regla_90min": 0.0,
+    "flujo_through_t": 483.6800000000434,
+    "flujo_transferido_t": 123.98000000006273,
+    "conexiones_transferencia_usadas": 19,
+    "transferencias_entre_operadores": 13,
+    "ttr_h": 2.0
+  },
+  "validador_ok": true,
+  "violaciones": [],
+  "por_operador": [
+    {
+      "operador": "BRA",
+      "aviones": 2,
+      "tramos_candidatos": 127,
+      "enteras": 178314,
+      "estado": "Optimal",
+      "objetivo": 411358.79399999947,
+      "cota": 414998.31180562475,
+      "gap": 0.008847550748180387,
+      "tiempo_s": 383.9089300632477
+    },
+    {
+      "operador": "PAC",
+      "aviones": 2,
+      "tramos_candidatos": 105,
+      "enteras": 150818,
+      "estado": "Time limit reached",
+      "objetivo": 1009959.0409999999,
+      "cota": 1086590.4206921896,
+      "gap": 0.0758757301843786,
+      "tiempo_s": 421.47523069381714
+    },
+    {
+      "operador": "SUR",
+      "aviones": 7,
+      "tramos_candidatos": 115,
+      "enteras": 596022,
+      "estado": "Time limit reached",
+      "objetivo": 4153813.835999999,
+      "cota": 4343542.692482235,
+      "gap": 0.04567582081746327,
+      "tiempo_s": 428.09802317619324
+    },
+    {
+      "operador": "AND",
+      "aviones": 8,
+      "tramos_candidatos": 121,
+      "enteras": 673616,
+      "estado": "Time limit reached",
+      "objetivo": 159860.30675801588,
+      "cota": 214896.0971788349,
+      "gap": 0.34427427006084704,
+      "tiempo_s": 424.1410505771637
+    }
+  ],
+  "modelo_carga": {
+    "ok": true,
+    "estado": "Optimal",
+    "objetivo_carga": 17341698.76999984,
+    "cota": 17355849.559999995,
+    "gap": 0.000815997912767095,
+    "tiempo_s": 16.572219610214233,
+    "estadisticas": {
+      "toneladas_entregadas": 11587.909999999882,
+      "toneladas_directas": 11192.379999999901,
+      "flujo_through_t": 483.6800000000434,
+      "flujo_transferido_t": 123.98000000006273,
+      "conexiones_transferencia_usadas": 19,
+      "transferencias_entre_operadores": 13
+    },
+    "tamano": {
+      "vuelos": 335,
+      "conexiones": 10601,
+      "commodities_con_camino": 194,
+      "variables": 508589,
+      "variables_enteras": 539,
+      "restricciones": 48770
+    }
+  }
+}
