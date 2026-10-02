@@ -152,6 +152,9 @@ def visualizar_datos():
         print("No hay versiones disponibles para visualizar.")
         return
         
+    # Ordenar por fecha de modificación (más reciente primero)
+    versiones.sort(key=lambda x: os.path.getmtime(os.path.join(results_base, x)), reverse=True)
+        
     print("\n--- VERSIONES DISPONIBLES ---")
     for i, v in enumerate(versiones):
         meta_path = os.path.join(results_base, v, "metadata.json")
@@ -164,13 +167,16 @@ def visualizar_datos():
                 pass
         print(f"{i+1}. {v} {desc}")
         
-    sel = input("\nSelecciona el número de la versión a visualizar: ").strip()
-    try:
-        idx = int(sel) - 1
-        v_sel = versiones[idx]
-    except:
-        print("Selección inválida.")
-        return
+    sel = input("\nSelecciona el número de la versión a visualizar (Enter para cargar la más reciente automáticamente): ").strip()
+    if sel == "":
+        v_sel = versiones[0]
+    else:
+        try:
+            idx = int(sel) - 1
+            v_sel = versiones[idx]
+        except:
+            print("Selección inválida.")
+            return
         
     # Copiamos el resultados.json de la versión seleccionada al actual para que index.html lo lea
     origen_json = os.path.join(results_base, v_sel, "resultados.json")

@@ -168,3 +168,11 @@ Nota: quedaron todas las restricciones comentadas.
 - **Fecha**: 1 de Octubre de 2026
 - **Desarrollo**: Se hicieron un par de cambios en las funciones que producen los resultados json y el html de la animación para añadir los KPI en el tiempo y como evolucionan. Para correrlo se usa el main pero seleccionar NUEVA BASE para ver los KPI porque la vieja no tiene todos los datos necesarios. No está relacionado a los filtros eso si.
 
+**Hito 9**
+- **Integrante**: Franco Nicolai
+- **Fecha**: 2 de Octubre de 2026
+- **Desarrollo**: Se ejecutó el modelo con distintos intervalos temporales de discretización (1 hora, 30 minutos y 15 minutos) para observar el impacto en los resultados. Además, se realizaron sustanciales mejoras de experiencia de usuario en la interfaz gráfica web:
+  - Diseño *Glassmorphism* consolidado en todos los controles, paneles y ventanas modales (filtros, kpis, reproductor), unificando el estilo con curvaturas uniformes (14px).
+  - Renovación del selector de datos en un menú desplegable fluido y transparente que escanea dinámicamente los sets de datos.
+  - Configuración de colores semánticos en las trazas de los aviones para representar la ocupación de carga (Verde: Alta >70%, Amarillo: Media 40-70%, Rojo: Baja <40%), junto a una leyenda visual.
+  - Implementación de etiquetas dinámicas integradas en el lienzo para cada aeropuerto (carga in/out) y aeronave que aparecen gradualmente de acuerdo al nivel de zoom sin invadir la vista global.

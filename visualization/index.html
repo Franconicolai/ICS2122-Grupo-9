@@ -10,13 +10,13 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         
         :root {
-            --bg-glass: rgba(255, 255, 255, 0.85);
-            --bg-blur: blur(20px) saturate(180%);
+            --bg-glass: rgba(255, 255, 255, 0.35);
+            --bg-blur: blur(40px) saturate(200%);
             --text-main: #1d1d1f;
             --text-muted: #86868b;
-            --border: rgba(0, 0, 0, 0.08);
-            --shadow-sm: 0 4px 12px rgba(0,0,0,0.05);
-            --shadow-lg: 0 12px 32px rgba(0,0,0,0.1);
+            --border: rgba(255, 255, 255, 0.3);
+            --shadow-sm: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 12px 32px rgba(0,0,0,0.12);
             --accent: #007aff;
             --plane-default: #6e6e73;
         }
@@ -24,33 +24,34 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body, html { width: 100%; height: 100%; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color: var(--text-main); background: #ffffff; overflow-x: hidden; scroll-behavior: smooth; }
 
-        .glass { background: var(--bg-glass); backdrop-filter: var(--bg-blur); -webkit-backdrop-filter: var(--bg-blur); border: 1px solid rgba(0,0,0,0.05); box-shadow: var(--shadow-sm); }
+        .glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(24px) saturate(200%); -webkit-backdrop-filter: blur(24px) saturate(200%); border: 1px solid var(--border); box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
 
         /* ================= VISTA MAPA ================= */
-        #map-view { display: flex; flex-direction: column; width: 100vw; min-height: 100vh; }
+        #map-view { display: flex; flex-direction: column; width: 100vw; height: 100vh; }
 
-        #map-section { position: relative; width: 100%; height: 70vh; min-height: 500px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+        #map-section { position: relative; width: 100%; height: 100vh; flex-shrink: 0; }
         #map { position: absolute; inset: 0; z-index: 1; }
         #canvas-layer { position: absolute; inset: 0; z-index: 5; pointer-events: none; }
 
-        /* Controles Superiores Flotantes */
-        .map-top-left { position: absolute; top: 24px; left: 24px; z-index: 10; display: flex; align-items: center; gap: 12px; }
+        /* Controles Flotantes */
+        .map-top-left { position: absolute; top: 24px; left: 24px; z-index: 10; display: flex; align-items: flex-start; gap: 12px; }
         .map-top-right { position: absolute; top: 24px; right: 24px; z-index: 10; display: flex; gap: 12px; align-items: flex-start; }
+        .map-bottom-right { position: absolute; bottom: 24px; right: 24px; z-index: 10; display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
         
-        .map-top-btn { padding: 12px 20px; border-radius: 14px; font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 8px; border: 1px solid var(--border); color: var(--text-main); }
-        .map-top-btn:hover { background: rgba(255,255,255,0.95); }
+        .map-top-btn { padding: 0 16px; height: 45px; border-radius: 14px; font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--text-main); max-width: 200px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; appearance: none; -webkit-appearance: none; font-family: inherit; }
+        .map-top-btn:hover { background: rgba(255,255,255,0.6); }
 
         /* Timeline */
-        .timeline-glass { border-radius: 14px; padding: 10px 16px; display: flex; align-items: center; gap: 12px; height: 45px; border: 1px solid var(--border); }
-        .play-btn { width: 28px; height: 28px; border-radius: 14px; border: none; background: var(--accent); color: #fff; font-size: 11px; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.2s; padding-left: 2px; }
-        .play-btn.paused { padding-left: 0; }
+        .timeline-glass { border-radius: 14px; padding: 10px 16px; display: flex; align-items: center; gap: 12px; height: 45px; }
+        .play-btn { width: 28px; height: 28px; border-radius: 14px; border: none; background: var(--accent); color: #fff; font-size: 11px; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.2s; padding: 0 0 0 3px; }
+        .play-btn.paused { padding: 0; }
         .play-btn:hover { transform: scale(1.05); }
         .speed-btn { background: none; border: none; font-size: 13px; font-weight: 600; color: var(--text-muted); cursor: pointer; min-width: 24px; }
         input[type="range"] { accent-color: var(--accent); height: 4px; cursor: pointer; width: 120px; }
         .time-display { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -0.3px; color: var(--text-main); min-width: 80px; text-align: right; }
 
         /* Ventana Emergente de Filtros */
-        .filters-popup { position: absolute; top: 60px; right: 0; z-index: 10; width: 320px; padding: 24px; border-radius: 20px; display: none; flex-direction: column; gap: 16px; animation: fadeIn 0.2s ease; margin-top: 10px; }
+        .filters-popup { position: absolute; top: 60px; right: 0; z-index: 10; width: 320px; padding: 24px; border-radius: 14px; display: none; flex-direction: column; gap: 16px; animation: fadeIn 0.2s ease; margin-top: 10px; }
         .filters-popup.active { display: flex; }
         .filters-popup h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
         
@@ -61,13 +62,8 @@
         .btn-clear { padding: 10px; background: rgba(0,0,0,0.05); border: none; border-radius: 10px; font-size: 13px; font-weight: 600; color: var(--text-main); cursor: pointer; transition: 0.2s; margin-top: 8px; }
         .btn-clear:hover { background: rgba(0,0,0,0.08); }
 
-        /* Tooltip */
-        .tooltip { position: absolute; z-index: 100; pointer-events: none; display: none; padding: 16px; border-radius: 16px; font-size: 13px; min-width: 260px; transform: translate(-50%, -120%); }
-        .tt-title { font-size: 15px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; letter-spacing: -0.3px; }
-        .tt-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
-        .tt-row span:first-child { color: var(--text-muted); font-weight: 500; }
-        .tt-row span:last-child { font-weight: 600; }
-        .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 8px; }
+        .version-option { padding: 8px 12px; background: transparent; border: none; border-radius: 6px; font-size: 13px; font-weight: 500; color: var(--text-main); cursor: pointer; text-align: left; transition: 0.1s; display: flex; justify-content: space-between; align-items: center; }
+        .version-option:hover { background: var(--accent); color: #ffffff; }
 
         /* Dashboard Inferior */
         #dashboard-section { max-width: 1200px; margin: 0 auto; padding: 40px 24px; width: 100%; flex: 1; }
@@ -95,10 +91,12 @@
 
         .loading { position: fixed; inset: 0; background: #ffffff; z-index: 9999; display: flex; justify-content: center; align-items: center; font-size: 16px; font-weight: 500; color: var(--text-muted); text-align: center; line-height: 1.5; }
 
-        .kpi-panel { display:grid; grid-template-columns:repeat(2,minmax(130px,1fr)); gap:10px 22px; padding:14px 18px; border-radius:16px; border:1px solid var(--border); }
+        .kpi-panel { width: 300px; display:flex; flex-direction:column; gap:12px; padding:24px; border-radius:14px; border:1px solid var(--border); animation: fadeIn 0.2s ease; }
+        .kpi-panel h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+        .kpi-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:12px 18px; }
         .kpi-label { font-size:11px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:.4px; }
         .kpi-value { font-size:17px; font-weight:700; font-variant-numeric:tabular-nums; letter-spacing:-0.3px; }
-        .kpi-sub { font-size:11px; color:var(--text-muted); font-variant-numeric:tabular-nums; }
+        .kpi-sub { font-size:11px; color:var(--text-muted); font-variant-numeric:tabular-nums; margin-top:2px; }
         .kpi-pos { color:#34c759; } .kpi-neg { color:#ff3b30; }
 
     </style>
@@ -114,19 +112,51 @@
         <div id="map-section">
 
             <div class="map-top-left">
+                <!-- Se movió al lado derecho inferior -->
+            </div>
+
+            <div class="map-bottom-right">
                 <div class="kpi-panel glass" id="kpi-panel">
-                    <div id="kpi-margen-wrap"><div class="kpi-label">Margen acumulado</div><div class="kpi-value" id="kpi-margen">-</div><div class="kpi-sub" id="kpi-margen-sub"></div></div>
-                    <div id="kpi-ing-wrap"><div class="kpi-label">Ingresos</div><div class="kpi-value" id="kpi-ing">-</div><div class="kpi-sub" id="kpi-ing-sub"></div></div>
-                    <div id="kpi-cos-wrap"><div class="kpi-label">Costos (vuelo + handling)</div><div class="kpi-value" id="kpi-cos">-</div><div class="kpi-sub" id="kpi-cos-sub"></div></div>
-                    <div><div class="kpi-label">Ocupación acumulada</div><div class="kpi-value" id="kpi-ocup">-</div></div>
-                    <div><div class="kpi-label">Vuelos completados</div><div class="kpi-value" id="kpi-comp">-</div><div class="kpi-sub" id="kpi-aire"></div></div>
-                    <div><div class="kpi-label">Horas de bloque</div><div class="kpi-value" id="kpi-horas">-</div><div class="kpi-sub" id="kpi-avs"></div></div>
+                    <h3>Indicadores de Vuelo</h3>
+                    <div class="kpi-grid">
+                        <div id="kpi-margen-wrap"><div class="kpi-label">Margen</div><div class="kpi-value" id="kpi-margen">-</div><div class="kpi-sub" id="kpi-margen-sub"></div></div>
+                        <div id="kpi-ing-wrap"><div class="kpi-label">Ingresos</div><div class="kpi-value" id="kpi-ing">-</div><div class="kpi-sub" id="kpi-ing-sub"></div></div>
+                        <div id="kpi-cos-wrap"><div class="kpi-label">Costos (Op)</div><div class="kpi-value" id="kpi-cos">-</div><div class="kpi-sub" id="kpi-cos-sub"></div></div>
+                        <div><div class="kpi-label">Ocupación</div><div class="kpi-value" id="kpi-ocup">-</div></div>
+                        <div><div class="kpi-label">Completados</div><div class="kpi-value" id="kpi-comp">-</div><div class="kpi-sub" id="kpi-aire"></div></div>
+                        <div><div class="kpi-label">Horas bloque</div><div class="kpi-value" id="kpi-horas">-</div><div class="kpi-sub" id="kpi-avs"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="map-bottom-left" style="position: absolute; bottom: 24px; left: 24px; z-index: 10;">
+                <div class="glass" style="padding: 12px 16px; border-radius: 14px; display: flex; flex-direction: column; gap: 8px;">
+                    <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">Ocupación de Carga</div>
+                    <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 500;">
+                        <div style="width: 12px; height: 12px; border-radius: 50%; background: #ff3b30;"></div> Lleno (>85%)
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 500;">
+                        <div style="width: 12px; height: 12px; border-radius: 50%; background: #ff9500;"></div> Medio (50-85%)
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 500;">
+                        <div style="width: 12px; height: 12px; border-radius: 50%; background: #34c759;"></div> Ligero (>10t)
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 500;">
+                        <div style="width: 12px; height: 12px; border-radius: 50%; background: #8e8e93;"></div> Vacío (10t)
+                    </div>
                 </div>
             </div>
 
             <!-- Controles (Arriba Derecha) -->
             <div class="map-top-right">
-                
+                <!-- Data Selector Circular -->
+                <div style="position:relative">
+                    <button class="map-top-btn glass" id="btn-toggle-data">📊 Datos</button>
+                    <div class="filters-popup glass" id="versions-popup" style="width: 220px; padding: 8px; gap: 2px;">
+                        <div id="versions-list" style="display:flex; flex-direction:column; gap:2px;"></div>
+                    </div>
+                </div>
+
                 <!-- Timeline Control Integrado Arriba -->
                 <div class="timeline-glass glass">
                     <button id="btn-play" class="play-btn">▶</button>
@@ -137,10 +167,17 @@
 
                 <!-- Botón Filtros y Popup Relativo -->
                 <div style="position:relative">
-                    <button class="map-top-btn glass" id="btn-toggle-filters" style="height:45px;">Filtros</button>
+                    <button class="map-top-btn glass" id="btn-toggle-filters">⚙️ Filtros</button>
                     
                     <div class="filters-popup glass" id="filters-popup">
                         <h3>Filtrar Visualización</h3>
+                        <label style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; cursor:pointer; margin-bottom:8px;">
+                            <input type="checkbox" id="f-all-traces" style="width:16px;height:16px;accent-color:var(--accent);"> Ver todas las trazas de vuelos
+                        </label>
+                        <div class="filter-group">
+                            <label>Avión (Aeronave)</label>
+                            <select id="f-avion"><option value="ALL">Todos</option></select>
+                        </div>
                         <div class="filter-group">
                             <label>Operador</label>
                             <select id="f-op"><option value="ALL">Todos</option></select>
@@ -149,9 +186,10 @@
                             <label>Nivel de Carga</label>
                             <select id="f-carga">
                                 <option value="ALL">Cualquiera</option>
-                                <option value="HIGH">Alta (>70%)</option>
-                                <option value="MED">Media (40-70%)</option>
-                                <option value="LOW">Baja (<40%)</option>
+                                <option value="FULL">Lleno (>85%)</option>
+                                <option value="MED">Medio (50-85%)</option>
+                                <option value="LIGHT">Ligero (>10t)</option>
+                                <option value="EMPTY">Vacío (10t)</option>
                             </select>
                         </div>
                         <div class="filter-group">
@@ -173,32 +211,6 @@
 
             <div id="map"></div>
             <canvas id="canvas-layer"></canvas>
-            <div id="tooltip" class="tooltip glass"></div>
-        </div>
-
-        <!-- Dashboard Inferior -->
-        <div id="dashboard-section">
-            <div class="tabs">
-                <button class="tab-btn active" data-tab="fids">Directorio de Vuelos</button>
-                <button class="tab-btn" data-tab="airports">Transferencias por Aeropuerto</button>
-                <button class="tab-btn" data-tab="cargo">Cumplimiento de Carga</button>
-            </div>
-
-            <div class="tab-content active" id="tab-fids">
-                <div class="list-header grid-fids"><span>Vuelo / Aeronave</span><span>Ruta Origen → Destino</span><span style="text-align:right">Progreso de Vuelo</span></div>
-                <div id="fids-body"></div>
-            </div>
-            
-            <div class="tab-content" id="tab-airports">
-                <div class="list-header grid-apts"><span>Aeropuerto</span><span style="text-align:right">Carga Enviada</span><span style="text-align:right">Carga Recibida</span></div>
-                <div id="airports-body"></div>
-            </div>
-
-            <div class="tab-content" id="tab-cargo">
-                <div class="list-header grid-carg"><span>Ruta</span><span style="text-align:right">Servida / Demanda</span><span>Progreso de Satisfacción</span></div>
-                <div id="cargo-body"></div>
-            </div>
-        </div>
     </div>
 
 <script>
@@ -224,9 +236,10 @@ const COLORS = { 'AND':'#007aff', 'SUR':'#34c759', 'BRA':'#ff9500', 'PAC':'#ff3b
 const PLANE_PATH = new Path2D("M21,16 L21,14 L13,9 L13,3.5 C13,2.67 12.33,2 11.5,2 C10.67,2 10,2.67 10,3.5 L10,9 L2,14 L2,16 L10,13.5 L10,19 L8,20.5 L8,22 L11.5,21 L15,22 L15,20.5 L13,19 L13,13.5 Z");
 
 function getRouteColor(ratio) {
-    if (ratio < 0.4) return 'rgba(142,142,147,0.55)';
-    if (ratio < 0.7) return 'rgba(52,199,89,0.7)';
-    return 'rgba(255,59,48,0.7)';
+    if (ratio >= 0.85) return '#ff3b30'; // Rojo (Lleno)
+    if (ratio >= 0.50) return '#ff9500'; // Naranjo (Intermedio)
+    if (ratio > 0.25) return '#34c759'; // Verde (>10t)
+    return '#8e8e93'; // Gris (Vacío / ~10t)
 }
 
 function slerp(lat1, lon1, lat2, lon2, f) {
@@ -261,33 +274,79 @@ function getProgress(v) {
 }
 
 function isMatch(v, ratio) {
+    const av = document.getElementById('f-avion').value;
     const op = document.getElementById('f-op').value;
     const rt = document.getElementById('f-ruta').value;
     const ori = document.getElementById('f-origen').value;
     const des = document.getElementById('f-destino').value;
     const cg = document.getElementById('f-carga').value;
     
+    if (av !== 'ALL' && v.aeronave !== av) return false;
     if (op !== 'ALL' && v.operador !== op) return false;
     if (rt !== 'ALL' && `${v.origen}-${v.destino}` !== rt) return false;
     if (ori !== 'ALL' && v.origen !== ori) return false;
     if (des !== 'ALL' && v.destino !== des) return false;
     if (cg !== 'ALL') {
-        if (cg === 'HIGH' && ratio < 0.7) return false;
-        if (cg === 'MED' && (ratio < 0.4 || ratio >= 0.7)) return false;
-        if (cg === 'LOW' && ratio >= 0.4) return false;
+        if (cg === 'FULL' && ratio < 0.85) return false;
+        if (cg === 'MED' && (ratio < 0.50 || ratio >= 0.85)) return false;
+        if (cg === 'LIGHT' && (ratio <= 0.25 || ratio >= 0.50)) return false;
+        if (cg === 'EMPTY' && ratio > 0.25) return false;
     }
     return true;
 }
 
-async function initMap() {
+let currentVersion = 'actual';
+
+let fetchedVersions = [];
+
+async function fetchVersions() {
+    try {
+        const r = await fetch('/api/versions');
+        if (r.ok) {
+            fetchedVersions = await r.json();
+            if(fetchedVersions.length > 0) {
+                currentVersion = fetchedVersions[0].id;
+                renderVersionsList();
+            }
+        }
+    } catch(e) { console.warn('No versions API found'); }
+}
+
+function renderVersionsList() {
+    const list = document.getElementById('versions-list');
+    if (!list) return;
+    list.innerHTML = ''; 
+    fetchedVersions.forEach(v => {
+        let displayName = v.id.replace('Ejecución con intervalos de', '');
+        if (displayName === v.id) displayName = v.id;
+        const isActive = (v.id === currentVersion);
+        list.insertAdjacentHTML('beforeend', `<button class="version-option" data-id="${v.id}">${displayName.trim()} ${v.desc ? ' (' + v.desc + ')' : ''} <span style="font-weight:bold;">${isActive ? '✓' : ''}</span></button>`);
+    });
+    
+    document.querySelectorAll('.version-option').forEach(btn => {
+        btn.onclick = (e) => {
+            currentVersion = e.currentTarget.dataset.id;
+            document.getElementById('versions-popup').classList.remove('active');
+            renderVersionsList();
+            loadData(currentVersion);
+        }
+    });
+}
+
+async function loadData(version) {
+    document.getElementById('loading').style.display = 'flex';
+    let url = `../data/results/${encodeURIComponent(version)}/resultados.json?_t=` + new Date().getTime();
+    if (version === 'visualizacion_actual.json' || version === 'actual') {
+        url = `../data/results/visualizacion_actual.json?_t=` + new Date().getTime();
+    }
     try { 
-        // Agregamos un timestamp (cache buster) para asegurar que siempre traiga los datos nuevos
-        const r = await fetch('../data/results/visualizacion_actual.json?_t=' + new Date().getTime()); 
+        const r = await fetch(url); 
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         D = await r.json(); 
     } 
     catch(e) { 
         console.error('Error cargando datos: ' + e.message); 
+        document.getElementById('loading').style.display = 'none';
         return; 
     }
 
@@ -295,10 +354,12 @@ async function initMap() {
     hayCostos = D.vuelos.some(v => v.costo_usd > 0);
 
     const oriSet = new Set(), desSet = new Set();
+    apDict = {}; airportStats = {};
     D.aeropuertos.forEach(a => { apDict[a.iata] = a; airportStats[a.iata] = { out: 0, in: 0 }; });
 
     const ops = new Set(D.vuelos.map(v => v.operador));
     const rts = new Set(D.vuelos.map(v => `${v.origen}-${v.destino}`));
+    const avs = new Set(D.vuelos.map(v => v.aeronave));
     
     D.vuelos.forEach(v => {
         oriSet.add(v.origen); desSet.add(v.destino);
@@ -306,21 +367,42 @@ async function initMap() {
         if(airportStats[v.destino]) airportStats[v.destino].in += v.carga_tons;
     });
 
+    ['f-avion','f-op','f-ruta','f-origen','f-destino'].forEach(id => {
+        const el = document.getElementById(id);
+        while(el.options.length > 1) el.remove(1);
+    });
+
     const pop = (sel, set, mapFn = x=>x) => Array.from(set).sort().forEach(i => document.getElementById(sel).insertAdjacentHTML('beforeend', `<option value="${i}">${mapFn(i)}</option>`));
-    pop('f-op', ops); pop('f-ruta', rts, x => x.replace('-',' → ')); pop('f-origen', oriSet); pop('f-destino', desSet);
+    pop('f-avion', avs); pop('f-op', ops); pop('f-ruta', rts, x => x.replace('-',' → ')); pop('f-origen', oriSet); pop('f-destino', desSet);
+
+    document.getElementById('loading').style.display = 'none';
+    if(map) render();
+}
+
+async function initMap() {
+    await fetchVersions();
+    // Use the fetched currentVersion or fallback to actual
+    if (!currentVersion || currentVersion === 'actual') currentVersion = 'visualizacion_actual.json';
+    
+    // We can fallback loadData directly to the json if versions failed
+    try {
+        await loadData(currentVersion);
+    } catch(e) {
+        currentVersion = 'visualizacion_actual.json';
+        await loadData(currentVersion);
+    }
 
     map = new maplibregl.Map({ 
         container: 'map', 
         style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json', 
-        center: [-60, -15], zoom: 3, dragRotate: false 
+        center: [-60, 10], zoom: 2.5, pitch: 45, dragRotate: true,
+        maxBounds: [[-140, -60], [60, 70]], // Limita a América, Europa y África
+        renderWorldCopies: false,
+        attributionControl: false
     });
-
-    // Quitar loading screen apenas tengamos los datos tabulares listos, ANTES de renderizar
-    document.getElementById('loading').style.display = 'none';
 
     setupCanvas(); 
     setupUIEvents(); 
-    populateStaticTabs();
     updateTimeUI();
     
     setTimeout(() => { if(map) map.resize(); }, 600);
@@ -359,59 +441,102 @@ function render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     window._drawnFlights = [];
-    const fOp = document.getElementById('f-op').value; 
+    const fOp = document.getElementById('f-op').value;
+    const fAv = document.getElementById('f-avion').value;
+    const fRuta = document.getElementById('f-ruta').value;
+    const showAllTraces = document.getElementById('f-all-traces').checked || fOp !== 'ALL' || fAv !== 'ALL' || fRuta !== 'ALL';
 
     D.rutas_catalogo.forEach(r => {
         const o = apDict[r.origen], d = apDict[r.destino];
-        if(o && d) drawArc(o.lon, o.lat, d.lon, d.lat, 'rgba(0,0,0,0.025)', 1, 20);
+        if(o && d) drawArc(o.lon, o.lat, d.lon, d.lat, 'rgba(0, 122, 255, 0.25)', 1.5, 20);
     });
 
     D.vuelos.forEach(v => {
-        const p = getProgress(v);
-        if(p < 0) return;
-
-        const cap = D.flota.find(f => f.aircraft_id === v.aeronave)?.payload_tons || 50;
+        const cap = payloadDict[v.aeronave] || 50;
         const ratio = v.carga_tons / cap;
         if(!isMatch(v, ratio)) return;
 
+        const p = getProgress(v);
         const o = apDict[v.origen], d = apDict[v.destino];
         if(!o || !d) return;
 
-        drawArc(o.lon, o.lat, d.lon, d.lat, getRouteColor(ratio), 2.5, 30);
-
-        const [clon, clat] = slerp(o.lat, o.lon, d.lat, d.lon, p);
-        const pt = map.project([clon, clat]);
-        const angle = getHeading(o.lat, o.lon, d.lat, d.lon, p);
-
         const isColored = (fOp !== 'ALL' && v.operador === fOp);
-        const planeColor = isColored ? COLORS[v.operador] : 'var(--plane-default)';
+        const routeColor = getRouteColor(ratio);
+        const planeColor = routeColor;
 
-        ctx.save();
-        ctx.translate(pt.x, pt.y);
-        ctx.rotate(angle + Math.PI/2);
-        ctx.scale(0.85, 0.85);
-        ctx.translate(-11.5, -12);
-        
-        ctx.lineJoin = 'round'; ctx.lineWidth = 3; ctx.strokeStyle = '#fff';
-        ctx.stroke(PLANE_PATH);
-        
-        ctx.fillStyle = planeColor;
-        ctx.fill(PLANE_PATH);
-        ctx.restore();
+        if (showAllTraces) {
+            drawArc(o.lon, o.lat, d.lon, d.lat, routeColor, 2, 30);
+        } else if (p >= 0) {
+            drawTrail(o.lon, o.lat, d.lon, d.lat, p, routeColor);
+        }
 
-        window._drawnFlights.push({v, pt, p, ratio, isColored});
+        if (p >= 0) {
+            const [clon, clat] = slerp(o.lat, o.lon, d.lat, d.lon, p);
+            const pt = map.project([clon, clat]);
+            const angle = getHeading(o.lat, o.lon, d.lat, d.lon, p);
+
+            ctx.save();
+            ctx.translate(pt.x, pt.y);
+            
+            // Dibujar etiqueta de avión si el zoom es mayor a 3.0
+            if (map.getZoom() >= 3.0) {
+                const pct = Math.round(ratio * 100);
+                const txt = `${v.aeronave} | ${v.origen}→${v.destino} | ${pct}%`;
+                ctx.font = '700 10px Inter';
+                const m = ctx.measureText(txt);
+                ctx.fillStyle = 'rgba(255,255,255,0.95)';
+                
+                // Fondo de la etiqueta
+                ctx.beginPath();
+                ctx.roundRect(14, -12, m.width + 10, 22, 4);
+                ctx.fill();
+                ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(0,0,0,0.15)'; ctx.stroke();
+                
+                // Texto
+                ctx.fillStyle = '#1d1d1f';
+                ctx.textAlign = 'left';
+                ctx.fillText(txt, 19, 3);
+            }
+
+            ctx.rotate(angle + Math.PI/2);
+            ctx.scale(0.85, 0.85);
+            ctx.translate(-11.5, -12);
+            
+            ctx.lineJoin = 'round'; ctx.lineWidth = 2.5; ctx.strokeStyle = '#000';
+            ctx.stroke(PLANE_PATH);
+            
+            ctx.fillStyle = planeColor;
+            ctx.fill(PLANE_PATH);
+            ctx.restore();
+
+            window._drawnFlights.push({v, pt, p, ratio, isColored: true});
+        }
     });
 
     D.aeropuertos.forEach(a => {
         const pt = map.project([a.lon, a.lat]);
-        ctx.beginPath(); ctx.arc(pt.x, pt.y, 3, 0, Math.PI*2);
-        ctx.fillStyle = '#fff'; ctx.fill();
-        ctx.lineWidth = 1.5; ctx.strokeStyle = 'rgba(0,0,0,0.3)'; ctx.stroke();
-        ctx.font = '600 10px Inter'; ctx.fillStyle = '#1d1d1f';
-        ctx.textAlign = 'center'; ctx.fillText(a.iata, pt.x, pt.y - 7);
-    });
+        ctx.beginPath(); ctx.arc(pt.x, pt.y, 3.5, 0, Math.PI*2);
+        ctx.fillStyle = '#ffffff'; ctx.fill();
+        ctx.lineWidth = 2; ctx.strokeStyle = '#007aff'; ctx.stroke();
+        
+        ctx.font = '700 10px Inter'; ctx.fillStyle = '#1d1d1f';
+        ctx.textAlign = 'center'; ctx.fillText(a.iata, pt.x, pt.y - 8);
 
-    updateFIDS();
+        if (map.getZoom() >= 4.5) {
+            const stats = airportStats[a.iata];
+            if (stats && (stats.in > 0 || stats.out > 0)) {
+                ctx.font = '600 9px Inter';
+                const txt = `In: ${Math.round(stats.in)}t | Out: ${Math.round(stats.out)}t`;
+                const m = ctx.measureText(txt);
+                
+                ctx.fillStyle = 'rgba(255,255,255,0.85)';
+                ctx.beginPath(); ctx.roundRect(pt.x - m.width/2 - 4, pt.y + 6, m.width + 8, 14, 3); ctx.fill();
+                
+                ctx.fillStyle = '#86868b';
+                ctx.fillText(txt, pt.x, pt.y + 16);
+            }
+        }
+    });
 }
 
 function drawArc(lon1, lat1, lon2, lat2, color, width, segs) {
@@ -424,58 +549,50 @@ function drawArc(lon1, lat1, lon2, lat2, color, width, segs) {
     ctx.stroke();
 }
 
-function updateFIDS() {
-    const list = window._drawnFlights || [];
-    const container = document.getElementById('fids-body');
-    if(!list.length) { container.innerHTML = '<div class="list-row" style="text-align:center;color:var(--text-muted)">Sin vuelos activos en este momento</div>'; return; }
-    
-    container.innerHTML = list.map(f => {
-        const pct = Math.round(f.p * 100);
-        const col = f.isColored ? COLORS[f.v.operador] : 'var(--plane-default)';
-        return `
-        <div class="list-row grid-fids">
-            <span><span class="dot" style="background:${col}"></span>${f.v.aeronave}</span>
-            <span>${f.v.origen} → ${f.v.destino}</span>
-            <span style="text-align:right; color:var(--text-muted)">${pct}%</span>
-        </div>`;
-    }).join('');
-}
+function drawTrail(lon1, lat1, lon2, lat2, p, color) {
+    // Trazado recorrido (sólido)
+    ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.setLineDash([]);
+    for(let i=0; i<=Math.floor(p*30); i++) {
+        const [l, pt_lat] = slerp(lat1, lon1, lat2, lon2, i/30);
+        const pt = map.project([l, pt_lat]);
+        i===0 ? ctx.moveTo(pt.x, pt.y) : ctx.lineTo(pt.x, pt.y);
+    }
+    const [clon, clat] = slerp(lat1, lon1, lat2, lon2, p);
+    const cpt = map.project([clon, clat]);
+    ctx.lineTo(cpt.x, cpt.y);
+    ctx.stroke();
 
-function populateStaticTabs() {
-    const aptTab = document.getElementById('airports-body');
-    const apts = D.aeropuertos.filter(a => airportStats[a.iata].out > 0 || airportStats[a.iata].in > 0)
-        .sort((a,b) => (airportStats[b.iata].out + airportStats[b.iata].in) - (airportStats[a.iata].out + airportStats[a.iata].in));
-    
-    aptTab.innerHTML = apts.map(a => {
-        const s = airportStats[a.iata];
-        return `
-        <div class="list-row grid-apts">
-            <span><strong>${a.iata}</strong> <span style="font-size:12px;color:var(--text-muted)">(${a.pais})</span></span>
-            <span style="text-align:right;">${FMT_NUM(s.out)} t</span>
-            <span style="text-align:right;">${FMT_NUM(s.in)} t</span>
-        </div>`;
-    }).join('');
-
-    const cgTab = document.getElementById('cargo-body');
-    cgTab.innerHTML = D.demanda_servida.map(d => {
-        const pct = Math.min(100, (d.toneladas_servidas / d.toneladas_disponibles) * 100);
-        return `
-        <div class="list-row grid-carg">
-            <span>${d.origen} → ${d.destino}</span>
-            <span style="text-align:right">${FMT_NUM(d.toneladas_servidas)} / ${FMT_NUM(d.toneladas_disponibles)} t</span>
-            <div class="cargo-bar-wrapper"><div class="cargo-bar-fill" style="width:${pct}%; background:var(--accent)"></div></div>
-        </div>`;
-    }).join('');
+    // Trazado futuro (punteado)
+    ctx.globalAlpha = 0.5;
+    ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = 1.5; ctx.setLineDash([4, 6]);
+    ctx.moveTo(cpt.x, cpt.y);
+    for(let i=Math.ceil(p*30); i<=30; i++) {
+        const [l, pt_lat] = slerp(lat1, lon1, lat2, lon2, i/30);
+        const pt = map.project([l, pt_lat]);
+        ctx.lineTo(pt.x, pt.y);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.globalAlpha = 1.0;
 }
 
 let payloadDict = {}, hayCostos = false;
 
 function calcKPIs() {
     const k = { ing:0, cos:0, han:0, horas:0, ton:0, cap:0, comp:0, aire:0, usados:new Set() };
+    airportStats = {};
+    if (D && D.aeropuertos) {
+        D.aeropuertos.forEach(a => airportStats[a.iata] = { in: 0, out: 0 });
+    }
+
     for (const v of D.vuelos) {
         if (v.hora_salida > t) continue;
         const dur = v.hora_llegada - v.hora_salida;
         const frac = dur > 0 ? Math.min(1, (t - v.hora_salida) / dur) : 1;
+        
+        if (airportStats[v.origen]) airportStats[v.origen].out += v.carga_tons * frac;
+        if (airportStats[v.destino]) airportStats[v.destino].in += v.carga_tons * frac;
+
         k.usados.add(v.aeronave);
         k.horas += dur * frac;
         k.ton += v.carga_tons * frac;
@@ -543,62 +660,35 @@ function setupUIEvents() {
     document.getElementById('slider').oninput = e => { t = parseFloat(e.target.value); updateTimeUI(); render(); };
 
     // Toggle ventana de filtros superior derecha
-    const popup = document.getElementById('filters-popup');
     document.getElementById('btn-toggle-filters').onclick = () => {
-        popup.classList.toggle('active');
+        const fp = document.getElementById('filters-popup');
+        const active = fp.classList.contains('active');
+        document.querySelectorAll('.filters-popup').forEach(p => p.classList.remove('active'));
+        if (!active) fp.classList.add('active');
     };
 
-    ['f-op', 'f-ruta', 'f-origen', 'f-destino', 'f-carga'].forEach(id => {
+    ['f-avion', 'f-op', 'f-ruta', 'f-origen', 'f-destino', 'f-carga'].forEach(id => {
         document.getElementById(id).onchange = render;
     });
+    
+    document.getElementById('f-all-traces').onchange = render;
+
+    document.getElementById('btn-toggle-data').onclick = () => {
+        const vp = document.getElementById('versions-popup');
+        const active = vp.classList.contains('active');
+        document.querySelectorAll('.filters-popup').forEach(p => p.classList.remove('active'));
+        if (!active) vp.classList.add('active');
+    };
 
     document.getElementById('btn-clear-filters').onclick = () => {
-        ['f-op', 'f-ruta', 'f-origen', 'f-destino', 'f-carga'].forEach(id => document.getElementById(id).value = 'ALL');
+        ['f-avion', 'f-op', 'f-ruta', 'f-origen', 'f-destino', 'f-carga'].forEach(id => document.getElementById(id).value = 'ALL');
+        document.getElementById('f-all-traces').checked = false;
         render();
     };
 
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.onclick = () => {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            btn.classList.add('active');
-            document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
-        };
-    });
 
-    const tt = document.getElementById('tooltip');
-    document.getElementById('map-section').addEventListener('mousemove', e => {
-        let found = null;
-        if (window._drawnFlights) {
-            for (let f of window._drawnFlights) {
-                if (Math.hypot(f.pt.x - e.clientX, f.pt.y - e.clientY) < 16) { found = f; break; }
-            }
-        }
-        if (found) {
-            const v = found.v;
-            const pct = Math.round(found.p * 100);
-            tt.style.display = 'block';
-            tt.style.left = (e.clientX + 15) + 'px';
-            tt.style.top = (e.clientY - 15) + 'px';
-            
-            const fOp = document.getElementById('f-op').value;
-            const isColored = (fOp !== 'ALL' && v.operador === fOp);
-            const dispCol = isColored ? COLORS[v.operador] : 'var(--text-main)';
 
-            tt.innerHTML = `
-                <div class="tt-title"><span class="dot" style="background:${dispCol}; width:10px; height:10px;"></span> ${v.aeronave} <span style="color:var(--text-muted);font-weight:500;margin-left:4px">(${v.operador})</span></div>
-                <div class="tt-row"><span>Ruta</span><span>${v.origen} → ${v.destino}</span></div>
-                <div class="tt-row"><span>Carga</span><span>${FMT_NUM(v.carga_tons)} t</span></div>
-                <div class="tt-row"><span>Costo vuelo</span><span>${FMT_USD(v.costo_usd || 0)}</span></div>
-                <div class="tt-row"><span>Ingreso asignado</span><span>${FMT_USD(v.ingreso_usd || 0)}</span></div>
-                <div class="cargo-bar-wrapper" style="margin-top:12px;height:4px;background:rgba(0,0,0,0.1)"><div class="cargo-bar-fill" style="width:${pct}%;background:${dispCol}"></div></div>
-            `;
-        } else {
-            tt.style.display = 'none';
-        }
-    });
-    
-    document.getElementById('map-section').addEventListener('mouseleave', () => { tt.style.display = 'none'; });
+
 }
 
 // Iniciar mapa automáticamente al cargar

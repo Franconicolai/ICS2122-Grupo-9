@@ -16,6 +16,32 @@ class VisualizationServer(SimpleHTTPRequestHandler):
         # Silenciar logs para mantener la consola limpia
         pass
 
+    def do_GET(self):
+        if self.path.endswith('/api/versions'):
+            import json
+            results_base = os.path.join("data", "results")
+            versiones = []
+            if os.path.exists(results_base):
+                for d in os.listdir(results_base):
+                    if os.path.isdir(os.path.join(results_base, d)):
+                        meta_path = os.path.join(results_base, d, "metadata.json")
+                        desc = ""
+                        if os.path.exists(meta_path):
+                            try:
+                                m = json.load(open(meta_path, 'r', encoding='utf-8'))
+                                desc = f"{m.get('descripcion', '')} ({m.get('fecha', '')})"
+                            except:
+                                pass
+                        # check if it has resultados.json
+                        if os.path.exists(os.path.join(results_base, d, "resultados.json")):
+                            versiones.append({"id": d, "desc": desc})
+            self.send_response(200)
+            self.send_header('Content-type', 'application/json')
+            self.end_headers()
+            self.wfile.write(json.dumps(versiones).encode('utf-8'))
+            return
+        return super().do_GET()
+
 def start_server():
     # Establecer la carpeta de visualization (este directorio) como la raíz del servidor
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
