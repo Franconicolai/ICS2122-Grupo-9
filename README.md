@@ -176,3 +176,15 @@ Nota: quedaron todas las restricciones comentadas.
   - Renovación del selector de datos en un menú desplegable fluido y transparente que escanea dinámicamente los sets de datos.
   - Configuración de colores semánticos en las trazas de los aviones para representar la ocupación de carga (Verde: Alta >70%, Amarillo: Media 40-70%, Rojo: Baja <40%), junto a una leyenda visual.
   - Implementación de etiquetas dinámicas integradas en el lienzo para cada aeropuerto (carga in/out) y aeronave que aparecen gradualmente de acuerdo al nivel de zoom sin invadir la vista global.
+
+**Hito 10**
+- **Integrante**: Fernando Mora
+- **Fecha**: 2 de Octubre de 2026
+- **Desarrollo**: Se hizo una prueba con distintos intervalos ttr_h usando de base el itinerario generado por Ejecucion_con_intervalos_de_2_horas, para esto es necesario correr variabilidad_ttrh.py. Los resultados fueron:
+
+ TTR_H  | margen_usd | toneladas | transbordos | entre_operadores | violaciones
+  0.00  |   6310378  |  11806.2  |         31  |              18  |          0
+  0.25  |   6292713  |  11800.2  |         26  |              15  |          0
+  0.50  |   6298840  |  11800.2  |         36  |              18  |          0
+  1.00  |   6298194  |  11800.2  |         29  |              18  |          0
+  2.00  |   6310307  |  11806.2  |         33  |              19  |          0
