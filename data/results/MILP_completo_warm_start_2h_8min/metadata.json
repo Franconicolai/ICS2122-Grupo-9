@@ -1,0 +1,8 @@
+{
+  "version": "MILP_completo_warm_start_2h_8min",
+  "fecha": "2026-10-15 12:30:54",
+  "descripcion": "MILP completo con warm start desde Ejecucion_con_intervalos_de_2_horas: 8 min de Gurobi (300 s de heuristica NoRel), comando: python warm_start_milp.py --tiempo 480 --norel 300",
+  "solver": "gurobi",
+  "dt": "continuo (MILP)",
+  "tlim": 480.0
+}

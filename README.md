@@ -18,6 +18,8 @@ El proyecto está modularizado para separar los datos, el motor matemático de l
   - `validador.py`: Auditor independiente de reglas logísticas.
   - `solver_util.py`: Herramientas de conectividad para solvers (HiGHS, Gurobi).
 - `main.py`: **Orquestador central e interactivo (CLI)**. Ejecuta el modelo guiado paso a paso, versiona los resultados y permite visualizar los datos.
+- `gurobi_model.py`: MILP completo (posición-indexado, tiempo continuo) con las mismas reglas que la heurística.
+- `warm_start_milp.py`: resuelve ese MILP partiendo de una corrida de la heurística (warm start). Detalles en `docs/README_milp_completo.md`.
 - `visualization/`: Interfaz gráfica web interactiva que despliega los resultados.
   - `main.py`: Script que levanta el servidor web.
 - **Archivos de configuración**:
@@ -58,6 +60,13 @@ Para levantar el servidor web y visualizar los resultados recién exportados en 
 
 ```bash
 python visualization/main.py
+```
+
+**3. MILP completo con warm start (opcional)**
+Resuelve el MILP de `gurobi_model.py` partiendo de la corrida de 2 h. Deja los resultados en `data/results/MILP_completo_Ejecucion_con_intervalos_de_2_horas/`, que también se pueden ver en el visualizador. Las opciones están en `docs/README_milp_completo.md`.
+
+```bash
+python warm_start_milp.py --tiempo 3600
 ```
 
 ## Bitácora de implementación

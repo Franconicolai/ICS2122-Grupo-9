@@ -1,0 +1,65 @@
+{
+  "kpis": {
+    "margen_usd": 6376959.164000002,
+    "ingresos_usd": 18348583.4,
+    "costo_vuelos_usd": 11468001.915999997,
+    "costo_handling_usd": 503622.3199999998,
+    "toneladas": 11812.49,
+    "pct_demanda": 88.30381771833954,
+    "vuelos": 343,
+    "aviones_usados": 18,
+    "horas_bloque": 1334.1599999999999,
+    "factor_ocupacion_pct": 66.0284516489659,
+    "frecuencias_cumplidas": "25/25",
+    "flujo_through_t": 696.8100000000002,
+    "flujo_transferido_t": 153.79,
+    "conexiones_transferencia_usadas": 29,
+    "transferencias_entre_operadores": 18,
+    "ttr_h": 2.0
+  },
+  "validador_ok": true,
+  "violaciones": [],
+  "milp": {
+    "corrida_start": "Ejecucion_con_intervalos_de_2_horas",
+    "estado": "Limite de tiempo",
+    "objetivo_milp_sin_transbordos": 6236508.383999997,
+    "cota_milp": 8257861.39375312,
+    "gap_milp": 0.3241161376354407,
+    "tiempo_gurobi_s": 480.14800000190735,
+    "tiempo_limite_s": 480.0,
+    "objetivo_start": 6138952.274000002,
+    "warm_start": true,
+    "margen_heuristica_usd": 6310307.054000012,
+    "margen_heuristica_mismo_paso_final_usd": 6310378.454000012,
+    "margen_start_sin_transbordos_usd": 6138952.274000012,
+    "s_max": 32,
+    "variables": 262244,
+    "variables_enteras": 94739,
+    "restricciones": 83787,
+    "margen_milp_sin_transbordos_validado_usd": 6236588.384000002
+  },
+  "modelo_carga": {
+    "ok": true,
+    "estado": "Optimal",
+    "objetivo_carga": 17844961.080000002,
+    "cota": 17844966.029999997,
+    "gap": 2.7738922900075336e-07,
+    "tiempo_s": 25.81010890007019,
+    "estadisticas": {
+      "toneladas_entregadas": 11812.49,
+      "toneladas_directas": 11220.789999999999,
+      "flujo_through_t": 696.8100000000002,
+      "flujo_transferido_t": 153.79,
+      "conexiones_transferencia_usadas": 29,
+      "transferencias_entre_operadores": 18
+    },
+    "tamano": {
+      "vuelos": 343,
+      "conexiones": 10833,
+      "commodities_con_camino": 201,
+      "variables": 488332,
+      "variables_enteras": 473,
+      "restricciones": 48495
+    }
+  }
+}
