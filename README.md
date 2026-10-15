@@ -20,6 +20,7 @@ El proyecto está modularizado para separar los datos, el motor matemático de l
 - `main.py`: **Orquestador central e interactivo (CLI)**. Ejecuta el modelo guiado paso a paso, versiona los resultados y permite visualizar los datos.
 - `gurobi_model.py`: MILP completo (posición-indexado, tiempo continuo) con las mismas reglas que la heurística.
 - `warm_start_milp.py`: resuelve ese MILP partiendo de una corrida de la heurística (warm start). Detalles en `docs/README_milp_completo.md`.
+- `modelo_integrado_espacio_tiempo.py`: MILP integrado en red espacio-tiempo (vuelos, carga multitramo y transbordos en un solo modelo); `--libres` indica qué aviones decide. Detalles en `docs/README_modelo_integrado_espacio_tiempo.md`.
 - `visualization/`: Interfaz gráfica web interactiva que despliega los resultados.
   - `main.py`: Script que levanta el servidor web.
 - **Archivos de configuración**:
@@ -67,6 +68,13 @@ Resuelve el MILP de `gurobi_model.py` partiendo de la corrida de 2 h. Deja los r
 
 ```bash
 python warm_start_milp.py --tiempo 3600
+```
+
+**4. MILP integrado en red espacio-tiempo (opcional)**
+Vuelos, carga y transbordos en un solo modelo, partiendo de la corrida de 2 h. `--libres` indica qué aviones decide el modelo: `todos`, `ninguno`, aviones (`AC-06,AC-10`) u operadores (`BRA`). Con `todos` el modelo no cabe en un computador de 8 GB; ver `docs/README_modelo_integrado_espacio_tiempo.md`.
+
+```bash
+python modelo_integrado_espacio_tiempo.py --libres AC-06,AC-10 --tiempo 1800
 ```
 
 ## Bitácora de implementación
