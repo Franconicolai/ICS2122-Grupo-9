@@ -107,7 +107,12 @@ def generar_json_visualizacion(results_dir):
             "rutas_catalogo": rutas_unicas,
             "vuelos": [],
             "demanda_servida": [],
-            "kpis": kpis.get("kpis", {})
+            "kpis": kpis.get("kpis", {}),
+            "validacion": {
+                "ok": kpis.get("validador_ok"),
+                "violaciones": kpis.get("violaciones", [])
+            },
+            "calidad_optimizacion": kpis.get("calidad_optimizacion", {})
         }
         
         for _, row in itin.iterrows():
