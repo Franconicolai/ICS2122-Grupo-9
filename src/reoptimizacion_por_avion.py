@@ -197,29 +197,36 @@ def main(pkl):
            'frecuencias': True, 'demanda_diaria': True, 'dist_frecuencias': False,
            'transferencias': True, 'ttr_h': TTR_H}
     v = validar(s, cfg, ruta_raw=RAW)
-    dem_tot = pd.read_csv(os.path.join(RAW, 'demand_weekly.csv')).tons_week.sum()
-    horas = sum(l['t_arr'] - l['t_dep'] for legs in itinerario.values() for l in legs)
-    cap = sum(payload[k] for k, legs in itinerario.items() for l in legs)
-    freq_real = defaultdict(int)
-    for legs in itinerario.values():
-        for l in legs: freq_real[l['tramo']] += 1
-    kp = {'margen_usd': v['margen'], 'ingresos_usd': v['ingresos'], 'costo_vuelos_usd': v['costo_vuelos'],
-          'costo_handling_usd': v['handling'], 'toneladas': v['toneladas_entregadas'],
-          'pct_demanda': 100 * v['toneladas_entregadas'] / dem_tot, 'vuelos': v['vuelos'],
-          'aviones_usados': sum(1 for l in itinerario.values() if l), 'horas_bloque': horas,
-          'factor_ocupacion_pct': 100 * v['toneladas_entregadas'] / cap if cap else 0,
-          'frecuencias_cumplidas': f"{sum(freq_real[od] >= f for od, f in fmin.items())}/{len(fmin)}",
-          'toneladas_recortadas_regla_90min': perd,
-          'flujo_through_t': multi['estadisticas']['flujo_through_t'],
-          'flujo_transferido_t': multi['estadisticas']['flujo_transferido_t'],
-          'conexiones_transferencia_usadas': multi['estadisticas']['conexiones_transferencia_usadas'],
-          'transferencias_entre_operadores': multi['estadisticas']['transferencias_entre_operadores'],
-          'ttr_h': TTR_H}
+    # El validador es la fuente única de KPI. Esto evita que el ejecutor y el
+    # informe usen fórmulas distintas (en particular para ocupación CTK/ACTK).
+    kp = dict(v['kpis'])
+    kp.update({
+        'toneladas_recortadas_regla_90min': perd,
+        'flujo_through_t': multi['estadisticas']['flujo_through_t'],
+        'flujo_transferido_t': multi['estadisticas']['flujo_transferido_t'],
+        'ttr_h': TTR_H,
+    })
+    calidad_optimizacion = {
+        'metodo': 'secuencial_en_tres_pasos',
+        'gap_global_disponible': False,
+        'gap_global': None,
+        'nota': ('No existe una cota común para la solución integrada: los gaps de los '
+                 'subproblemas no se pueden sumar ni promediar para formar un gap global.'),
+        'paso_1_red_agregada': P.get('res', {}),
+        'paso_2_por_operador': [
+            {clave: fila.get(clave) for clave in ('operador', 'estado', 'objetivo', 'cota', 'gap', 'tiempo_s')}
+            for fila in resumen
+        ],
+        'paso_3_carga_condicionada_itinerarios': {
+            clave: multi.get(clave) for clave in ('estado', 'objetivo_carga', 'cota', 'gap', 'tiempo_s')
+        },
+    }
     print('Validador OK:', v['ok'], '| violaciones:', len(v['violaciones']))
     for w in v['violaciones'][:25]: print('  -', w)
     for k2, x in kp.items(): print(f'  {k2}: {x}')
     base = pkl.replace('.pkl', '') + ('_poravion_amp' if AMPLIAR else '_poravion')
-    json.dump({'kpis': kp, 'validador_ok': v['ok'], 'violaciones': v['violaciones'], 'por_operador': resumen,
+    json.dump({'kpis': kp, 'validador_ok': v['ok'], 'violaciones': v['violaciones'],
+               'calidad_optimizacion': calidad_optimizacion, 'por_operador': resumen,
                'modelo_carga': {k: x for k, x in multi.items() if k != 'solucion'}},
               open(base + '_kpis.json', 'w'), indent=2, ensure_ascii=False, default=str)
 

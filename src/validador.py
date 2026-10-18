@@ -7,6 +7,8 @@ si el modelo dice que una solución es óptima pero el validador encuentra viola
 distinto), hay un error en el modelo.
 """
 
+import heapq
+import math
 import os
 from datetime import datetime
 from typing import Dict, Any, List, Optional
@@ -33,13 +35,15 @@ def _cargar_raw(ruta_raw: str) -> Dict[str, Any]:
                                (datetime.fromisoformat(r.start_datetime) - inicio).total_seconds() / 3600.0,
                                (datetime.fromisoformat(r.end_datetime) - inicio).total_seconds() / 3600.0)
     dw = rd('demand_weekly.csv')
+    legs = rd('legs_catalog.csv')
     intercambio = rd('interchange_airports.csv')
     return {
         'reglas': reglas,
         'op': dict(zip(fleet.aircraft_id, fleet.operator)),
         'payload': dict(zip(fleet.aircraft_id, fleet.payload_tons.astype(float))),
         'pais': dict(zip(ap.iata, ap.country)),
-        'block': {(r.origin, r.dest): float(r.block_hours) for r in rd('legs_catalog.csv').itertuples()},
+        'block': {(r.origin, r.dest): float(r.block_hours) for r in legs.itertuples()},
+        'distancia': {(r.origin, r.dest): float(r.distance_km) for r in legs.itertuples()},
         'permitido': {(r.operator, r.country) for r in rd('traffic_rights.csv').itertuples() if r.allowed == 1},
         'cp': cp,
         'fee': dict(zip(rd('landing_fees.csv').airport, rd('landing_fees.csv').fee_usd.astype(float))),
@@ -54,6 +58,30 @@ def _cargar_raw(ruta_raw: str) -> Dict[str, Any]:
                     for operador in intercambio.columns if operador != 'airport'},
         'inicio': inicio,
     }
+
+
+def _distancia_referencia(origen: str, destino: str,
+                          distancias: Dict) -> Optional[float]:
+    """Distancia directa o, si no existe, camino más corto en el catálogo."""
+    if (origen, destino) in distancias:
+        return distancias[(origen, destino)]
+    ady = {}
+    for (o, d), km in distancias.items():
+        ady.setdefault(o, []).append((d, km))
+    mejor = {origen: 0.0}
+    cola = [(0.0, origen)]
+    while cola:
+        km, nodo = heapq.heappop(cola)
+        if nodo == destino:
+            return km
+        if km > mejor.get(nodo, float('inf')):
+            continue
+        for siguiente, arco_km in ady.get(nodo, []):
+            candidato = km + arco_km
+            if candidato < mejor.get(siguiente, float('inf')):
+                mejor[siguiente] = candidato
+                heapq.heappush(cola, (candidato, siguiente))
+    return None
 
 
 def validar(solucion: Dict[str, Any], config: Optional[Dict[str, Any]] = None,
@@ -286,6 +314,126 @@ def validar(solucion: Dict[str, Any], config: Optional[Dict[str, Any]] = None,
             if od in exig and n > -(-exig[od] // 7):
                 viol.append(f"distribución: {od} tiene {n} salidas el día {dia} (tope {-(-exig[od] // 7)})")
 
+    # KPI económicos y operacionales, calculados desde la misma solución que se valida.
+    # CTK/ACTK es el factor de ocupación estándar; el promedio simple por tramo queda
+    # separado para evitar confundir toneladas entregadas con carga efectivamente volada.
+    exig = freq_exigibles if freq_exigibles is not None else R['freq']
+    toneladas = sum(entregado.values())
+    demanda_total = sum(R['demanda_diaria'].values())
+    vuelos = sum(len(v) for v in it.values())
+    horas_bloque = sum(float(l['t_arr']) - float(l['t_dep'])
+                        for legs in it.values() for l in legs)
+    aviones_usados = sum(bool(legs) for legs in it.values())
+    costo_total = costo_vuelos + handling
+
+    carga_total_tramos = 0.0
+    capacidad_total_tramos = 0.0
+    ctk = 0.0
+    actk = 0.0
+    vuelos_vacios = 0
+    recorrido_tkm_por_q = {}
+    for k, legs in it.items():
+        for l in legs:
+            clave_vuelo = (k, l['pos'])
+            od = tuple(l['tramo'])
+            distancia = R['distancia'].get(od, 0.0)
+            carga_tramo = carga_vuelo.get(clave_vuelo, 0.0)
+            carga_total_tramos += carga_tramo
+            capacidad_total_tramos += R['payload'][k]
+            ctk += carga_tramo * distancia
+            actk += R['payload'][k] * distancia
+            if carga_tramo <= TOL:
+                vuelos_vacios += 1
+            for (kc, sc, q), registro in carga.items():
+                if (kc, sc) == clave_vuelo:
+                    recorrido_tkm_por_q[q] = recorrido_tkm_por_q.get(q, 0.0) + registro['x'] * distancia
+
+    # Una tonelada es directa solo si se embarca y entrega en el mismo vuelo.
+    directas_por_q = {}
+    for (_, _, q), registro in carga.items():
+        directa = min(float(registro['b']), float(registro['a']))
+        directas_por_q[q] = directas_por_q.get(q, 0.0) + directa
+    toneladas_directas = sum(directas_por_q.values())
+    toneladas_multitramos = max(0.0, toneladas - toneladas_directas)
+
+    referencia_tkm = 0.0
+    recorrido_multitramos_tkm = 0.0
+    referencia_multitramos_tkm = 0.0
+    commodities_sin_distancia = []
+    for q, entregadas_q in entregado.items():
+        distancia_ref = _distancia_referencia(q[0], q[1], R['distancia'])
+        if distancia_ref is None:
+            commodities_sin_distancia.append(q)
+            continue
+        directa_q = min(directas_por_q.get(q, 0.0), entregadas_q)
+        multitramos_q = max(0.0, entregadas_q - directa_q)
+        referencia_tkm += entregadas_q * distancia_ref
+        referencia_multitramos_tkm += multitramos_q * distancia_ref
+        recorrido_multitramos_tkm += max(
+            0.0, recorrido_tkm_por_q.get(q, 0.0) - directa_q * distancia_ref)
+
+    demanda_por_dia = {d: 0.0 for d in range(1, 8)}
+    servida_por_dia = {d: 0.0 for d in range(1, 8)}
+    for (_, _, dia), valor in R['demanda_diaria'].items():
+        demanda_por_dia[dia] += valor
+    for (_, _, dia), valor in entregado.items():
+        servida_por_dia[dia] += valor
+    nombres_dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
+    satisfaccion_diaria = []
+    porcentajes_diarios = []
+    for dia in range(1, 8):
+        pct = (100.0 * servida_por_dia[dia] / demanda_por_dia[dia]
+               if demanda_por_dia[dia] else 0.0)
+        porcentajes_diarios.append(pct)
+        satisfaccion_diaria.append({
+            'dia': dia,
+            'nombre': nombres_dias[dia - 1],
+            'demanda_t': demanda_por_dia[dia],
+            'servida_t': servida_por_dia[dia],
+            'satisfaccion_pct': pct,
+        })
+    media_diaria = sum(porcentajes_diarios) / len(porcentajes_diarios)
+    variabilidad_diaria = math.sqrt(sum((x - media_diaria) ** 2 for x in porcentajes_diarios)
+                                     / len(porcentajes_diarios))
+    frecuencias_cumplidas = sum(freq_real.get(od, 0) >= f for od, f in exig.items())
+
+    kpis = {
+        'margen_usd': ingresos - costo_total,
+        'ingresos_usd': ingresos,
+        'costo_vuelos_usd': costo_vuelos,
+        'costo_handling_usd': handling,
+        'costo_operacional_usd': costo_total,
+        'toneladas': toneladas,
+        'pct_demanda': 100.0 * toneladas / demanda_total if demanda_total else 0.0,
+        'vuelos': vuelos,
+        'aviones_usados': aviones_usados,
+        'horas_bloque': horas_bloque,
+        'ctk': ctk,
+        'actk': actk,
+        'factor_ocupacion_pct': 100.0 * ctk / actk if actk else 0.0,
+        'factor_ocupacion_tramos_pct': (100.0 * carga_total_tramos / capacidad_total_tramos
+                                        if capacidad_total_tramos else 0.0),
+        'costo_usd_por_tkm': costo_total / ctk if ctk else None,
+        'costo_usd_por_tonelada': costo_total / toneladas if toneladas else None,
+        'vuelos_vacios': vuelos_vacios,
+        'pct_vuelos_vacios': 100.0 * vuelos_vacios / vuelos if vuelos else 0.0,
+        'frecuencias_cumplidas_num': frecuencias_cumplidas,
+        'frecuencias_exigidas_num': len(exig),
+        'frecuencias_cumplidas': f'{frecuencias_cumplidas}/{len(exig)}',
+        'toneladas_directas': toneladas_directas,
+        'pct_carga_directa': 100.0 * toneladas_directas / toneladas if toneladas else 0.0,
+        'toneladas_multitramos': toneladas_multitramos,
+        'pct_carga_multitramos': 100.0 * toneladas_multitramos / toneladas if toneladas else 0.0,
+        'satisfaccion_demanda_diaria': satisfaccion_diaria,
+        'satisfaccion_diaria_media_pct': media_diaria,
+        'variabilidad_diaria_pp': variabilidad_diaria,
+        'rango_satisfaccion_diaria_pp': max(porcentajes_diarios) - min(porcentajes_diarios),
+        'factor_desvio_global': ctk / referencia_tkm if referencia_tkm else None,
+        'factor_desvio_multitramos': (recorrido_multitramos_tkm / referencia_multitramos_tkm
+                                      if referencia_multitramos_tkm else None),
+        'commodities_sin_distancia_referencia': len(commodities_sin_distancia),
+    }
+
     return {
         'ok': not viol,
         'violaciones': viol,
@@ -293,6 +441,13 @@ def validar(solucion: Dict[str, Any], config: Optional[Dict[str, Any]] = None,
         'costo_vuelos': costo_vuelos,
         'handling': handling,
         'margen': ingresos - costo_vuelos - handling,
-        'toneladas_entregadas': sum(entregado.values()),
-        'vuelos': sum(len(v) for v in it.values()),
+        'toneladas_entregadas': toneladas,
+        'vuelos': vuelos,
+        'kpis': kpis,
+        'calidad_optimizacion': {
+            'gap_global_disponible': False,
+            'gap_global': None,
+            'nota': ('El validador certifica factibilidad y recalcula KPI de una solución dada; '
+                     'no genera una cota global del problema integrado.'),
+        },
     }
