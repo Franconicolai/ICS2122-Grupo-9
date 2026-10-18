@@ -91,6 +91,8 @@ Estas pruebas muestran que la parte de carga y transbordos es equivalente a la h
 | `AC-06,AC-10` (BRA), 10 min | 1,6 M variables (49 mil binarias), 1,1 M restricciones | NoRel mejoró a **6.310.808 USD (+429)**: validador OK, 342 vuelos, 25 de 25 frecuencias. El LP de la raíz se detuvo por memoria (más de 5 GB) |
 | `todos`, 3 intentos de 10–15 min | **11,9 M variables** (448 mil binarias, 224 mil semicontinuas), **7,2 M restricciones**, 39 M no ceros | Se arma en 8 s y el start es factible (6.310.378). **Gurobi se detiene por memoria a los 11 s**, con 5 GB, con 6,5 GB y 1 hilo, y con 6,5 GB, 1 hilo y sin presolve. No alcanza a buscar |
 
+Una de esas corridas quedó guardada en `data/results/MILP_integrado_TSN_todos_limite_memoria/`, que contiene la solución de partida exportada.
+
 El modelo con todos los aviones libres está bien formulado y acepta el start, pero en este notebook no hay memoria para que Gurobi lo explore. Para intentarlo se necesita un computador con bastante más RAM (por ejemplo, 32 GB o más); en ese caso:
 
 ```bash

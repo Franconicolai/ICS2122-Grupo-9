@@ -131,10 +131,10 @@ Para que la comparación sea exacta, el script aplica ese mismo paso final, con 
 Requisitos: los mismos de la heurística (`gurobipy` con licencia, `pandas`, `numpy`, `scipy`, `pyyaml`). Desde la raíz del repositorio:
 
 ```bash
-python warm_start_milp.py
+python warm_start_milp.py --tiempo 3600 --norel 2880
 ```
 
-Con eso se toma la corrida `data/results/Ejecucion_con_intervalos_de_2_horas`, Gurobi corre 1 hora y los resultados quedan en `data/results/MILP_completo_Ejecucion_con_intervalos_de_2_horas/`.
+Con eso se toma la corrida `data/results/Ejecucion_con_intervalos_de_2_horas`, Gurobi corre 1 hora (48 min con la heurística NoRel, que fue la que encontró mejoras) y los resultados quedan en `data/results/MILP_completo_Ejecucion_con_intervalos_de_2_horas/`. Esa carpeta se sobrescribe en cada corrida; para conservar una, use `--salida` con otro nombre. Sin `--norel`, NoRel queda apagada (valor predeterminado de Gurobi) y lo más probable es que no mejore el start.
 
 Opciones:
 
@@ -158,7 +158,7 @@ La corrida se puede cortar con **Ctrl+C**: Gurobi se detiene y el script exporta
 Salida (mismos archivos y columnas que la heurística, así que se puede ver con el visualizador desde `main.py` → "Visualizar Datos"):
 
 - `itinerario_vuelos.csv`, `carga_transportada.csv`, `transferencias_carga.csv`: vuelos, carga por commodity y transbordos después del paso final.
-- `indicadores_kpi.json`: KPIs validados y un bloque `milp` con el estado, el objetivo, la cota, el gap y el tiempo de Gurobi, el margen del start y el de la heurística.
+- `indicadores_kpi.json`: KPIs calculados por `src/validador.py` (la misma fuente que usa la heurística), el bloque `calidad_optimizacion` (estado, cota y gap del modelo, que lee el visualizador) y un bloque `milp` con el detalle de la corrida: objetivo, cota, gap y tiempo de Gurobi, margen del start y de la heurística.
 - `gurobi.log`, `modelo_resuelto.pkl`, `metadata.json`, `resultados.json`.
 
 Al terminar, la consola muestra el margen validado de la heurística y el del MILP, ambos con el mismo paso final con transbordos, y la diferencia entre ellos.
@@ -179,8 +179,9 @@ Al terminar, la consola muestra el margen validado de la heurística y el del MI
 | Sin start, 10 minutos | Ninguna solución factible, que es lo mismo que pasaba con el MILP anterior |
 | Start de 2 h con 17 aviones fijos y los 2 de BRA libres, 5 minutos | Sin cambios respecto del start (gap 19,4 %) |
 | **Start de 2 h, 8 minutos, de ellos 300 s de NoRel** | **Mejora el start desde los primeros segundos. Objetivo del MILP: 6.138.952 → 6.236.508 USD. Con el paso final: 6.376.959 USD contra 6.310.378 de la heurística con el mismo paso final (+66.581, +1,1 %). Validador OK, 343 vuelos, 25 de 25 frecuencias** |
+| Corrida cortada con Ctrl+C (16-10-2026) | 6.359.560 USD con el paso final (+49.182 sobre la referencia); validador OK. Confirma que al cortar con Ctrl+C se exporta la mejor solución |
 
-La solución de 8 minutos quedó guardada en `data/results/MILP_completo_warm_start_2h_8min/` y se puede ver en el visualizador. Respecto de la heurística, cambia la secuencia de tramos de 16 de los 18 aviones usados. Además, 289 de sus 343 salidas quedan fuera de la grilla de 2 h, y la espera mediana sobre el TAT mínimo baja de 1,16 h a 0,33 h.
+La solución de 8 minutos quedó guardada en `data/results/MILP_completo_warm_start_2h_8min/` y la cortada con Ctrl+C en `data/results/MILP_completo_warm_start_2h_interrumpida/`; ambas se pueden ver en el visualizador. Respecto de la heurística, cambia la secuencia de tramos de 16 de los 18 aviones usados. Además, 289 de sus 343 salidas quedan fuera de la grilla de 2 h, y la espera mediana sobre el TAT mínimo baja de 1,16 h a 0,33 h.
 
 Las mejoras vinieron de NoRel. En estas pruebas, el árbol de ramificación no avanzó más allá de la raíz. Por defecto el script deja NoRel con el valor predeterminado de Gurobi (`NoRelHeurTime = 0`, es decir, apagada); para usarla hay que indicar `--norel`, por ejemplo el 80 % de `--tiempo`. Con más tiempo (`--tiempo 14400` o más) NoRel puede seguir mejorando: en la prueba seguía encontrando soluciones mejores al final de sus 300 s. **El notebook debe estar conectado al cargador y con la suspensión desactivada:** en una de las pruebas, Windows lo suspendió 34 minutos por batería crítica y Gurobi quedó detenido todo ese tiempo.
 

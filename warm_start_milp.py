@@ -174,6 +174,24 @@ def extraer_itinerario(modelo):
     return itinerario
 
 
+def calidad_optimizacion(info):
+    """Bloque 'calidad_optimizacion' de indicadores_kpi.json (lo lee el visualizador) para las corridas MILP."""
+    return {
+        'metodo': info.get('modelo', 'MILP continuo (gurobi_model.py); transbordos en el paso final'),
+        'estado': info.get('estado'),
+        'objetivo_modelo': info.get('objetivo_modelo', info.get('objetivo_milp_sin_transbordos')),
+        'cota_modelo': info.get('cota', info.get('cota_milp')),
+        'gap_modelo': info.get('gap', info.get('gap_milp')),
+        'tiempo_gurobi_s': info.get('tiempo_gurobi_s'),
+        'aviones_libres': info.get('aviones_libres', 'todos'),
+        'gap_global_disponible': False,
+        'gap_global': None,
+        'nota': ('La cota y el gap son los del modelo resuelto: sin transbordos dentro del MILP (warm_start_milp.py) '
+                 'o con los aviones no libres fijos (modelos con --libres). No son una cota del problema completo; '
+                 'el margen reportado es el validado después del paso final con transbordos.'),
+    }
+
+
 def exportar(carpeta, itinerario, multi, val, datos, info, ttr_h):
     """Mismos archivos y columnas que exporta la heurística (main.py), para el visualizador."""
     os.makedirs(carpeta, exist_ok=True)
@@ -208,25 +226,15 @@ def exportar(carpeta, itinerario, multi, val, datos, info, ttr_h):
                                                'from_operator', 'to_operator']).to_csv(
         os.path.join(carpeta, 'transferencias_carga.csv'), index=False)
 
-    dem_tot = sum(datos['D_q'].values())
-    horas = sum(l['t_arr'] - l['t_dep'] for legs in itinerario.values() for l in legs)
-    cap = sum(datos['P_k'][k] for k, legs in itinerario.items() for l in legs)
-    freq = defaultdict(int)
-    for legs in itinerario.values():
-        for l in legs:
-            freq[tuple(l['tramo'])] += 1
+    # KPI: el validador es la fuente única (misma convención que src/reoptimizacion_por_avion.py)
     est = multi['estadisticas']
-    kpis = {'margen_usd': val['margen'], 'ingresos_usd': val['ingresos'], 'costo_vuelos_usd': val['costo_vuelos'],
-            'costo_handling_usd': val['handling'], 'toneladas': val['toneladas_entregadas'],
-            'pct_demanda': 100 * val['toneladas_entregadas'] / dem_tot, 'vuelos': val['vuelos'],
-            'aviones_usados': sum(1 for legs in itinerario.values() if legs), 'horas_bloque': horas,
-            'factor_ocupacion_pct': 100 * val['toneladas_entregadas'] / cap if cap else 0,
-            'frecuencias_cumplidas': f"{sum(freq[od] >= f for od, f in datos['f_od'].items())}/{len(datos['f_od'])}",
-            'flujo_through_t': est['flujo_through_t'], 'flujo_transferido_t': est['flujo_transferido_t'],
-            'conexiones_transferencia_usadas': est['conexiones_transferencia_usadas'],
-            'transferencias_entre_operadores': est['transferencias_entre_operadores'], 'ttr_h': ttr_h}
+    kpis = dict(val['kpis'])
+    kpis.update({'flujo_through_t': est['flujo_through_t'], 'flujo_transferido_t': est['flujo_transferido_t'],
+                 'conexiones_transferencia_usadas': est['conexiones_transferencia_usadas'],
+                 'transferencias_entre_operadores': est['transferencias_entre_operadores'], 'ttr_h': ttr_h})
     with open(os.path.join(carpeta, 'indicadores_kpi.json'), 'w', encoding='utf-8') as f:
-        json.dump({'kpis': kpis, 'validador_ok': val['ok'], 'violaciones': val['violaciones'], 'milp': info,
+        json.dump({'kpis': kpis, 'validador_ok': val['ok'], 'violaciones': val['violaciones'],
+                   'calidad_optimizacion': calidad_optimizacion(info), 'milp': info,
                    'modelo_carga': {k: x for k, x in multi.items() if k != 'solucion'}},
                   f, indent=2, ensure_ascii=False, default=str)
     with open(os.path.join(carpeta, 'modelo_resuelto.pkl'), 'wb') as f:

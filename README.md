@@ -18,10 +18,11 @@ El proyecto está modularizado para separar los datos, el motor matemático de l
   - `validador.py`: Auditor independiente de reglas logísticas.
   - `solver_util.py`: Herramientas de conectividad para solvers (HiGHS, Gurobi).
 - `main.py`: **Orquestador central e interactivo (CLI)**. Ejecuta el modelo guiado paso a paso, versiona los resultados y permite visualizar los datos.
-- `gurobi_model.py`: MILP completo (posición-indexado, tiempo continuo) con las mismas reglas que la heurística.
-- `warm_start_milp.py`: resuelve ese MILP partiendo de una corrida de la heurística (warm start). Detalles en `docs/README_milp_completo.md`.
-- `milp_continuo_transbordos.py`: MILP de `gurobi_model.py` con los transbordos dentro del modelo (problema completo); `--libres` indica qué aviones decide. Detalles en `docs/README_milp_continuo_transbordos.md`.
-- `modelo_integrado_espacio_tiempo.py`: MILP integrado en red espacio-tiempo (vuelos, carga multitramo y transbordos en un solo modelo); `--libres` indica qué aviones decide. Detalles en `docs/README_modelo_integrado_espacio_tiempo.md`.
+- **Modelos MILP integrados** (alternativa a la heurística; guía para el equipo en `docs/README_modelos_milp.md`):
+  - `gurobi_model.py`: MILP completo (posición-indexado, tiempo continuo) con las mismas reglas que la heurística.
+  - `warm_start_milp.py`: resuelve ese MILP partiendo de una corrida de la heurística (warm start). Detalles en `docs/README_milp_completo.md`.
+  - `milp_continuo_transbordos.py`: el mismo MILP con los transbordos dentro del modelo; `--libres` indica qué aviones decide. Detalles en `docs/README_milp_continuo_transbordos.md`.
+  - `modelo_integrado_espacio_tiempo.py`: MILP integrado en red espacio-tiempo (vuelos, carga multitramo y transbordos en un solo modelo); `--libres` indica qué aviones decide. Detalles en `docs/README_modelo_integrado_espacio_tiempo.md`.
 - `visualization/`: Interfaz gráfica web interactiva que despliega los resultados.
   - `main.py`: Script que levanta el servidor web.
 - **Archivos de configuración**:
@@ -54,7 +55,7 @@ La arquitectura ahora separa estrictamente la ejecución del modelo y la visuali
 Desde la raíz del proyecto, ejecuta el script del modelo para resolver y exportar los resultados en consola:
 
 ```bash
-python src/main.py
+python main.py
 ```
 
 **2. Levantar la Visualización (Interfaz Gráfica)**
@@ -64,19 +65,14 @@ Para levantar el servidor web y visualizar los resultados recién exportados en 
 python visualization/main.py
 ```
 
-**3. MILP completo con warm start (opcional)**
-Resuelve el MILP de `gurobi_model.py` partiendo de la corrida de 2 h. Deja los resultados en `data/results/MILP_completo_Ejecucion_con_intervalos_de_2_horas/`, que también se pueden ver en el visualizador. Las opciones están en `docs/README_milp_completo.md`.
+**3. Modelos MILP integrados (opcional)**
+Resuelven el problema con un MILP partiendo de la corrida de 2 h de la heurística, y dejan sus resultados en `data/results/` con el mismo formato que la heurística (se ven en el visualizador). Para mejorar la solución hay que pedir la heurística NoRel de Gurobi (`--norel`), porque viene apagada por defecto. El MILP de tiempo continuo, con todos los aviones a la vez, es el que mejoró la heurística en +66.581 USD en 8 minutos:
 
 ```bash
-python warm_start_milp.py --tiempo 3600
+python warm_start_milp.py --tiempo 3600 --norel 2880 --salida data/results/MILP_completo_1h
 ```
 
-**4. MILP integrado en red espacio-tiempo (opcional)**
-Vuelos, carga y transbordos en un solo modelo, partiendo de la corrida de 2 h. `--libres` indica qué aviones decide el modelo: `todos`, `ninguno`, aviones (`AC-06,AC-10`) u operadores (`BRA`). Con `todos` el modelo no cabe en un computador de 8 GB; ver `docs/README_modelo_integrado_espacio_tiempo.md`.
-
-```bash
-python modelo_integrado_espacio_tiempo.py --libres AC-06,AC-10 --tiempo 1800
-```
+Qué modelo usar, los resultados guardados, los supuestos y las opciones de cada script están en `docs/README_modelos_milp.md`.
 
 ## Bitácora de implementación
 
@@ -206,3 +202,13 @@ Nota: quedaron todas las restricciones comentadas.
   0.50  |   6298840  |  11800.2  |         36  |              18  |          0
   1.00  |   6298194  |  11800.2  |         29  |              18  |          0
   2.00  |   6310307  |  11806.2  |         33  |              19  |          0
+
+
+**Hito 11**
+- **Integrante**: Vicente Olea (con apoyo de Claude Code)
+- **Fecha**: 15 al 18 de Octubre de 2026
+- **Desarrollo**: Se retomó el MILP integrado para inyectarle la solución de la heurística como punto de partida (MIP start). Rama `milp-completo-warm-start`; guía para el equipo en `docs/README_modelos_milp.md`.
+  - `gurobi_model.py` se reescribió con las mismas reglas que `src/validador.py` (TAT 70/50/90 min, rotación cerrada, mantenimiento, frecuencias, mínimo 10 t, demanda por día, costos reales y handling) y su propia carga de datos, porque `estructuras_datos.py` se había borrado. Pasó de 2,2 millones a 84 mil restricciones.
+  - `warm_start_milp.py` inyecta la corrida de 2 h, verifica que cumpla todas las restricciones, resuelve con Gurobi, agrega los transbordos con el paso final de la heurística, valida y exporta. Con 8 minutos y la heurística NoRel de Gurobi llegó a un margen validado de **6.376.959 USD (+66.581, +1,1 %)**; una corrida cortada con Ctrl+C llegó a 6.359.560 USD.
+  - `modelo_integrado_espacio_tiempo.py` y `milp_continuo_transbordos.py` incluyen los transbordos dentro del modelo. Con los vuelos fijos reproducen exactamente la heurística (6.310.378 USD), pero con todos los aviones libres no caben en un computador de 8 GB (11,9 M variables y 8,8 M binarias de transbordo, respectivamente); se pueden resolver liberando pocos aviones (`--libres`).
+  - Los resultados MILP calculan sus KPI con `src/validador.py`, igual que la heurística desde el commit "centraliza KPIs y calidad de solución", y quedan en `data/results/MILP_*`, visibles en el visualizador.

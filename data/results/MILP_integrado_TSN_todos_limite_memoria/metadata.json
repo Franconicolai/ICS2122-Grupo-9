@@ -1,7 +1,7 @@
 {
-  "version": "MILP_integrado_TSN_todos",
+  "version": "MILP_integrado_TSN_todos_limite_memoria",
   "fecha": "2026-10-15 18:54:41",
-  "descripcion": "MILP integrado espacio-tiempo (DT 2 h), aviones libres: todos, start desde Ejecucion_con_intervalos_de_2_horas",
+  "descripcion": "MILP integrado espacio-tiempo, todos los aviones libres: Gurobi se detuvo por memoria a los ~11 s y se exporta la solución de partida",
   "solver": "gurobi",
   "dt": "2",
   "tlim": 3600

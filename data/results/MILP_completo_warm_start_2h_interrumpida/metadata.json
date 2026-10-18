@@ -1,7 +1,7 @@
 {
-  "version": "MILP_completo_Ejecucion_con_intervalos_de_2_horas",
+  "version": "MILP_completo_warm_start_2h_interrumpida",
   "fecha": "2026-10-16 10:29:15",
-  "descripcion": "MILP completo con warm start desde Ejecucion_con_intervalos_de_2_horas",
+  "descripcion": "MILP continuo (warm_start_milp.py) desde la corrida de 2 h, cortado con Ctrl+C (corrida del 16-10-2026)",
   "solver": "gurobi",
   "dt": "continuo (MILP)",
   "tlim": 999999999.0
