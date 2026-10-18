@@ -115,8 +115,8 @@ python modelo_integrado_espacio_tiempo.py --libres AC-06,AC-10 --tiempo 1800
 | `--corrida` | corrida de 2 h | Corrida de la heurística: start y vuelos de los aviones fijos (debe estar en la grilla de `DT`) |
 | `--dt` / `--ttr` | los de la corrida | Horas por bloque y `TTR_H` |
 | `--tiempo` | 3600 | Segundos de Gurobi |
-| `--norel` | 80 % de `--tiempo` | Segundos de la heurística NoRel antes de la raíz |
-| `--memoria` | 5 | GB máximos para Gurobi; si los supera, se detiene y exporta la mejor solución |
+| `--norel` | predeterminado de Gurobi | Segundos de la heurística NoRel antes de la raíz |
+| `--memoria` | 0 (sin límite) | GB máximos para Gurobi; si los supera, se detiene y exporta la mejor solución |
 | `--hilos`, `--presolve`, `--mipfocus`, `--gap` | todos, -1, 1, 0,01 | Parámetros de Gurobi |
 | `--salida` | `data/results/MILP_integrado_TSN_<libres>` | Carpeta de salida |
 

@@ -104,8 +104,10 @@ def cargar_datos(ruta_raw: str = RAW, s_max: int = S_MAX) -> Dict[str, Any]:
     }
 
 
-def construir_modelo_completo(datos: Dict[str, Any], env: gp.Env = None) -> gp.Model:
-    """Arma el MILP. Las variables quedan en modelo._v (diccionario de tupledicts) y los datos en modelo._datos."""
+def construir_modelo_completo(datos: Dict[str, Any], env: gp.Env = None, transbordos: bool = False) -> gp.Model:
+    """Arma el MILP. Las variables quedan en modelo._v (diccionario de tupledicts) y los datos en modelo._datos.
+    Con transbordos=True cada vuelo puede recibir (tin) y entregar (tout) carga a otros aviones; los pares de
+    vuelos y sus reglas se agregan en milp_continuo_transbordos.py."""
     if env is None:
         env = gp.Env(empty=True)
         env.setParam("OutputFlag", 1)
@@ -132,9 +134,14 @@ def construir_modelo_completo(datos: Dict[str, Any], env: gp.Env = None) -> gp.M
             sale[k, e[0]].append(e)
             llega[k, e[1]].append(e)
 
-    # Sin transbordos, un avión solo puede llevar commodities que embarca en su origen y entrega en su destino
-    Q_k = {k: [q for q in Q if sale[k, q[0]] and llega[k, q[1]]] for k in K}
-    D_k = {k: sorted({q[1] for q in Q_k[k]}) for k in K}
+    # Sin transbordos, un avión solo puede llevar commodities que embarca en su origen y entrega en su destino;
+    # con transbordos, embarca lo que sale de sus aeropuertos y puede llevar carga hacia cualquier destino
+    if transbordos:
+        Q_k = {k: [q for q in Q if sale[k, q[0]]] for k in K}
+        D_k = {k: sorted({q[1] for q in Q}) for k in K}
+    else:
+        Q_k = {k: [q for q in Q if sale[k, q[0]] and llega[k, q[1]]] for k in K}
+        D_k = {k: sorted({q[1] for q in Q_k[k]}) for k in K}
     O_k = {k: sorted({q[0] for q in Q_k[k]}) for k in K}
     Q_kd, Q_ko, Q_kdia = defaultdict(list), defaultdict(list), defaultdict(list)
     for k in K:
@@ -169,6 +176,9 @@ def construir_modelo_completo(datos: Dict[str, Any], env: gp.Env = None) -> gp.M
     a = modelo.addVars(DKS, lb=0, ub=[P_k[k] for d, k, s in DKS], name="a")  # entregado en d
     w = modelo.addVars(DKS_menos, lb=0, ub=[P_k[k] for d, k, s in DKS_menos], name="w")  # sigue en s+1 (through)
     s_q = modelo.addVars(Q, lb=0, ub=[D_q[q] for q in Q], name="s_q")      # toneladas servidas (R26c: s_q <= D_q)
+    if transbordos:
+        tin = modelo.addVars(DKS, lb=0, ub=[P_k[k] for d, k, s in DKS], name="tin")    # recibido de otro avión
+        tout = modelo.addVars(DKS, lb=0, ub=[P_k[k] for d, k, s in DKS], name="tout")  # entregado a otro avión
 
     # Expresiones auxiliares por posición
     def llega_a(k, s, aerop):
@@ -261,12 +271,14 @@ def construir_modelo_completo(datos: Dict[str, Any], env: gp.Env = None) -> gp.M
     modelo.addConstrs((lc[k, s] <= u[k, s] for k, s in KS), name="R8_uso")
 
     # R20: balance al entrar: lo que va a bordo hacia d = embarque inicial con destino d + lo que sigue del vuelo s-1
+    #      (+ lo recibido de otro avión, si hay transbordos)
     modelo.addConstrs((x[d, k, s] == gp.quicksum(b[q, k, s] for q in Q_kd[k, d]) + (w[d, k, s-1] if s > 1 else 0)
-                       for d, k, s in DKS), name="R20_entrada")
+                       + (tin[d, k, s] if transbordos else 0) for d, k, s in DKS), name="R20_entrada")
 
     # R21: balance al salir: se entrega en el destino o sigue en el vuelo s+1 del mismo avión
-    modelo.addConstrs((x[d, k, s] == a[d, k, s] + (w[d, k, s] if s < S_max_k[k] else 0) for d, k, s in DKS),
-                      name="R21_salida")
+    #      (o se entrega a otro avión, si hay transbordos)
+    modelo.addConstrs((x[d, k, s] == a[d, k, s] + (w[d, k, s] if s < S_max_k[k] else 0)
+                       + (tout[d, k, s] if transbordos else 0) for d, k, s in DKS), name="R21_salida")
 
     # R23: solo se embarca carga en un vuelo que sale del origen del commodity
     modelo.addConstrs((gp.quicksum(b[q, k, s] for q in Q_ko[k, o]) <= P_k[k] * sale_de(k, s, o)
@@ -297,5 +309,7 @@ def construir_modelo_completo(datos: Dict[str, Any], env: gp.Env = None) -> gp.M
 
     modelo._v = {'y': y, 'u': u, 'l': l, 't_dep': t_dep, 't_arr': t_arr, 'dia': dia, 'lc': lc, 'll': ll,
                  'g': g, 'gc': gc, 'm0': m0, 'm': m, 'b': b, 'x': x, 'a': a, 'w': w, 's_q': s_q}
+    if transbordos:
+        modelo._v.update(tin=tin, tout=tout)
     modelo._datos = datos
     return modelo

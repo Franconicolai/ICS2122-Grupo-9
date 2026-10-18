@@ -549,11 +549,13 @@ def main():
     ap.add_argument('--ttr', type=float, default=None, help='TTR_H (h) de los transbordos; por defecto el de la corrida')
     ap.add_argument('--tiempo', type=float, default=3600, help='segundos de Gurobi. Por defecto 3600')
     ap.add_argument('--norel', type=float, default=None,
-                    help='segundos de la heurística NoRel de Gurobi antes de la raíz; por defecto el 80 %% de --tiempo')
+                    help='segundos de la heurística NoRel de Gurobi antes de la raíz; por defecto, el valor '
+                         'predeterminado de Gurobi')
     ap.add_argument('--gap', type=float, default=0.01, help='MIPGap. Por defecto 0.01')
     ap.add_argument('--mipfocus', type=int, default=1, help='MIPFocus de Gurobi. Por defecto 1')
     ap.add_argument('--hilos', type=int, default=0, help='Threads de Gurobi (0 = todos)')
-    ap.add_argument('--memoria', type=float, default=5.0, help='GB máximos para Gurobi; al superarlos se detiene y exporta')
+    ap.add_argument('--memoria', type=float, default=0,
+                    help='GB máximos para Gurobi; al superarlos se detiene y exporta. Por defecto 0: sin límite')
     ap.add_argument('--presolve', type=int, default=-1,
                     help='Presolve de Gurobi (-1 automático, 0 apagado: ahorra la copia presolvida en modelos enormes)')
     ap.add_argument('--salida', default=None, help='carpeta de salida (por defecto data/results/MILP_integrado_TSN_<libres>)')
@@ -621,21 +623,22 @@ def main():
     modelo.ObjCon = red['constante']
     red['A'] = None                                       # Gurobi ya tiene su copia
     xv.Start = xs
-    norel = args.norel if args.norel is not None else 0.8 * args.tiempo
     prm = modelo.Params
     prm.TimeLimit = args.tiempo
     prm.MIPGap = args.gap
     prm.MIPFocus = args.mipfocus
     prm.NodefileStart = 0.5
     prm.LogFile = os.path.join(salida, 'gurobi.log')
-    if norel > 0:
-        prm.NoRelHeurTime = norel
+    if args.norel is not None:   # sin --norel se deja el valor predeterminado de Gurobi
+        prm.NoRelHeurTime = args.norel
+    norel = prm.NoRelHeurTime
     if args.hilos:
         prm.Threads = args.hilos
     if args.memoria:
         prm.SoftMemLimit = args.memoria
     prm.Presolve = args.presolve
-    print(f'[4/5] Gurobi: hasta {args.tiempo:,.0f} s, de ellos {norel:,.0f} s de heurística NoRel '
+    print(f'[4/5] Gurobi: hasta {args.tiempo:,.0f} s; heurística NoRel: '
+          f'{"predeterminada de Gurobi" if args.norel is None else f"{norel:,.0f} s"} '
           f'(Ctrl+C para cortar y exportar la mejor solución)...', flush=True)
     modelo.optimize()
 

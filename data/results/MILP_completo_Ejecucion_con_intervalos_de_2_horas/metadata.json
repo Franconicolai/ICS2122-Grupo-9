@@ -1,0 +1,8 @@
+{
+  "version": "MILP_completo_Ejecucion_con_intervalos_de_2_horas",
+  "fecha": "2026-10-16 10:29:15",
+  "descripcion": "MILP completo con warm start desde Ejecucion_con_intervalos_de_2_horas",
+  "solver": "gurobi",
+  "dt": "continuo (MILP)",
+  "tlim": 999999999.0
+}

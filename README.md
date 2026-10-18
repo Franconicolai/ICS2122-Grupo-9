@@ -20,6 +20,7 @@ El proyecto está modularizado para separar los datos, el motor matemático de l
 - `main.py`: **Orquestador central e interactivo (CLI)**. Ejecuta el modelo guiado paso a paso, versiona los resultados y permite visualizar los datos.
 - `gurobi_model.py`: MILP completo (posición-indexado, tiempo continuo) con las mismas reglas que la heurística.
 - `warm_start_milp.py`: resuelve ese MILP partiendo de una corrida de la heurística (warm start). Detalles en `docs/README_milp_completo.md`.
+- `milp_continuo_transbordos.py`: MILP de `gurobi_model.py` con los transbordos dentro del modelo (problema completo); `--libres` indica qué aviones decide. Detalles en `docs/README_milp_continuo_transbordos.md`.
 - `modelo_integrado_espacio_tiempo.py`: MILP integrado en red espacio-tiempo (vuelos, carga multitramo y transbordos en un solo modelo); `--libres` indica qué aviones decide. Detalles en `docs/README_modelo_integrado_espacio_tiempo.md`.
 - `visualization/`: Interfaz gráfica web interactiva que despliega los resultados.
   - `main.py`: Script que levanta el servidor web.

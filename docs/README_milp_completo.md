@@ -145,8 +145,8 @@ Opciones:
 | `--corrida` | corrida de 2 h | Otra carpeta de resultados como start; también sirve la salida de un MILP anterior, para encadenar corridas |
 | `--smax` | 32 | Posiciones por avión |
 | `--ttr` | el de la corrida (2 h) | `TTR_H` de los transbordos del paso final |
-| `--memoria` | 5 | GB máximos para Gurobi; si los supera, se detiene y exporta la mejor solución |
-| `--norel` | 80 % de `--tiempo` | Segundos de la heurística NoRel de Gurobi antes de la raíz, que mejora el start sin resolver el LP; `0` la desactiva |
+| `--memoria` | 0 (sin límite) | GB máximos para Gurobi; si los supera, se detiene y exporta la mejor solución |
+| `--norel` | predeterminado de Gurobi | Segundos de la heurística NoRel de Gurobi antes de la raíz, que mejora el start sin resolver el LP |
 | `--hilos` | todos | Hilos de Gurobi |
 | `--mipfocus` | 1 | 1 = priorizar mejores soluciones |
 | `--gap` | 0,01 | Gap de término |
@@ -182,7 +182,7 @@ Al terminar, la consola muestra el margen validado de la heurística y el del MI
 
 La solución de 8 minutos quedó guardada en `data/results/MILP_completo_warm_start_2h_8min/` y se puede ver en el visualizador. Respecto de la heurística, cambia la secuencia de tramos de 16 de los 18 aviones usados. Además, 289 de sus 343 salidas quedan fuera de la grilla de 2 h, y la espera mediana sobre el TAT mínimo baja de 1,16 h a 0,33 h.
 
-Las mejoras vinieron de NoRel. En estas pruebas, el árbol de ramificación no avanzó más allá de la raíz. Por eso el script usa NoRel por defecto durante el 80 % del tiempo. Con más tiempo (`--tiempo 14400` o más) NoRel puede seguir mejorando: en la prueba seguía encontrando soluciones mejores al final de sus 300 s. **El notebook debe estar conectado al cargador y con la suspensión desactivada:** en una de las pruebas, Windows lo suspendió 34 minutos por batería crítica y Gurobi quedó detenido todo ese tiempo.
+Las mejoras vinieron de NoRel. En estas pruebas, el árbol de ramificación no avanzó más allá de la raíz. Por defecto el script deja NoRel con el valor predeterminado de Gurobi (`NoRelHeurTime = 0`, es decir, apagada); para usarla hay que indicar `--norel`, por ejemplo el 80 % de `--tiempo`. Con más tiempo (`--tiempo 14400` o más) NoRel puede seguir mejorando: en la prueba seguía encontrando soluciones mejores al final de sus 300 s. **El notebook debe estar conectado al cargador y con la suspensión desactivada:** en una de las pruebas, Windows lo suspendió 34 minutos por batería crítica y Gurobi quedó detenido todo ese tiempo.
 
 ## 8. Limitaciones
 

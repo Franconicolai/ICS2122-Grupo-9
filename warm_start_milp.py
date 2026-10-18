@@ -12,8 +12,9 @@ Pasos:
  2. Recalcula la carga de esos vuelos sin transbordos con el submodelo de la heurística
     (src/asignacion_carga_multitramos.py), porque el MILP no tiene transbordos entre aviones.
  3. Arma el MIP start (un valor para cada variable del MILP) y revisa que cumpla todas sus restricciones.
- 4. Resuelve el MILP con Gurobi desde ese start. Por defecto, el 80 % del tiempo corre la heurística NoRel de Gurobi,
-    que en las pruebas fue la que mejoró el start. Se puede cortar con Ctrl+C: se exporta la mejor solución.
+ 4. Resuelve el MILP con Gurobi desde ese start. La heurística NoRel, que en las pruebas fue la que mejoró el start,
+    usa el valor predeterminado de Gurobi salvo que se indique --norel. Se puede cortar con Ctrl+C: se exporta la
+    mejor solución.
  5. Sobre los vuelos del MILP agrega los transbordos con el mismo submodelo de la heurística (TTR_H), valida
     con src/validador.py y exporta los resultados con el mismo formato que main.py (sirven para el visualizador).
 """
@@ -118,10 +119,13 @@ def armar_start(modelo, itinerario, cargas):
                 raise ValueError(f"{k}: el itinerario no respeta su ventana de mantenimiento")
     for c in cargas:
         q, k, s = tuple(c['q']), c['k'], int(c['s'])
-        if (q, k, s) not in v['b']:
-            raise ValueError(f"{k} lleva {q} en la posición {s}, pero no lo puede embarcar y entregar sin transbordo")
-        st[v['b'][q, k, s]] += c['b']
-        st[v['s_q'][q]] += c['b']
+        if c['b'] > 1e-9:
+            if (q, k, s) not in v['b']:
+                raise ValueError(f"{k} embarca {q} en la posición {s}, pero el modelo no lo permite")
+            st[v['b'][q, k, s]] += c['b']
+            st[v['s_q'][q]] += c['b']
+        if (q[1], k, s) not in v['x']:
+            raise ValueError(f"{k} lleva {q} en la posición {s}, pero no lo puede llevar sin transbordo")
         st[v['x'][q[1], k, s]] += c['x']
         st[v['a'][q[1], k, s]] += c['a']
         if c['w'] > 1e-9:
@@ -252,9 +256,10 @@ def main():
     ap.add_argument('--mipfocus', type=int, default=1, help='MIPFocus de Gurobi. Por defecto 1 (buscar mejores soluciones)')
     ap.add_argument('--norel', type=float, default=None,
                     help='segundos de la heurística NoRel de Gurobi antes de la raíz (mejora el start sin resolver el LP); '
-                         'por defecto el 80 %% de --tiempo, 0 la desactiva')
+                         'por defecto, el valor predeterminado de Gurobi')
     ap.add_argument('--hilos', type=int, default=0, help='Threads de Gurobi (0 = todos)')
-    ap.add_argument('--memoria', type=float, default=5.0, help='GB máximos para Gurobi; al superarlos se detiene y exporta')
+    ap.add_argument('--memoria', type=float, default=0,
+                    help='GB máximos para Gurobi; al superarlos se detiene y exporta. Por defecto 0: sin límite')
     ap.add_argument('--solo-verificar', action='store_true', help='arma el modelo y revisa el start, sin optimizar')
     ap.add_argument('--sin-start', action='store_true', help='resuelve el MILP sin warm start (para comparar)')
     args = ap.parse_args()
@@ -304,14 +309,15 @@ def main():
     prm.MIPFocus = args.mipfocus
     prm.NodefileStart = 0.5
     prm.LogFile = os.path.join(salida, 'gurobi.log')
-    norel = args.norel if args.norel is not None else 0.8 * args.tiempo
-    if norel > 0:   # en las pruebas, NoRel fue lo que mejoró el start; el árbol no avanzó más allá de la raíz
-        prm.NoRelHeurTime = norel
+    if args.norel is not None:   # sin --norel se deja el valor predeterminado de Gurobi
+        prm.NoRelHeurTime = args.norel
+    norel = prm.NoRelHeurTime
     if args.hilos:
         prm.Threads = args.hilos
     if args.memoria:
         prm.SoftMemLimit = args.memoria
-    print(f'[4/5] Gurobi: hasta {args.tiempo:,.0f} s, de ellos {norel:,.0f} s de heurística NoRel '
+    print(f'[4/5] Gurobi: hasta {args.tiempo:,.0f} s; heurística NoRel: '
+          f'{"predeterminada de Gurobi" if args.norel is None else f"{norel:,.0f} s"} '
           f'(Ctrl+C para cortar y exportar la mejor solución)...', flush=True)
     modelo.optimize()
 

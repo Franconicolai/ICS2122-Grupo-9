@@ -1,0 +1,66 @@
+{
+  "kpis": {
+    "margen_usd": 6359559.82500001,
+    "ingresos_usd": 18122399.0,
+    "costo_vuelos_usd": 11266315.17499999,
+    "costo_handling_usd": 496523.99999999977,
+    "toneladas": 11654.799999999997,
+    "pct_demanda": 87.12501214762544,
+    "vuelos": 340,
+    "aviones_usados": 17,
+    "horas_bloque": 1311.7500000000007,
+    "factor_ocupacion_pct": 65.75716542541186,
+    "frecuencias_cumplidas": "25/25",
+    "flujo_through_t": 879.9899999999998,
+    "flujo_transferido_t": 149.50000000000003,
+    "conexiones_transferencia_usadas": 36,
+    "transferencias_entre_operadores": 23,
+    "ttr_h": 2.0
+  },
+  "validador_ok": true,
+  "violaciones": [],
+  "milp": {
+    "corrida_start": "Ejecucion_con_intervalos_de_2_horas",
+    "estado": "Interrumpido (Ctrl+C)",
+    "objetivo_milp_sin_transbordos": 6217972.424999996,
+    "cota_milp": 8257861.301398906,
+    "gap_milp": 0.32806335200158293,
+    "tiempo_gurobi_s": 44877.8180000782,
+    "tiempo_limite_s": 999999999.0,
+    "norel_s": 0.0,
+    "objetivo_start": 6138952.274000002,
+    "warm_start": true,
+    "margen_heuristica_usd": 6310307.054000012,
+    "margen_heuristica_mismo_paso_final_usd": 6310378.454000012,
+    "margen_start_sin_transbordos_usd": 6138952.274000012,
+    "s_max": 32,
+    "variables": 262244,
+    "variables_enteras": 94739,
+    "restricciones": 83787,
+    "margen_milp_sin_transbordos_validado_usd": 6217972.425000011
+  },
+  "modelo_carga": {
+    "ok": true,
+    "estado": "Optimal",
+    "objetivo_carga": 17625874.999999996,
+    "cota": 17625874.999999996,
+    "gap": 0.0,
+    "tiempo_s": 31.809191703796387,
+    "estadisticas": {
+      "toneladas_entregadas": 11654.799999999994,
+      "toneladas_directas": 11021.21,
+      "flujo_through_t": 879.9899999999998,
+      "flujo_transferido_t": 149.50000000000003,
+      "conexiones_transferencia_usadas": 36,
+      "transferencias_entre_operadores": 23
+    },
+    "tamano": {
+      "vuelos": 340,
+      "conexiones": 10267,
+      "commodities_con_camino": 205,
+      "variables": 471237,
+      "variables_enteras": 463,
+      "restricciones": 48861
+    }
+  }
+}
