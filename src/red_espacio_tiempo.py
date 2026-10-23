@@ -34,6 +34,9 @@ TLIM = float(os.environ.get('TLIM', 600))       # segundos
 GAP = float(os.environ.get('GAP', 0.01))
 NOWRAP = os.environ.get('NOWRAP', '1') == '1'
 H = 168.0
+# START: carpeta de una corrida anterior (itinerario_vuelos.csv). Sus vuelos se usan como punto de partida de los
+# pasos 1 y 2 (solo con Gurobi), y al final se conserva la mejor de las dos soluciones. Sirve para refinar la grilla:
+# una corrida de 2 h es factible con DT = 1 h, 30 min o 15 min, así que la grilla fina parte de ella.
 
 
 def cargar():
@@ -157,14 +160,70 @@ def construir(DT=DT):
     return (cols_lb, cols_ub, cols_obj, cols_int, rows), info
 
 
-def resolver(modelo, info, tlim=TLIM, gap=GAP, relax=False):
+def resolver(modelo, info, tlim=TLIM, gap=GAP, relax=False, start=None):
     """Función resolver: [Descripción pendiente]."""
     from solver_util import resolver_matriz, filas_a_matriz, SOLVER
     cols_lb, cols_ub, cols_obj, cols_int, rows = modelo
     A, lo, hi = filas_a_matriz(rows, len(cols_lb))
     print(f'Modelo: {len(cols_lb)} variables ({sum(cols_int)} enteras), {len(rows)} restricciones, '
           f'{A.nnz} no ceros. Solver: {SOLVER}', flush=True)
-    return resolver_matriz(cols_lb, cols_ub, cols_obj, cols_int, A, lo, hi, tlim, gap, log=True, relax=relax)
+    return resolver_matriz(cols_lb, cols_ub, cols_obj, cols_int, A, lo, hi, tlim, gap, log=True, relax=relax,
+                           start=start)
+
+
+def leer_itinerario(carpeta):
+    """Vuelos de una corrida anterior: {avión: [{'op', 'tramo', 't_dep'}]} desde itinerario_vuelos.csv."""
+    df = pd.read_csv(os.path.join(carpeta, 'itinerario_vuelos.csv'))
+    itinerario = {}
+    for r in df.sort_values(['avion', 'pos']).itertuples():
+        itinerario.setdefault(r.avion, []).append({'op': r.operador, 'tramo': (r.origen, r.destino),
+                                                   't_dep': float(r.t_dep_h)})
+    return itinerario
+
+
+def bloques_itinerario(itinerario, DT):
+    """{avión: [(tramo, bloque de salida)]} ordenado por salida; None si alguna salida no cae en la grilla."""
+    bloques = {}
+    for k, legs in itinerario.items():
+        b = []
+        for l in legs:
+            t = l['t_dep'] / DT
+            if abs(t - round(t)) > 1e-6:
+                return None
+            b.append((l['tramo'], int(round(t))))
+        bloques[k] = sorted(b, key=lambda v: v[1])
+    return bloques
+
+
+def esperas_avion(b, dur, T):
+    """Bloques en tierra de un avión entre cada llegada y su siguiente salida (red cíclica): [(aeropuerto, t)]."""
+    esperas = []
+    for i, (e, t) in enumerate(b):
+        e2, t2 = b[(i + 1) % len(b)]
+        fin = t2 + (T if i + 1 == len(b) else 0)
+        esperas += [(e[1], tt % T) for tt in range(t + dur[e], fin)]
+    return esperas
+
+
+def start_paso_1(info, itinerario, DT):
+    """Punto de partida parcial del paso 1: vuelos (n) y esperas (g) por operador de una corrida anterior; Gurobi
+    completa la carga. Devuelve (start, motivo si no se puede usar)."""
+    vb = bloques_itinerario(itinerario, DT)
+    if vb is None:
+        return None, f'sus horarios no caen en la grilla de {DT:g} h'
+    start = {j: 0 for j in list(info['n'].values()) + list(info['g'].values())}
+    for k, b in vb.items():
+        if not b:
+            continue
+        op = itinerario[k][0]['op']
+        for e, t in b:
+            j = info['n'].get((op, e, t))
+            if j is None:
+                return None, f'el vuelo {k} {e} del bloque {t} no existe en la red'
+            start[j] += 1
+        for a, t in esperas_avion(b, info['dur'], info['T']):
+            start[info['g'][op, a, t]] += 1
+    return start, None
 
 
 def kpis(info, sol):
@@ -193,12 +252,16 @@ def run_paso_1(salida_pkl=None):
     t0 = time.time()
     modelo, info = construir()
     print(f'Construcción: {time.time()-t0:.1f}s, DT={DT} h, T={info["T"]} bloques')
-    r = resolver(modelo, info, relax=False)
+    start = None
+    if os.environ.get('START'):
+        start, motivo = start_paso_1(info, leer_itinerario(os.environ['START']), DT)
+        print(f'Punto de partida: {os.environ["START"]} ' + ('(vuelos y esperas; Gurobi completa la carga)'
+                                                              if start else f'NO se usa: {motivo}'), flush=True)
+    r = resolver(modelo, info, relax=False, start=start)
     print({k: v for k, v in r.items() if k != 'sol'})
     if r['sol'] is not None:
         for k, v in kpis(info, r['sol']).items(): print(f'  {k}: {v}')
         import pickle
-        import os
         salida = salida_pkl or os.environ.get('OUT', os.path.join('data', 'results', f'sol_dt{DT:g}.pkl'))
         os.makedirs(os.path.dirname(salida), exist_ok=True)
         pickle.dump({'info': info, 'sol': list(r['sol']),

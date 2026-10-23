@@ -1,0 +1,11 @@
+{
+  "version": "Heuristica_dt1_desde_2h",
+  "descripcion": "Heurística DT 1 h con punto de partida en la corrida de 2 h (START) y enlace fuerte en el paso 2",
+  "fecha": "2026-10-23 01:23:38",
+  "solver": "gurobi",
+  "dt": "1",
+  "tlim": "1500",
+  "tlim_op": "420",
+  "start": "data/results/Ejecucion_con_intervalos_de_2_horas",
+  "enlace_fuerte": "1"
+}

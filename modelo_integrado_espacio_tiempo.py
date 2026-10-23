@@ -12,9 +12,15 @@ partida, pero su carga y sus transbordos se vuelven a optimizar junto con los av
 
 La solución de la corrida (por defecto, la de 2 h) se inyecta completa como MIP start, con sus transbordos.
 
+--sin-transbordos arma el mismo modelo sin transbordos entre aviones (la carga solo sigue a bordo del avión que la
+embarcó). Es casi la mitad del tamaño; los transbordos se agregan después con el paso final de la heurística, así
+que su cota no es una cota del problema con transbordos. --relajacion resuelve solo la relajación lineal (la cota
+que daría la raíz) con barrera.
+
 Uso, desde la raíz del repositorio:
     python modelo_integrado_espacio_tiempo.py --libres AC-06,AC-10 --tiempo 1800
     python modelo_integrado_espacio_tiempo.py --libres todos --estimar     # solo el tamaño del modelo
+    python modelo_integrado_espacio_tiempo.py --libres todos --sin-transbordos --relajacion
     python modelo_integrado_espacio_tiempo.py --help
 
 La formulación está en docs/README_modelo_integrado_espacio_tiempo.md.
@@ -95,9 +101,11 @@ def interpretar_libres(texto, datos):
     return libres
 
 
-def construir(datos, dt, ttr, itinerario, libres, estimar=False):
+def construir(datos, dt, ttr, itinerario, libres, estimar=False, transbordos=True, enlace_fuerte=False):
     """Arma la red espacio-tiempo integrada. Devuelve la matriz, las columnas y los índices necesarios para
-    inyectar el start y leer la solución (o solo el tamaño, si estimar=True)."""
+    inyectar el start y leer la solución (o solo el tamaño, si estimar=True). transbordos=False omite el depósito
+    de transbordos: la carga solo baja en su destino. enlace_fuerte=True agrega B(a,q) <= min(D_q, P) z(a) en los
+    vuelos libres: no corta soluciones enteras, pero ajusta la relajación lineal."""
     K, E, Q, tau = datos['K'], datos['E'], datos['Q'], datos['tau_e']
     T = int(round(gm.H / dt))
     if abs(T * dt - gm.H) > 1e-9:
@@ -161,7 +169,7 @@ def construir(datos, dt, ttr, itinerario, libres, estimar=False):
             raise ValueError(f'{k}: la rotación no cierra en la grilla de {dt} h')
 
     # ---------------------------------------------------------------- dónde existe cada variable
-    baja_ok = ~es_tec[a_d] & soporte[a_d, a_op] & (a_avail <= T - 1)
+    baja_ok = ~es_tec[a_d] & soporte[a_d, a_op] & (a_avail <= T - 1) & transbordos
     XM = (a_tarr < T)[:, None] | (np.arange(nD)[None, :] == a_dest[:, None]) | baja_ok[:, None]
     DM = baja_ok[:, None] & XM
     Qarr = -np.ones((nA, nD, 8), dtype=np.int64)
@@ -183,8 +191,8 @@ def construir(datos, dt, ttr, itinerario, libres, estimar=False):
     en_tierra[:, :, T - 1] = False                    # la carga no cruza el corte de la semana
     nodo_salida = np.zeros((nK, nA, T), dtype=bool)
     nodo_salida[a_k, a_o, a_t] = True
-    PKM = nodo_salida & ~es_tec[None, :, None] & soporte[:, OPK].T[:, :, None]
-    deposito_ok = ~es_tec & soporte.any(axis=1)
+    PKM = nodo_salida & ~es_tec[None, :, None] & soporte[:, OPK].T[:, :, None] & transbordos
+    deposito_ok = ~es_tec & soporte.any(axis=1) & transbordos
     # el depósito se lleva por avión que baja la carga: así se impide que un avión suba carga que él mismo bajó
     SP = np.zeros((nK, nA), dtype=bool)
     SP[a_k[baja_ok], a_d[baja_ok]] = True
@@ -279,38 +287,39 @@ def construir(datos, dt, ttr, itinerario, libres, estimar=False):
         R.entradas(inicio + fila_de[n_ * nD + d_], c_, v_)
     del usada, fila_de
 
-    # (2) depósito de transbordos, llevado por avión que baja la carga:
-    #  (2a) inventario del avión k: anterior + sus bajadas que quedan disponibles en el bloque (aterrizaje + TTR_H)
-    #       - lo que sale hacia otros aviones = inventario siguiente (no cruza el corte de la semana)
-    par = np.full((nK, nA), -1, dtype=np.int64)                 # solo los pares (avión, aeropuerto) que pueden bajar
-    par[SP] = np.arange(int(SP.sum()))
-    clave4 = lambda k, a, d, tt: (par[k, a] * nD + d) * T + tt
-    inicio = R.nuevas('inventario del depósito por avión que baja', int(SP.sum()) * nD * T, '=', 0)
-    sk_k, sk_a, sk_d, sk_t = np.nonzero(SKM)
-    R.entradas(inicio + clave4(sk_k, sk_a, sk_d, sk_t), SK[sk_k, sk_a, sk_d, sk_t], -1.0)
-    R.entradas(inicio + clave4(sk_k, sk_a, sk_d, sk_t + 1), SK[sk_k, sk_a, sk_d, sk_t], 1.0)
-    ok_k, ok_a, ok_d, ok_t = np.nonzero(OKM)
-    R.entradas(inicio + clave4(ok_k, ok_a, ok_d, ok_t), OK[ok_k, ok_a, ok_d, ok_t], -1.0)
-    ai, di = np.nonzero(DM)
-    R.entradas(inicio + clave4(a_k[ai], a_d[ai], di, a_avail[ai]), DR[ai, di], 1.0)
-    #  (2b) en cada (aeropuerto, destino, bloque): lo que sale de los inventarios = total transbordado = lo que suben
-    clave = lambda a, d, tt: (a * nD + d) * T + tt
-    inicio = R.nuevas('salidas del depósito = total transbordado', nA * nD * T, '=', 0)
-    R.entradas(inicio + clave(ok_a, ok_d, ok_t), OK[ok_k, ok_a, ok_d, ok_t], 1.0)
-    ta, td, tt_ = np.nonzero(TM)
-    R.entradas(inicio + clave(ta, td, tt_), TOT[ta, td, tt_], -1.0)
-    inicio = R.nuevas('subidas = total transbordado', nA * nD * T, '=', 0)
-    R.entradas(inicio + clave(pa_, pd_, pt_), PK[pk_, pa_, pt_, pd_], 1.0)
-    R.entradas(inicio + clave(ta, td, tt_), TOT[ta, td, tt_], -1.0)
-    #  (2c) un avión no sube carga que él mismo bajó: con lo que sale de su inventario (o_k) y lo que sube (p_k),
-    #       o_k + p_k <= total asegura que todo se puede asignar entre aviones distintos (condición de Hall)
-    ambos = OKM & PKM[:, :, None, :]
-    ak_, aa_, ad_, at_ = np.nonzero(ambos)
-    inicio = R.nuevas('sin re-embarque propio', len(ak_), '<', 0)
-    filas = inicio + np.arange(len(ak_))
-    R.entradas(filas, OK[ak_, aa_, ad_, at_], 1.0)
-    R.entradas(filas, PK[ak_, aa_, at_, ad_], 1.0)
-    R.entradas(filas, TOT[aa_, ad_, at_], -1.0)
+    if transbordos:
+        # (2) depósito de transbordos, llevado por avión que baja la carga:
+        #  (2a) inventario del avión k: anterior + sus bajadas que quedan disponibles en el bloque (aterrizaje + TTR_H)
+        #       - lo que sale hacia otros aviones = inventario siguiente (no cruza el corte de la semana)
+        par = np.full((nK, nA), -1, dtype=np.int64)                 # solo los pares (avión, aeropuerto) que pueden bajar
+        par[SP] = np.arange(int(SP.sum()))
+        clave4 = lambda k, a, d, tt: (par[k, a] * nD + d) * T + tt
+        inicio = R.nuevas('inventario del depósito por avión que baja', int(SP.sum()) * nD * T, '=', 0)
+        sk_k, sk_a, sk_d, sk_t = np.nonzero(SKM)
+        R.entradas(inicio + clave4(sk_k, sk_a, sk_d, sk_t), SK[sk_k, sk_a, sk_d, sk_t], -1.0)
+        R.entradas(inicio + clave4(sk_k, sk_a, sk_d, sk_t + 1), SK[sk_k, sk_a, sk_d, sk_t], 1.0)
+        ok_k, ok_a, ok_d, ok_t = np.nonzero(OKM)
+        R.entradas(inicio + clave4(ok_k, ok_a, ok_d, ok_t), OK[ok_k, ok_a, ok_d, ok_t], -1.0)
+        ai, di = np.nonzero(DM)
+        R.entradas(inicio + clave4(a_k[ai], a_d[ai], di, a_avail[ai]), DR[ai, di], 1.0)
+        #  (2b) en cada (aeropuerto, destino, bloque): lo que sale de los inventarios = total transbordado = lo que suben
+        clave = lambda a, d, tt: (a * nD + d) * T + tt
+        inicio = R.nuevas('salidas del depósito = total transbordado', nA * nD * T, '=', 0)
+        R.entradas(inicio + clave(ok_a, ok_d, ok_t), OK[ok_k, ok_a, ok_d, ok_t], 1.0)
+        ta, td, tt_ = np.nonzero(TM)
+        R.entradas(inicio + clave(ta, td, tt_), TOT[ta, td, tt_], -1.0)
+        inicio = R.nuevas('subidas = total transbordado', nA * nD * T, '=', 0)
+        R.entradas(inicio + clave(pa_, pd_, pt_), PK[pk_, pa_, pt_, pd_], 1.0)
+        R.entradas(inicio + clave(ta, td, tt_), TOT[ta, td, tt_], -1.0)
+        #  (2c) un avión no sube carga que él mismo bajó: con lo que sale de su inventario (o_k) y lo que sube (p_k),
+        #       o_k + p_k <= total asegura que todo se puede asignar entre aviones distintos (condición de Hall)
+        ambos = OKM & PKM[:, :, None, :]
+        ak_, aa_, ad_, at_ = np.nonzero(ambos)
+        inicio = R.nuevas('sin re-embarque propio', len(ak_), '<', 0)
+        filas = inicio + np.arange(len(ak_))
+        R.entradas(filas, OK[ak_, aa_, ad_, at_], 1.0)
+        R.entradas(filas, PK[ak_, aa_, at_, ad_], 1.0)
+        R.entradas(filas, TOT[aa_, ad_, at_], -1.0)
 
     # (3) red de cada avión libre: conservación de flujo cíclica, un solo ciclo semanal y mantenimiento
     if len(libres_idx):
@@ -369,6 +378,15 @@ def construir(datos, dt, ttr, itinerario, libres, estimar=False):
     ai, di = np.nonzero(BM)
     R.entradas(inicio + pos[ai], B[ai, di], 1.0)
     R.entradas(inicio + np.arange(len(arcos)), L[arcos], -1.0)
+    if enlace_fuerte:
+        # enlace fuerte: el embarque de cada demanda en un vuelo libre no supera min(D_q, P) por la fracción del vuelo.
+        # Con solo L <= P z, la relajación paga una fracción de avión exactamente proporcional a la carga (vuelos
+        # "perfectamente llenos"), aunque la mayoría de las demandas son mucho menores que un avión
+        lib = a_libre[b_arc]
+        inicio = R.nuevas('enlace fuerte embarque-vuelo', int(lib.sum()), '<', 0)
+        filas = inicio + np.arange(int(lib.sum()))
+        R.entradas(filas, B[BM][lib], 1.0)
+        R.entradas(filas, z[b_arc[lib]], -np.minimum(Dq[bq[lib]], a_P[b_arc[lib]]))
     # lo que se descarga al aterrizar (entrega + bajada a depósito) sale de lo que trae ese vuelo para ese destino:
     # impide "bajar" carga recién subida del depósito sin volarla (cambiaría de dueño o de día sin un vuelo real)
     UM = DM.copy()
@@ -561,6 +579,15 @@ def main():
     ap.add_argument('--salida', default=None, help='carpeta de salida (por defecto data/results/MILP_integrado_TSN_<libres>)')
     ap.add_argument('--estimar', action='store_true', help='solo muestra el tamaño del modelo, sin armarlo')
     ap.add_argument('--solo-verificar', action='store_true', help='arma el modelo y revisa el start, sin optimizar')
+    ap.add_argument('--sin-transbordos', action='store_true',
+                    help='modelo sin transbordos entre aviones (casi la mitad del tamaño); se agregan en el paso final')
+    ap.add_argument('--relajacion', action='store_true',
+                    help='solo resuelve la relajación lineal y muestra su cota')
+    ap.add_argument('--enlace-fuerte', action='store_true',
+                    help='agrega las desigualdades de enlace fuerte B(a,q) <= min(D_q, P) z(a) (ajustan la relajación)')
+    ap.add_argument('--metodo-lp', type=int, default=2,
+                    help='método de la relajación: 2 barrera (por defecto) o 6 PDHG (primer orden: usa mucha menos '
+                         'memoria, pero da un valor aproximado, con tolerancia relativa ~1e-4)')
     args = ap.parse_args()
 
     t0 = time.time()
@@ -575,11 +602,18 @@ def main():
     libres = interpretar_libres(args.libres, datos)
     etiqueta = ('todos' if len(libres) == len(datos['K']) else 'ninguno' if not libres
                 else '_'.join(sorted(libres)))
+    transbordos = not args.sin_transbordos
+    if not transbordos:
+        etiqueta += '_sin_transbordos'
+    if args.enlace_fuerte:
+        etiqueta += '_enlace_fuerte'
     itinerario = ws.leer_itinerario(corrida)
 
     print(f'[1/5] Modelo integrado espacio-tiempo | corrida {nombre} | DT = {dt:g} h | TTR_H = {ttr:g} h | '
-          f'aviones libres: {etiqueta} ({len(libres)} de {len(datos["K"])})')
-    for clave, valor in construir(datos, dt, ttr, itinerario, libres, estimar=True)['tamano'].items():
+          f'aviones libres: {etiqueta} ({len(libres)} de {len(datos["K"])}) | '
+          f'transbordos {"dentro del modelo" if transbordos else "solo en el paso final"}')
+    for clave, valor in construir(datos, dt, ttr, itinerario, libres, estimar=True,
+                                  transbordos=transbordos)['tamano'].items():
         print(f'      {clave}: {valor:,}')
     if args.estimar:
         return
@@ -589,11 +623,16 @@ def main():
     multi_ref, val_ref = ws.resolver_carga(itinerario, ttr)
     print(f'      margen validado de la corrida: {val_ref["margen"]:,.0f} USD | validador '
           f'{"OK" if val_ref["ok"] else val_ref["violaciones"][:5]}')
+    multi_start, val_start = multi_ref, val_ref
+    if not transbordos:                                   # el start debe venir de la carga sin transbordos
+        multi_start, val_start = ws.resolver_carga(itinerario, ws.SIN_TRANSBORDOS)
+        print(f'      margen validado de la corrida sin transbordos (start): {val_start["margen"]:,.0f} USD')
 
     print('[3/5] Armando el modelo...', flush=True)
     t1 = time.time()
     try:
-        red = construir(datos, dt, ttr, itinerario, libres)
+        red = construir(datos, dt, ttr, itinerario, libres, transbordos=transbordos,
+                        enlace_fuerte=args.enlace_fuerte)
     except MemoryError:
         print('[!] No hay memoria suficiente para armar el modelo. Pruebe con menos aviones libres (--libres).')
         sys.exit(2)
@@ -601,13 +640,13 @@ def main():
     print(f"      {red['n']:,} variables ({n_ent:,} binarias, {int((red['vt'] == GRB.SEMICONT).sum()):,} semicontinuas), "
           f"{red['A'].shape[0]:,} restricciones, {red['A'].nnz:,} no ceros, armado en {time.time() - t1:.0f} s",
           flush=True)
-    xs = armar_start(red, itinerario, multi_ref['solucion'])
+    xs = armar_start(red, itinerario, multi_start['solucion'])
     violaciones, obj_start = verificar(red, xs)
     if violaciones:
         print(f'      [!] El start NO cumple el modelo: {violaciones}')
         sys.exit(1)
     print(f'      start factible: cumple todas las restricciones; objetivo {obj_start:,.0f} USD '
-          f'(margen validado {val_ref["margen"]:,.0f})')
+          f'(margen validado {val_start["margen"]:,.0f})')
     if args.solo_verificar:
         return
 
@@ -616,6 +655,39 @@ def main():
     env = gp.Env(empty=True)
     env.setParam('OutputFlag', 1)
     env.start()
+    if args.relajacion:
+        nombre_lp = {2: 'barrera', 6: 'PDHG'}.get(args.metodo_lp, f'método {args.metodo_lp}')
+        print(f'[4/4] Relajación lineal ({nombre_lp}, sin crossover)...', flush=True)
+        vt = red['vt']
+        lb = np.where(vt == GRB.SEMICONT, 0.0, red['lb'])
+        rel = gp.Model('relajacion_TSN', env=env)
+        rv = rel.addMVar(red['n'], lb=lb, ub=red['ub'], obj=red['obj'])
+        rel.addMConstr(red['A'], rv, red['sentido'], red['rhs'])
+        red['A'] = None
+        rel.ModelSense = GRB.MAXIMIZE
+        rel.ObjCon = red['constante']
+        rel.Params.Method = args.metodo_lp
+        rel.Params.Crossover = 0
+        rel.Params.TimeLimit = args.tiempo
+        rel.Params.LogFile = os.path.join(salida, 'gurobi_relajacion.log')
+        if args.hilos:
+            rel.Params.Threads = args.hilos
+        rel.optimize()
+        res = {'aviones_libres': sorted(libres), 'dt_h': dt, 'transbordos_en_modelo': transbordos,
+               'metodo_lp': nombre_lp, 'enlace_fuerte': args.enlace_fuerte,
+               'estado': ws.ESTADOS.get(rel.Status, str(rel.Status)),
+               'cota_relajacion': rel.ObjVal if rel.Status == GRB.OPTIMAL else None,
+               'objetivo_start': obj_start, 'margen_start_validado_usd': val_start['margen'],
+               'margen_corrida_con_transbordos_usd': val_ref['margen'],
+               'variables': red['n'], 'restricciones': len(red['rhs']), 'tiempo_s': rel.Runtime}
+        json.dump(res, open(os.path.join(salida, 'relajacion.json'), 'w', encoding='utf-8'), indent=2,
+                  ensure_ascii=False)
+        if res['cota_relajacion'] is None:
+            print(f'Relajación sin óptimo: {res["estado"]}')
+        else:
+            print(f'Relajación lineal: {res["cota_relajacion"]:,.0f} USD | start {obj_start:,.0f} USD | brecha '
+                  f'{100 * (res["cota_relajacion"] / obj_start - 1):.1f} % | {rel.Runtime:.0f} s')
+        return
     modelo = gp.Model('MILP_integrado_espacio_tiempo', env=env)
     xv = modelo.addMVar(red['n'], lb=red['lb'], ub=red['ub'], obj=red['obj'], vtype=red['vt'])
     modelo.addMConstr(red['A'], xv, red['sentido'], red['rhs'])
@@ -648,7 +720,9 @@ def main():
             'gap': modelo.MIPGap if modelo.SolCount else None, 'tiempo_gurobi_s': modelo.Runtime,
             'tiempo_limite_s': args.tiempo, 'norel_s': norel, 'objetivo_start': obj_start,
             'margen_corrida_mismo_paso_final_usd': val_ref['margen'], 'margen_reportado_corrida_usd': kpi['margen_usd'],
-            'variables': red['n'], 'restricciones': len(red['rhs']), 'ttr_h': ttr}
+            'variables': red['n'], 'restricciones': len(red['rhs']), 'ttr_h': ttr,
+            'transbordos_en_modelo': transbordos, 'enlace_fuerte': args.enlace_fuerte,
+            'margen_start_validado_usd': val_start['margen']}
     if not modelo.SolCount:
         print('No hay solución para exportar.')
         return

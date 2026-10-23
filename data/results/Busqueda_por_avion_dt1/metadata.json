@@ -1,0 +1,8 @@
+{
+  "version": "busqueda_test2",
+  "fecha": "2026-10-22 20:46:41",
+  "descripcion": "Búsqueda avión por avión (DT 1 h) desde Ejecucion_con_intervalos_de_2_horas",
+  "solver": "gurobi",
+  "dt": "1",
+  "tlim": null
+}

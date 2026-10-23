@@ -1,0 +1,8 @@
+{
+  "version": "MILP_completo_desde_heuristica_dt1",
+  "fecha": "2026-10-23 02:12:03",
+  "descripcion": "MILP completo con warm start desde Heuristica_dt1_iter2",
+  "solver": "gurobi",
+  "dt": "continuo (MILP)",
+  "tlim": 1800.0
+}

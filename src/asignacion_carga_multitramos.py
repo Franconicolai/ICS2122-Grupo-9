@@ -32,7 +32,9 @@ RAW = os.environ.get(
 )
 TTR_H = float(os.environ.get("TTR_H", 2.0))
 TLIM_CARGA = float(os.environ.get("TLIM_CARGA", 300))
-GAP_CARGA = float(os.environ.get("GAP_CARGA", 0.001))
+# 1e-6: el objetivo de carga es de ~17,8 M USD, así que un gap de 0,1 % dejaba hasta ~18.000 USD sin asignar
+# y metía ruido al comparar corridas (la misma solución valía 6.319.306 con 0,1 % y 6.336.259 con 1e-6)
+GAP_CARGA = float(os.environ.get("GAP_CARGA", 1e-6))
 TOL = 1e-7
 
 

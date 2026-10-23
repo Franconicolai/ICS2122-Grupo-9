@@ -1,0 +1,11 @@
+{
+  "version": "Heuristica_dt1_iter2",
+  "descripcion": "Heurística DT 1 h, segunda iteración desde Heuristica_dt1_desde_2h (START, enlace fuerte)",
+  "fecha": "2026-10-23 01:39:10",
+  "solver": "gurobi",
+  "dt": "1",
+  "tlim": "1500",
+  "tlim_op": "420",
+  "start": "data/results/Heuristica_dt1_desde_2h",
+  "enlace_fuerte": "1"
+}

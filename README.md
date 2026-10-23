@@ -23,6 +23,7 @@ El proyecto está modularizado para separar los datos, el motor matemático de l
   - `warm_start_milp.py`: resuelve ese MILP partiendo de una corrida de la heurística (warm start). Detalles en `docs/README_milp_completo.md`.
   - `milp_continuo_transbordos.py`: el mismo MILP con los transbordos dentro del modelo; `--libres` indica qué aviones decide. Detalles en `docs/README_milp_continuo_transbordos.md`.
   - `modelo_integrado_espacio_tiempo.py`: MILP integrado en red espacio-tiempo (vuelos, carga multitramo y transbordos en un solo modelo); `--libres` indica qué aviones decide. Detalles en `docs/README_modelo_integrado_espacio_tiempo.md`.
+  - `busqueda_por_avion.py`: recorre los aviones uno por uno con el modelo anterior (un avión libre, DT = 1 h por defecto), aceptando cada mejora validada; pensado para correr de noche. Uso en `docs/README_modelos_milp.md`.
 - `visualization/`: Interfaz gráfica web interactiva que despliega los resultados.
   - `main.py`: Script que levanta el servidor web.
 - **Archivos de configuración**:
@@ -58,6 +59,8 @@ Desde la raíz del proyecto, ejecuta el script del modelo para resolver y export
 python main.py
 ```
 
+**Partir de una corrida anterior (refinar la grilla).** `main.py` pregunta por una carpeta de una corrida anterior; también se puede fijar con la variable `START`. Los vuelos de esa corrida se usan como punto de partida de los pasos 1 y 2 (solo con `SOLVER=gurobi`), sus tramos entran a los candidatos del paso 2 y, al final, se conserva la mejor de las dos soluciones. Como una corrida de 2 h es factible con DT = 1 h, 30 min o 15 min, la grilla fina ya no puede dar menos que la corrida de la que parte (antes, con el mismo `TLIM`, daba menos: 6,08 M con 1 h frente a 6,31 M con 2 h).
+
 **2. Levantar la Visualización (Interfaz Gráfica)**
 Para levantar el servidor web y visualizar los resultados recién exportados en tu navegador, ejecuta:
 
@@ -71,6 +74,8 @@ Resuelven el problema con un MILP partiendo de la corrida de 2 h de la heurísti
 ```bash
 python warm_start_milp.py --tiempo 3600 --norel 2880 --salida data/results/MILP_completo_1h
 ```
+
+El mejor resultado hasta ahora, **6.435.839 USD**, se obtuvo encadenando la heurística con DT = 1 h (partiendo de la corrida de 2 h) y este MILP partiendo de ese resultado. La secuencia de comandos está en la sección 4 de `docs/README_modelos_milp.md`.
 
 Qué modelo usar, los resultados guardados, los supuestos y las opciones de cada script están en `docs/README_modelos_milp.md`.
 
@@ -212,3 +217,35 @@ Nota: quedaron todas las restricciones comentadas.
   - `warm_start_milp.py` inyecta la corrida de 2 h, verifica que cumpla todas las restricciones, resuelve con Gurobi, agrega los transbordos con el paso final de la heurística, valida y exporta. Con 8 minutos y la heurística NoRel de Gurobi llegó a un margen validado de **6.376.959 USD (+66.581, +1,1 %)**; una corrida cortada con Ctrl+C llegó a 6.359.560 USD.
   - `modelo_integrado_espacio_tiempo.py` y `milp_continuo_transbordos.py` incluyen los transbordos dentro del modelo. Con los vuelos fijos reproducen exactamente la heurística (6.310.378 USD), pero con todos los aviones libres no caben en un computador de 8 GB (11,9 M variables y 8,8 M binarias de transbordo, respectivamente); se pueden resolver liberando pocos aviones (`--libres`).
   - Los resultados MILP calculan sus KPI con `src/validador.py`, igual que la heurística desde el commit "centraliza KPIs y calidad de solución", y quedan en `data/results/MILP_*`, visibles en el visualizador.
+
+**Hito 12**
+- **Integrante**: Vicente Olea (con apoyo de Claude Code)
+- **Fecha**: 21 al 23 de Octubre de 2026
+- **Desarrollo**: Mejoras de formulación y de la heurística para grillas finas. Rama `milp-completo-warm-start`.
+  - **Diagnóstico.** La heurística empeoraba al refinar la grilla con el mismo `TLIM` (2 h: 6,31 M; 1 h: 6,08 M; 30 min: 6,21 M; 15 min: 6,08 M), aunque toda solución de 2 h es factible en las grillas finas.
+  - **Punto de partida entre grillas (`START`).** `main.py` (o la variable `START`) recibe la carpeta de una corrida anterior. Sus vuelos son el punto de partida del paso 1. El paso 2 mejora esa corrida operador por operador: el estado inicial de los demás operadores es el de la corrida, con su carga directa, y la carga que llega en varios tramos o con transbordo se descuenta de la demanda. Al final se evalúa la corrida de partida con el mismo paso 3 y validador, y se conserva la mejor, así que refinar la grilla ya no puede empeorar el resultado. Solo funciona con `SOLVER=gurobi`.
+  - **Resultado con DT = 1 h desde la corrida de 2 h** (`TLIM=1500`, `TLIM_OP=420`): margen validado **6.314.758 USD**, contra 6.310.378 de la corrida de partida (ambos con carga a gap 1e-6), con 334 vuelos, 16 aviones y 25 de 25 frecuencias. La corrida original con 1 h daba 6.081.562. La mejora sobre la de 2 h (+4.380) está dentro del ruido de unos 30.000 USD que se midió en el Hito 7. Lo que sí es nuevo es la garantía de no empeorar.
+  - **Primeros intentos que no funcionaron, y por qué:**
+    - Si el paso 2 usaba como estado de los demás operadores la solución del paso 1, el punto de partida violaba las frecuencias residuales y Gurobi lo descartaba.
+    - Si no se descontaba la carga indirecta, cada operador "vendía" de nuevo demanda que ya estaba servida por conexiones: el paso 2 subió ~197 mil, pero el margen final bajó a 6.288.728.
+  - Coincide con la conclusión del Hito 7: el límite está en la formulación del paso 2 (AND quedó con gap de 12,9 %) y en que los pasos 1 y 2 solo ven carga directa.
+  - Modelos exactos: `--sin-transbordos`, `--enlace-fuerte` y `--relajacion` en `modelo_integrado_espacio_tiempo.py`, Benders (`docs/README_benders.md`) y `busqueda_por_avion.py`. Con AC-10 libre y DT = 1 h, el modelo exacto llegó a **6.316.063 USD**. Las desigualdades de enlace fuerte `B ≤ min(D, P)·z` bajan la relajación lineal de 6.588.618 a 6.461.469 con AC-10 libre, y de ~7,285 M a ~7,00 M con todos los aviones libres y sin transbordos. Detalles en `docs/README_modelo_integrado_espacio_tiempo.md`.
+  - **Encadenamiento heurística → MILP (23 de octubre).**
+    - Heurística con DT = 1 h partiendo de la corrida de 2 h, más una segunda iteración: 6.336.259.
+    - `warm_start_milp.py` con 1.500 s de NoRel partiendo de esa solución: **6.435.839 USD**, el mejor margen validado hasta ahora (+125.461 sobre la heurística original y +58.880 sobre el mejor MILP anterior). Validador OK, 330 vuelos, 16 aviones y 25 de 25 frecuencias.
+    - La mejora viene de cortar vuelos poco rentables: el costo de vuelos baja 562 mil y los ingresos, 452 mil.
+    - Una segunda pasada del MILP empeora el margen con transbordos (6.413.268), así que basta con una.
+    - La secuencia de comandos está en `docs/README_modelos_milp.md`, sección 4.
+  - **Correcciones y mejoras de la heurística:**
+    - `GAP_CARGA` del paso 3 bajó de 0,1 % a 1e-6. El objetivo de carga es de ~17,8 M, así que 0,1 % dejaba hasta ~18 mil USD sin asignar y metía ruido: la misma solución valía 6.319.306 con el gap anterior y 6.336.259 con el nuevo.
+    - El JSON de indicadores del paso 2 se escribe en UTF-8. En Windows salía en cp1252 y el visualizador no lo podía leer.
+    - `SOLO=<operador>` junto con `START` conserva los vuelos de los demás operadores.
+    - Nuevo `correr_heuristica.py`: corre los tres pasos sin el menú interactivo, para encadenar corridas.
+  - **`warm_start_milp.py`:**
+    - acepta como `--corrida` una salida del propio MILP: con horarios redondeados, solo fija vuelos y binarias, y Gurobi recalcula los horarios;
+    - el chequeo de mantenimiento tolera 1e-4 h.
+  - **Lo que no sirvió:**
+    - una tercera iteración de la heurística, que converge (los operadores mejoran menos de 2 mil);
+    - el enlace fuerte en el paso 2: la cota de AND casi no cambia, probablemente porque Gurobi ya lo deduce;
+    - darle a AND 40 min en vez de 7: la cota queda en ~692 mil contra ~590 mil de solución, un gap de 17 %. El límite es la relajación del paso 2, como en el Hito 7.
+  - **Análisis de la flota de AND.** Varios aviones casi no vuelan, aunque queda demanda hacia MIA sin servir (UIO→MIA 691 t/semana). Esa demanda no es rentable sola, porque la vuelta va vacía. Lo que sí podría pagar son triángulos (MIA→VCP→BOG→MIA, ~+85 mil) o pares con carga en ambos sentidos (GRU↔MAO), pero la heurística no los encontró. Hace falta una formulación que valore las conexiones al decidir los vuelos.

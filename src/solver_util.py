@@ -11,8 +11,9 @@ SOLVER = os.environ.get('SOLVER', 'highs').lower()
 THREADS = int(os.environ.get('THREADS', 0))
 
 
-def resolver_matriz(lb, ub, obj, integ, A, lo, hi, tlim, gap=0.01, log=True, relax=False):
-    """Función resolver_matriz: [Descripción pendiente]."""
+def resolver_matriz(lb, ub, obj, integ, A, lo, hi, tlim, gap=0.01, log=True, relax=False, start=None):
+    """Función resolver_matriz: [Descripción pendiente].
+    start: dict {columna: valor} con un punto de partida (puede ser parcial; Gurobi completa el resto)."""
     lb, ub, obj = np.asarray(lb, float), np.asarray(ub, float), np.asarray(obj, float)
     lo, hi = np.asarray(lo, float), np.asarray(hi, float)
     integ = np.asarray(integ, bool) & (not relax)
@@ -28,6 +29,10 @@ def resolver_matriz(lb, ub, obj, integ, A, lo, hi, tlim, gap=0.01, log=True, rel
         if THREADS: m.Params.Threads = THREADS
         vt = np.where(integ, GRB.INTEGER, GRB.CONTINUOUS)
         x = m.addMVar(len(lb), lb=lb, ub=np.where(np.isinf(ub), GRB.INFINITY, ub), obj=obj, vtype=vt)
+        if start:
+            valores = np.full(len(lb), GRB.UNDEFINED)
+            valores[list(start)] = list(start.values())
+            x.Start = valores
         m.ModelSense = GRB.MAXIMIZE
         eq = np.isfinite(lo) & np.isfinite(hi) & (np.abs(lo - hi) < 1e-12)
         ge = np.isfinite(lo) & ~eq
@@ -45,6 +50,8 @@ def resolver_matriz(lb, ub, obj, integ, A, lo, hi, tlim, gap=0.01, log=True, rel
                     gap=(m.MIPGap if (mip and ok) else None), tiempo=time.time() - t0,
                     sol=list(x.X) if ok else None)
     # ---- HiGHS
+    if start:
+        print('[!] El punto de partida solo se usa con SOLVER=gurobi; HiGHS parte de cero.')
     import highspy
     from scipy.sparse import csc_matrix
     A = csc_matrix(A)

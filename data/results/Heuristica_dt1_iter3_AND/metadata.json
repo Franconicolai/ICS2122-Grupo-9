@@ -1,0 +1,11 @@
+{
+  "version": "Heuristica_dt1_iter3_AND",
+  "descripcion": "Heurística DT 1 h: solo AND reoptimizado (SOLO=AND, 300 s) desde Heuristica_dt1_iter2",
+  "fecha": "2026-10-23 03:36:26",
+  "solver": "gurobi",
+  "dt": "1",
+  "tlim": "1500",
+  "tlim_op": "300",
+  "start": "data/results/Heuristica_dt1_iter2",
+  "enlace_fuerte": "1"
+}

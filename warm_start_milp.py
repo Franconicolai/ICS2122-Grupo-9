@@ -44,6 +44,7 @@ from validador import validar                                     # noqa: E402
 
 CORRIDA_2H = os.path.join('data', 'results', 'Ejecucion_con_intervalos_de_2_horas')
 SIN_TRANSBORDOS = 1e6    # TTR_H enorme: el submodelo de carga no puede armar transbordos
+TOL_HORAS = 1e-4         # los itinerarios exportados redondean las horas a 5 decimales: 1e-4 h = 0,36 s
 GAP_CARGA = 1e-6         # el 0,1 % por defecto del submodelo deja hasta ~6.000 USD sin asignar y ensucia la comparación
 CFG_VALIDADOR = {'ciclico': True, 'tat_variable': True, 'min_ton_escala': True, 'mantenimiento': True,
                  'frecuencias': True, 'demanda_diaria': True, 'dist_frecuencias': False, 'transferencias': True}
@@ -107,12 +108,12 @@ def armar_start(modelo, itinerario, cargas):
             st[v['gc'][k, n]] = 1
         # mantenimiento: mismo criterio que src/validador.py
         ap_m, ini, fin = datos['mant'][k]
-        if legs[0]['tramo'][0] == ap_m and legs[0]['t_dep'] >= fin - 1e-9:
+        if legs[0]['tramo'][0] == ap_m and legs[0]['t_dep'] >= fin - TOL_HORAS:
             st[v['m0'][k]] = 1
         else:
             for s, leg in enumerate(legs, start=1):
-                if (leg['tramo'][1] == ap_m and leg['t_arr'] <= ini + 1e-9
-                        and (s == n or legs[s]['t_dep'] >= fin - 1e-9)):
+                if (leg['tramo'][1] == ap_m and leg['t_arr'] <= ini + TOL_HORAS
+                        and (s == n or legs[s]['t_dep'] >= fin - TOL_HORAS)):
                     st[v['m'][k, s]] = 1
                     break
             else:
@@ -297,7 +298,7 @@ def main():
     print(f'      {modelo.NumVars:,} variables ({modelo.NumIntVars:,} enteras), {modelo.NumConstrs:,} restricciones, '
           f'{modelo.NumNZs:,} no ceros, armado en {time.time() - t1:.0f} s')
     start = armar_start(modelo, itinerario, multi0['solucion']['cargas'])
-    xs, violaciones, obj_start = verificar_start(modelo, start)
+    xs, violaciones, obj_start = verificar_start(modelo, start, tol=TOL_HORAS)   # Gurobi repara diferencias menores
     if violaciones:
         print('      [!] El start NO cumple el modelo:')
         for familia, lista in violaciones.items():
@@ -310,7 +311,14 @@ def main():
 
     os.makedirs(salida, exist_ok=True)
     if not args.sin_start:
-        modelo.setAttr('Start', modelo.getVars(), xs.tolist())
+        valores = xs.copy()
+        if verificar_start(modelo, start)[1]:
+            # horarios redondeados (p. ej. una corrida del propio MILP): Gurobi rechaza un start completo con
+            # diferencias mayores a su tolerancia, así que solo se fijan las enteras y él completa horarios y carga
+            continuas = np.array(modelo.getAttr('VType', modelo.getVars())) == GRB.CONTINUOUS
+            valores[continuas] = GRB.UNDEFINED
+            print('      start parcial: solo vuelos y binarias; Gurobi recalcula horarios y carga')
+        modelo.setAttr('Start', modelo.getVars(), valores.tolist())
     prm = modelo.Params
     prm.TimeLimit = args.tiempo
     prm.MIPGap = args.gap

@@ -26,6 +26,9 @@ def ejecutar_modelo():
         version = "v_default"
         
     desc = input("Ingresa una breve descripción de esta corrida: ").strip()
+    inicio = input("Carpeta de una corrida anterior como punto de partida (Enter = sin punto de partida): ").strip()
+    if inicio:
+        os.environ['START'] = inicio   # ver red_espacio_tiempo.py: pasos 1 y 2 parten de sus vuelos (solo Gurobi)
     
     # Crear carpeta de versión
     results_dir = os.path.join("data", "results", version)
@@ -76,7 +79,8 @@ def ejecutar_modelo():
         "fecha": time.strftime("%Y-%m-%d %H:%M:%S"),
         "solver": os.environ['SOLVER'],
         "dt": os.environ['DT'],
-        "tlim": os.environ['TLIM']
+        "tlim": os.environ['TLIM'],
+        "start": os.environ.get('START', '')
     }
     with open(os.path.join(results_dir, "metadata.json"), "w", encoding="utf-8") as f:
         json.dump(metadata, f, indent=2, ensure_ascii=False)
