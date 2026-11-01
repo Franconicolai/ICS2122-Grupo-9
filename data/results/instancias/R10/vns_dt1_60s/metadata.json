@@ -1,0 +1,8 @@
+{
+  "version": "vns_dt1_60s",
+  "fecha": "2026-11-01 08:37:58",
+  "descripcion": "Búsqueda avión por avión (DT 1 h) desde heuristica_dt1",
+  "solver": "gurobi",
+  "dt": "1",
+  "tlim": null
+}

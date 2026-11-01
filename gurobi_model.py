@@ -32,7 +32,8 @@ from gurobipy import GRB
 import pandas as pd
 import yaml
 
-RAW = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'raw data')
+# RAW permite usar otra carpeta de datos (p. ej. una instancia reducida de generar_instancia.py)
+RAW = os.environ.get('RAW', os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'raw data'))
 S_MAX = 32            # posiciones por avión; la heurística usa como máximo 31 vuelos por avión en la semana
 H = 168.0             # horas de la semana (lunes 00:00 a domingo 24:00, UTC)
 DIAS = range(1, 8)    # día de salida del vuelo: 1 = lunes ... 7 = domingo

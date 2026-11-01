@@ -1,0 +1,12 @@
+operadores:
+- BRA
+- PAC
+- SUR
+aviones: 11
+aeropuertos: 44
+tramos: 151
+mercados: 57
+mercados_con_frecuencia: 25
+frecuencias_semanales: 55
+escala_demanda: 0.5769
+demanda_t_semana: 7717.5

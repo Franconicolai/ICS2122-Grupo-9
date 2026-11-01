@@ -1,0 +1,8 @@
+{
+  "version": "Busqueda_vecindarios_dt1_bb",
+  "fecha": "2026-11-01 09:39:46",
+  "descripcion": "Búsqueda avión por avión (DT 1 h) desde Heuristica_dt1_iter3_AND",
+  "solver": "gurobi",
+  "dt": "1",
+  "tlim": null
+}

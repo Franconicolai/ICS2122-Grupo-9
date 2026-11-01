@@ -1,0 +1,57 @@
+
+Gurobi 13.0.2 (win64) logging started Sun Nov  1 18:06:51 2026
+
+Set parameter LogFile to value "data/results/instancias/R10/busqueda_continua_b\logs\gurobi_AC-06+AC-08.log"
+Set parameter Threads to value 3
+Set parameter SoftMemLimit to value 2.5
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 3 threads
+
+Non-default parameters:
+TimeLimit  60
+SoftMemLimit  2.5
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  60
+LogToConsole  0
+Threads  3
+
+Optimize a model with 104851 rows, 270753 columns and 1173727 nonzeros (Max)
+Model fingerprint: 0x75e14986
+Model has 222021 linear objective coefficients
+Variable types: 227351 continuous, 43402 integer (43402 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 8e+04]
+  Bounds range     [1e+00, 5e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 2.61984e+06
+
+Presolve removed 23434 rows and 63401 columns (presolve time = 5s)...
+Presolve removed 23434 rows and 63401 columns (presolve time = 10s)...
+Presolve removed 25045 rows and 70016 columns (presolve time = 15s)...
+Presolve removed 25158 rows and 70657 columns (presolve time = 20s)...
+Presolve removed 25158 rows and 70657 columns
+Presolve time: 20.49s
+Presolved: 79693 rows, 200096 columns, 951350 nonzeros
+Variable types: 169538 continuous, 30558 integer (30558 binary)
+Starting NoRel heuristic
+Elapsed time for NoRel heuristic: 6s (best bound 5.89678e+06)
+Elapsed time for NoRel heuristic: 14s (best bound 5.89678e+06)
+Elapsed time for NoRel heuristic: 23s (best bound 5.8873e+06)
+Elapsed time for NoRel heuristic: 29s (best bound 4.59928e+06)
+Elapsed time for NoRel heuristic: 36s (best bound 4.59885e+06)
+Elapsed time for NoRel heuristic: 41s (best bound 4.59885e+06)
+NoRel heuristic complete
+
+Explored 0 nodes (0 simplex iterations) in 62.01 seconds (24.17 work units)
+Thread count was 3 (of 8 available processors)
+
+Solution count 2: 2.61984e+06 2.61984e+06 
+
+Time limit reached
+Best objective 2.619839680000e+06, best bound 4.598846170500e+06, gap 75.5392%

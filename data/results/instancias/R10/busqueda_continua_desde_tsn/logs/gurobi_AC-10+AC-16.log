@@ -1,0 +1,56 @@
+
+Gurobi 13.0.2 (win64) logging started Sun Nov  1 15:36:53 2026
+
+Set parameter LogFile to value "data/results/instancias/R10/busqueda_continua_desde_tsn\logs\gurobi_AC-10+AC-16.log"
+Set parameter Threads to value 3
+Set parameter SoftMemLimit to value 2
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 3 threads
+
+Non-default parameters:
+TimeLimit  60
+SoftMemLimit  2
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  60
+LogToConsole  0
+Threads  3
+
+Optimize a model with 102061 rows, 259877 columns and 1136235 nonzeros (Max)
+Model fingerprint: 0x285a8e67
+Model has 212041 linear objective coefficients
+Variable types: 217371 continuous, 42506 integer (42506 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 8e+04]
+  Bounds range     [1e+00, 5e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 2.60468e+06
+
+Presolve removed 23693 rows and 64210 columns (presolve time = 5s)...
+Presolve removed 23693 rows and 64210 columns (presolve time = 10s)...
+Presolve removed 23693 rows and 64210 columns (presolve time = 15s)...
+Presolve removed 25729 rows and 72362 columns (presolve time = 20s)...
+Presolve removed 25729 rows and 73180 columns (presolve time = 25s)...
+Presolve removed 25886 rows and 73899 columns
+Presolve time: 27.57s
+Presolved: 76175 rows, 185978 columns, 1052931 nonzeros
+Variable types: 156507 continuous, 29471 integer (29471 binary)
+Starting NoRel heuristic
+Elapsed time for NoRel heuristic: 5s (best bound 6.13945e+06)
+Elapsed time for NoRel heuristic: 12s (best bound 6.13945e+06)
+Elapsed time for NoRel heuristic: 21s (best bound 6.13945e+06)
+Elapsed time for NoRel heuristic: 31s (best bound 4.86304e+06)
+NoRel heuristic complete
+
+Explored 0 nodes (0 simplex iterations) in 60.70 seconds (17.59 work units)
+Thread count was 3 (of 8 available processors)
+
+Solution count 2: 2.60468e+06 2.60468e+06 
+
+Time limit reached
+Best objective 2.604682866000e+06, best bound 4.863041887490e+06, gap 86.7038%

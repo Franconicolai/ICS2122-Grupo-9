@@ -1,0 +1,22 @@
+operadores:
+- BRA
+- PAC
+aviones: 4
+aeropuertos: 10
+lista_aeropuertos:
+- BOG
+- GRU
+- GUA
+- LIM
+- MAO
+- MDE
+- MIA
+- SCL
+- UIO
+- VCP
+tramos: 37
+mercados: 32
+mercados_con_frecuencia: 15
+frecuencias_semanales: 15
+escala_demanda: 0.2292
+demanda_t_semana: 2762.2

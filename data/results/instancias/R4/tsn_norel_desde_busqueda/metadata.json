@@ -1,0 +1,8 @@
+{
+  "version": "tsn_norel_desde_busqueda",
+  "fecha": "2026-11-01 07:57:31",
+  "descripcion": "MILP integrado espacio-tiempo (DT 2 h), aviones libres: todos_enlace_fuerte, start desde busqueda_por_avion_dt2_60s",
+  "solver": "gurobi",
+  "dt": "2",
+  "tlim": 1800.0
+}

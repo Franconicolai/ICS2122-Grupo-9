@@ -1,0 +1,55 @@
+
+Gurobi 13.0.2 (win64) logging started Sun Nov  1 15:43:08 2026
+
+Set parameter LogFile to value "data/results/instancias/R10/busqueda_continua_desde_tsn\logs\gurobi_AC-06+AC-16.log"
+Set parameter Threads to value 3
+Set parameter SoftMemLimit to value 2
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 3 threads
+
+Non-default parameters:
+TimeLimit  60
+SoftMemLimit  2
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  60
+LogToConsole  0
+Threads  3
+
+Optimize a model with 102829 rows, 262693 columns and 1146411 nonzeros (Max)
+Model fingerprint: 0xaf3b9aac
+Model has 214601 linear objective coefficients
+Variable types: 219931 continuous, 42762 integer (42762 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 8e+04]
+  Bounds range     [7e-01, 5e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 2.60477e+06
+
+Presolve removed 23608 rows and 63414 columns (presolve time = 5s)...
+Presolve removed 23608 rows and 63414 columns (presolve time = 10s)...
+Presolve removed 25387 rows and 70645 columns (presolve time = 15s)...
+Presolve removed 25488 rows and 71195 columns (presolve time = 20s)...
+Presolve removed 25500 rows and 71196 columns
+Presolve time: 22.18s
+Presolved: 77329 rows, 191497 columns, 977451 nonzeros
+Variable types: 161663 continuous, 29834 integer (29834 binary)
+Starting NoRel heuristic
+Elapsed time for NoRel heuristic: 6s (best bound 6.15954e+06)
+Elapsed time for NoRel heuristic: 20s (best bound 6.15954e+06)
+Elapsed time for NoRel heuristic: 25s (best bound 4.96516e+06)
+Elapsed time for NoRel heuristic: 34s (best bound 4.96516e+06)
+NoRel heuristic complete
+
+Explored 0 nodes (0 simplex iterations) in 60.70 seconds (18.81 work units)
+Thread count was 3 (of 8 available processors)
+
+Solution count 2: 2.60477e+06 2.60477e+06 
+
+Time limit reached
+Best objective 2.604774866000e+06, best bound 4.727482434361e+06, gap 81.4929%

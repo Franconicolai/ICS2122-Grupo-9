@@ -24,6 +24,7 @@ El proyecto está modularizado para separar los datos, el motor matemático de l
   - `milp_continuo_transbordos.py`: el mismo MILP con los transbordos dentro del modelo; `--libres` indica qué aviones decide. Detalles en `docs/README_milp_continuo_transbordos.md`.
   - `modelo_integrado_espacio_tiempo.py`: MILP integrado en red espacio-tiempo (vuelos, carga multitramo y transbordos en un solo modelo); `--libres` indica qué aviones decide. Detalles en `docs/README_modelo_integrado_espacio_tiempo.md`.
   - `busqueda_por_avion.py`: recorre los aviones uno por uno con el modelo anterior (un avión libre, DT = 1 h por defecto), aceptando cada mejora validada; pensado para correr de noche. Uso en `docs/README_modelos_milp.md`.
+  - `generar_instancia.py`: arma instancias reducidas (subconjunto de operadores y de aeropuertos) para comparar métodos con un óptimo de referencia; todos los códigos las leen con la variable `RAW`. Resultados y algoritmo candidato en `docs/README_instancias_reducidas.md`.
 - `visualization/`: Interfaz gráfica web interactiva que despliega los resultados.
   - `main.py`: Script que levanta el servidor web.
 - **Archivos de configuración**:
@@ -249,3 +250,37 @@ Nota: quedaron todas las restricciones comentadas.
     - el enlace fuerte en el paso 2: la cota de AND casi no cambia, probablemente porque Gurobi ya lo deduce;
     - darle a AND 40 min en vez de 7: la cota queda en ~692 mil contra ~590 mil de solución, un gap de 17 %. El límite es la relajación del paso 2, como en el Hito 7.
   - **Análisis de la flota de AND.** Varios aviones casi no vuelan, aunque queda demanda hacia MIA sin servir (UIO→MIA 691 t/semana). Esa demanda no es rentable sola, porque la vuelta va vacía. Lo que sí podría pagar son triángulos (MIA→VCP→BOG→MIA, ~+85 mil) o pares con carga en ambos sentidos (GRU↔MAO), pero la heurística no los encontró. Hace falta una formulación que valore las conexiones al decidir los vuelos.
+
+**Hito 13**
+- **Integrante**: Vicente Olea (con apoyo de Claude Code)
+- **Fecha**: 30 de Octubre de 2026
+- **Desarrollo**: Instancias reducidas para elegir el algoritmo que se llevará a un computador con más RAM. Detalles en `docs/README_instancias_reducidas.md`.
+  - `generar_instancia.py` filtra operadores y aeropuertos, escala la demanda para conservar la relación demanda/capacidad y escala las frecuencias mínimas. `gurobi_model.py` y `main.py` ahora leen los datos desde `RAW`, como el resto de los códigos.
+  - **En R4** (BRA y PAC, 4 aviones, 10 aeropuertos en torno a MIA; 400 mil variables en el modelo exacto con DT = 2 h), partiendo de la heurística (770.625):
+    - búsqueda avión por avión con el modelo exacto y transbordos: **836.779 (+8,6 %)** en 16 min;
+    - modelo completo con NoRel: +5,3 %;
+    - MILP continuo con NoRel: +4,7 %;
+    - modelo completo con ramificación (40 min): +3,1 %, con un gap de 42 %.
+  - **Conclusión.** La relajación del modelo completo se debilita al liberar más aviones (2,4 % con 1 de 19 libres; 27 % con 2 de 4; 47 % con 4 de 4), así que más RAM no permite resolverlo hasta el óptimo. El candidato es una **búsqueda exacta por vecindarios** sobre la red espacio-tiempo con transbordos, con vecindarios que crecen según la RAM disponible (1 avión con DT = 1 h en 8 GB; un operador completo con DT = 1 h en 64 GB).
+  - **Técnicas del IPre de diagramas de decisión (31 de octubre).** Se probó reoptimizar cada avión con un camino más largo sobre su red espacio-tiempo, al estilo del solver SDD (`reoptimizacion_camino_mas_largo.py`). Es 30–100 veces más rápido que el modelo exacto por avión, pero sus propuestas son peores: los vuelos que más valen son los que alimentan transbordos, y ese valor no se puede asignar a cada arco por separado. La búsqueda exacta con 60 s por avión logra casi lo mismo que con 240 s (834.798 contra 836.779 en R4), en la mitad del tiempo.
+
+**Hito 14**
+- **Integrante**: Vicente Olea (con apoyo de Claude Code)
+- **Fecha**: 1 de Noviembre de 2026
+- **Desarrollo**: Búsqueda por vecindarios variables y en tiempo continuo. Detalles en `docs/README_instancias_reducidas.md`, secciones 9 y 10.
+  - **Opciones nuevas de `busqueda_por_avion.py`:**
+    - `--vecindario avion,par,operador`: vecindarios variables; los pares se eligen por transbordos y aeropuertos compartidos;
+    - `--orden uso`: recorre primero los aviones menos usados;
+    - `--modelo continuo`: cada vecindario con el MILP de posiciones con transbordos, sin grilla;
+    - `--deposito-agregado`: −30 % de variables en la red espacio-tiempo;
+    - `--horas` y `--metodo-raiz`.
+  - **R10 (AND y BRA, 10 aviones), partiendo de la heurística con DT = 1 h (2.519.684):**
+    - red espacio-tiempo con aviones y pares: **+3,0 % en 1,4 h**; los pares sacaron a la búsqueda del óptimo local de un avión (sin ellos, +0,7 %);
+    - MILP continuo con NoRel: **+5,5 % en 10 min**;
+    - **MILP continuo + búsqueda continua por vecindarios: 2.682.344 (+6,5 %).**
+  - **Por qué gana el tiempo continuo.** La red espacio-tiempo redondea la duración de cada tramo hacia arriba hasta completar bloques enteros. En R10, cinco aviones del MILP continuo ocupan la semana completa y no caben en ninguna grilla. Bajar a DT = 30 min aportó solo +0,13 %.
+  - **Instancia completa en el notebook:** la búsqueda en la red espacio-tiempo no avanza (NoRel no cambia vuelos en 15 min y la raíz no cabe). La búsqueda continua desde la mejor solución (6.435.839) sí mejora: **6.451.322 (+15.483), nuevo mejor margen validado** (`data/results/Busqueda_continua_desde_MILP_dt1`), con 300 s por avión durante 6,9 h.
+  - **Candidato actualizado** (sección 11 de `docs/README_instancias_reducidas.md`), dos ramas en paralelo desde la heurística:
+    - (A) MILP continuo global con NoRel, repetido con distintas semillas, y luego búsqueda continua por vecindarios;
+    - (B) búsqueda en la red espacio-tiempo y luego búsqueda continua.
+  - En R4 ganó la rama B (845.742, +9,7 %); en R10, la A (+6,5 %). NoRel varía ~2 % entre corridas. Una segunda pasada global del MILP empeora con transbordos.

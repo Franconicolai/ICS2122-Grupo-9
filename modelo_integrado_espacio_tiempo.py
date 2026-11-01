@@ -101,11 +101,15 @@ def interpretar_libres(texto, datos):
     return libres
 
 
-def construir(datos, dt, ttr, itinerario, libres, estimar=False, transbordos=True, enlace_fuerte=False):
+def construir(datos, dt, ttr, itinerario, libres, estimar=False, transbordos=True, enlace_fuerte=False,
+              deposito_agregado=False):
     """Arma la red espacio-tiempo integrada. Devuelve la matriz, las columnas y los índices necesarios para
     inyectar el start y leer la solución (o solo el tamaño, si estimar=True). transbordos=False omite el depósito
     de transbordos: la carga solo baja en su destino. enlace_fuerte=True agrega B(a,q) <= min(D_q, P) z(a) en los
-    vuelos libres: no corta soluciones enteras, pero ajusta la relajación lineal."""
+    vuelos libres: no corta soluciones enteras, pero ajusta la relajación lineal. deposito_agregado=True lleva un
+    solo inventario por (aeropuerto, destino) en vez de uno por avión que baja: ~30 % menos variables, a cambio de
+    permitir que un avión vuelva a subir carga que él mismo bajó (relajación; sirve como guía si cada solución se
+    revalida con el paso de carga exacto, como hace busqueda_por_avion.py)."""
     K, E, Q, tau = datos['K'], datos['E'], datos['Q'], datos['tau_e']
     T = int(round(gm.H / dt))
     if abs(T * dt - gm.H) > 1e-9:
@@ -198,12 +202,16 @@ def construir(datos, dt, ttr, itinerario, libres, estimar=False, transbordos=Tru
     SP[a_k[baja_ok], a_d[baja_ok]] = True
     libres_idx = np.array(sorted(ik[k] for k in libres), dtype=np.int64)
 
+    if deposito_agregado:
+        SP[:] = False                                 # sin inventarios por avión: uno por (aeropuerto, destino)
     tam = {'aviones libres': len(libres), 'arcos de vuelo': nArc, 'binarias de vuelo (z)': int(a_libre.sum()),
            'carga en vuelo por destino (x)': int(XM.sum()), 'bajadas a depósito': int(DM.sum()),
            'embarques (b)': int(BM.sum()), 'carga a bordo en tierra (h)': int(en_tierra.sum()) * nD,
            'subidas desde depósito': int(PKM.sum()) * nD,
            'inventario en depósitos por avión que baja': 2 * int(SP.sum()) * nD * T}
-    tam['variables'] = (sum(v for k, v in tam.items() if k not in ('aviones libres', 'arcos de vuelo'))
+    if deposito_agregado:
+        tam['inventario agregado en depósitos'] = int(deposito_ok.sum()) * nD * (T - 1)
+    tam['variables'] = (sum(v for k, v in tam.items() if k not in ('aviones libres', 'arcos de vuelo', 'variables'))
                         + 2 * nArc + int(a_libre.sum()) + int(G_mask.sum()) + len(libres_idx)
                         + int(deposito_ok.sum()) * nD * T)
     if estimar:
@@ -251,6 +259,11 @@ def construir(datos, dt, ttr, itinerario, libres, estimar=False, transbordos=Tru
     TM[deposito_ok] = True
     TOT = np.full((nA, nD, T), -1, dtype=np.int64)
     TOT[TM] = V.nuevas(int(TM.sum()), 0, GRB.INFINITY, 0, GRB.CONTINUOUS)        # total transbordado en el bloque
+    SA = np.full((nA, nD, T), -1, dtype=np.int64)
+    if deposito_agregado:
+        SAM = TM.copy()
+        SAM[..., T - 1] = False                                                   # el depósito no cruza la semana
+        SA[SAM] = V.nuevas(int(SAM.sum()), 0, GRB.INFINITY, 0, GRB.CONTINUOUS)  # inventario agregado
     constante = -float(a_costo[~a_libre].sum())                                   # costo de los vuelos fijos
 
     # ---------------------------------------------------------------- restricciones
@@ -287,7 +300,22 @@ def construir(datos, dt, ttr, itinerario, libres, estimar=False, transbordos=Tru
         R.entradas(inicio + fila_de[n_ * nD + d_], c_, v_)
     del usada, fila_de
 
-    if transbordos:
+    if transbordos and deposito_agregado:
+        # (2') depósito agregado por (aeropuerto, destino, bloque): inventario anterior + bajadas disponibles en el
+        #      bloque (aterrizaje + TTR_H) - total transbordado = inventario siguiente; total transbordado = subidas
+        clave = lambda a, d, tt: (a * nD + d) * T + tt
+        inicio = R.nuevas('inventario agregado del depósito', nA * nD * T, '=', 0)
+        sa_a, sa_d, sa_t = np.nonzero(SA >= 0)
+        R.entradas(inicio + clave(sa_a, sa_d, sa_t), SA[sa_a, sa_d, sa_t], -1.0)
+        R.entradas(inicio + clave(sa_a, sa_d, sa_t + 1), SA[sa_a, sa_d, sa_t], 1.0)
+        ai, di = np.nonzero(DM)
+        R.entradas(inicio + clave(a_d[ai], di, a_avail[ai]), DR[ai, di], 1.0)
+        ta, td, tt_ = np.nonzero(TM)
+        R.entradas(inicio + clave(ta, td, tt_), TOT[ta, td, tt_], -1.0)
+        inicio = R.nuevas('subidas = total transbordado', nA * nD * T, '=', 0)
+        R.entradas(inicio + clave(pa_, pd_, pt_), PK[pk_, pa_, pt_, pd_], 1.0)
+        R.entradas(inicio + clave(ta, td, tt_), TOT[ta, td, tt_], -1.0)
+    elif transbordos:
         # (2) depósito de transbordos, llevado por avión que baja la carga:
         #  (2a) inventario del avión k: anterior + sus bajadas que quedan disponibles en el bloque (aterrizaje + TTR_H)
         #       - lo que sale hacia otros aviones = inventario siguiente (no cruza el corte de la semana)
@@ -454,7 +482,7 @@ def construir(datos, dt, ttr, itinerario, libres, estimar=False, transbordos=Tru
         'arco_de': arco_de, 'a_k': a_k, 'a_e': a_e, 'a_t': a_t, 'a_o': a_o, 'a_d': a_d, 'a_tarr': a_tarr,
         'a_avail': a_avail, 'a_libre': a_libre, 'a_seg': a_seg,
         'z': z, 'f': f, 'L': L, 'X': X, 'DL': DL, 'DR': DR, 'B': B, 'U': U, 'G': G, 'H': Hd, 'PK': PK,
-        'SK': SK, 'OK': OK, 'TOT': TOT,
+        'SK': SK, 'OK': OK, 'TOT': TOT, 'SA': SA, 'deposito_agregado': deposito_agregado,
     }
 
 
@@ -511,8 +539,12 @@ def armar_start(red, itinerario, solucion):
         if t_sube < red['a_avail'][desde]:
             raise ValueError(f'el transbordo {tr} no respeta TTR_H en la grilla')
         for tt in range(red['a_avail'][desde], t_sube):
-            poner(red['SK'][ks, a, d, tt], tr['tons'], f"inventario en depósito de {tr['q']}")
-        poner(red['OK'][ks, a, d, t_sube], tr['tons'], f"salida del depósito de {tr['q']}")
+            if red['deposito_agregado']:
+                poner(red['SA'][a, d, tt], tr['tons'], f"inventario en depósito de {tr['q']}")
+            else:
+                poner(red['SK'][ks, a, d, tt], tr['tons'], f"inventario en depósito de {tr['q']}")
+        if not red['deposito_agregado']:
+            poner(red['OK'][ks, a, d, t_sube], tr['tons'], f"salida del depósito de {tr['q']}")
         poner(red['TOT'][a, d, t_sube], tr['tons'], f"total transbordado de {tr['q']}")
     xs[red['L']] = carga
     xs[red['f'][carga > red['a_seg'] + 1e-9]] = 1
@@ -585,6 +617,9 @@ def main():
                     help='solo resuelve la relajación lineal y muestra su cota')
     ap.add_argument('--enlace-fuerte', action='store_true',
                     help='agrega las desigualdades de enlace fuerte B(a,q) <= min(D_q, P) z(a) (ajustan la relajación)')
+    ap.add_argument('--deposito-agregado', action='store_true',
+                    help='un solo inventario de transbordos por (aeropuerto, destino): ~30 %% menos variables, pero '
+                         'permite re-embarcar carga propia (el validador lo revisa al final)')
     ap.add_argument('--metodo-lp', type=int, default=2,
                     help='método de la relajación: 2 barrera (por defecto) o 6 PDHG (primer orden: usa mucha menos '
                          'memoria, pero da un valor aproximado, con tolerancia relativa ~1e-4)')
@@ -607,13 +642,15 @@ def main():
         etiqueta += '_sin_transbordos'
     if args.enlace_fuerte:
         etiqueta += '_enlace_fuerte'
+    if args.deposito_agregado:
+        etiqueta += '_deposito_agregado'
     itinerario = ws.leer_itinerario(corrida)
 
     print(f'[1/5] Modelo integrado espacio-tiempo | corrida {nombre} | DT = {dt:g} h | TTR_H = {ttr:g} h | '
           f'aviones libres: {etiqueta} ({len(libres)} de {len(datos["K"])}) | '
           f'transbordos {"dentro del modelo" if transbordos else "solo en el paso final"}')
     for clave, valor in construir(datos, dt, ttr, itinerario, libres, estimar=True,
-                                  transbordos=transbordos)['tamano'].items():
+                                  transbordos=transbordos, deposito_agregado=args.deposito_agregado)['tamano'].items():
         print(f'      {clave}: {valor:,}')
     if args.estimar:
         return
@@ -632,7 +669,7 @@ def main():
     t1 = time.time()
     try:
         red = construir(datos, dt, ttr, itinerario, libres, transbordos=transbordos,
-                        enlace_fuerte=args.enlace_fuerte)
+                        enlace_fuerte=args.enlace_fuerte, deposito_agregado=args.deposito_agregado)
     except MemoryError:
         print('[!] No hay memoria suficiente para armar el modelo. Pruebe con menos aviones libres (--libres).')
         sys.exit(2)

@@ -124,3 +124,4 @@ python busqueda_por_avion.py --vueltas 2
 - `docs/README_modelo_integrado_espacio_tiempo.md`: `modelo_integrado_espacio_tiempo.py` (incluye `--sin-transbordos`, `--enlace-fuerte`, `--relajacion` y las pruebas con DT = 1 h).
 - `docs/README_benders.md`: descomposiciones de Benders (`benders_binarias_maestro.py` y `benders_l_shaped.py`).
 - `busqueda_por_avion.py`: el uso está en el encabezado del archivo y en `python busqueda_por_avion.py --help`.
+- `docs/README_instancias_reducidas.md`: instancias reducidas (`generar_instancia.py`), comparación de métodos con óptimo de referencia y **algoritmo candidato para un computador con más RAM**.

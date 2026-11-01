@@ -1,0 +1,8 @@
+{
+  "version": "camino_mas_largo_dt2",
+  "fecha": "2026-10-31 20:01:53",
+  "descripcion": "Camino más largo avión por avión (DT 2 h) desde heuristica_dt2",
+  "solver": "gurobi",
+  "dt": "2",
+  "tlim": null
+}

@@ -1,0 +1,221 @@
+
+Gurobi 13.0.2 (win64) logging started Sun Nov  1 15:11:42 2026
+
+Set parameter LogFile to value "data/results/instancias/R10/busqueda_continua_desde_tsn\logs\gurobi_AC-16.log"
+Set parameter Threads to value 3
+Set parameter SoftMemLimit to value 2
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 3 threads
+
+Non-default parameters:
+TimeLimit  60
+SoftMemLimit  2
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  60
+LogToConsole  0
+Threads  3
+
+Optimize a model with 55153 rows, 176077 columns and 720547 nonzeros (Max)
+Model fingerprint: 0xb1f583f6
+Model has 147441 linear objective coefficients
+Variable types: 152771 continuous, 23306 integer (23306 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 8e+04]
+  Bounds range     [1e+00, 5e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 2.59878e+06
+
+Presolve removed 26777 rows and 74148 columns (presolve time = 5s)...
+Presolve removed 26954 rows and 74807 columns
+Presolve time: 6.75s
+Presolved: 28199 rows, 101270 columns, 454857 nonzeros
+Variable types: 92296 continuous, 8974 integer (8974 binary)
+Starting NoRel heuristic
+Elapsed time for NoRel heuristic: 7s (best bound 4.08903e+06)
+Elapsed time for NoRel heuristic: 13s (best bound 3.64776e+06)
+Elapsed time for NoRel heuristic: 18s (best bound 3.42407e+06)
+Elapsed time for NoRel heuristic: 25s (best bound 3.41901e+06)
+Elapsed time for NoRel heuristic: 31s (best bound 3.41901e+06)
+Elapsed time for NoRel heuristic: 39s (best bound 3.36135e+06)
+Elapsed time for NoRel heuristic: 44s (best bound 3.36135e+06)
+Elapsed time for NoRel heuristic: 51s (best bound 3.36135e+06)
+NoRel heuristic complete
+
+Explored 0 nodes (0 simplex iterations) in 60.46 seconds (21.93 work units)
+Thread count was 3 (of 8 available processors)
+
+Solution count 2: 2.59878e+06 2.59878e+06 
+
+Time limit reached
+Best objective 2.598775666000e+06, best bound 3.361349177865e+06, gap 29.3436%
+
+Gurobi 13.0.2 (win64) logging started Sun Nov  1 15:23:17 2026
+
+Set parameter LogFile to value "data/results/instancias/R10/busqueda_continua_desde_tsn\logs\gurobi_AC-16.log"
+Set parameter Threads to value 3
+Set parameter SoftMemLimit to value 2
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 3 threads
+
+Non-default parameters:
+TimeLimit  60
+SoftMemLimit  2
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  60
+LogToConsole  0
+Threads  3
+
+Optimize a model with 55155 rows, 176097 columns and 720607 nonzeros (Max)
+Model fingerprint: 0x0e792f48
+Model has 147461 linear objective coefficients
+Variable types: 152791 continuous, 23306 integer (23306 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 8e+04]
+  Bounds range     [1e+00, 5e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 2.60457e+06
+
+Presolve removed 25630 rows and 69585 columns (presolve time = 5s)...
+Presolve removed 26875 rows and 74710 columns (presolve time = 10s)...
+Presolve removed 26910 rows and 74710 columns
+Presolve time: 11.02s
+Presolved: 28245 rows, 101387 columns, 453961 nonzeros
+Variable types: 92388 continuous, 8999 integer (8999 binary)
+Starting NoRel heuristic
+Elapsed time for NoRel heuristic: 7s (best bound 4.07144e+06)
+Elapsed time for NoRel heuristic: 14s (best bound 3.62659e+06)
+Elapsed time for NoRel heuristic: 24s (best bound 3.40849e+06)
+Elapsed time for NoRel heuristic: 30s (best bound 3.4063e+06)
+Elapsed time for NoRel heuristic: 36s (best bound 3.4063e+06)
+Elapsed time for NoRel heuristic: 45s (best bound 3.37571e+06)
+NoRel heuristic complete
+
+Explored 0 nodes (0 simplex iterations) in 60.81 seconds (17.66 work units)
+Thread count was 3 (of 8 available processors)
+
+Solution count 2: 2.60457e+06 2.60457e+06 
+
+Time limit reached
+Best objective 2.604570666000e+06, best bound 3.375705186578e+06, gap 29.6070%
+
+Gurobi 13.0.2 (win64) logging started Sun Nov  1 15:53:36 2026
+
+Set parameter LogFile to value "data/results/instancias/R10/busqueda_continua_desde_tsn\logs\gurobi_AC-16.log"
+Set parameter Threads to value 3
+Set parameter SoftMemLimit to value 2
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 3 threads
+
+Non-default parameters:
+TimeLimit  60
+SoftMemLimit  2
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  60
+LogToConsole  0
+Threads  3
+
+Optimize a model with 54941 rows, 175173 columns and 717163 nonzeros (Max)
+Model fingerprint: 0x7b8a1385
+Model has 146601 linear objective coefficients
+Variable types: 151931 continuous, 23242 integer (23242 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 8e+04]
+  Bounds range     [7e-01, 5e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 2.62873e+06
+
+Presolve removed 25649 rows and 70221 columns (presolve time = 5s)...
+Presolve removed 26782 rows and 75271 columns (presolve time = 10s)...
+Presolve removed 26886 rows and 75591 columns
+Presolve time: 12.31s
+Presolved: 28055 rows, 99582 columns, 468865 nonzeros
+Variable types: 90614 continuous, 8968 integer (8968 binary)
+Starting NoRel heuristic
+Elapsed time for NoRel heuristic: 6s (best bound 4.14173e+06)
+Elapsed time for NoRel heuristic: 13s (best bound 3.66283e+06)
+Elapsed time for NoRel heuristic: 18s (best bound 3.41867e+06)
+Elapsed time for NoRel heuristic: 29s (best bound 3.38823e+06)
+Elapsed time for NoRel heuristic: 38s (best bound 3.38823e+06)
+Elapsed time for NoRel heuristic: 43s (best bound 3.37381e+06)
+NoRel heuristic complete
+
+Explored 0 nodes (0 simplex iterations) in 60.23 seconds (18.49 work units)
+Thread count was 3 (of 8 available processors)
+
+Solution count 2: 2.62873e+06 2.62873e+06 
+
+Time limit reached
+Best objective 2.628733555000e+06, best bound 3.373810264755e+06, gap 28.3436%
+
+Gurobi 13.0.2 (win64) logging started Sun Nov  1 16:04:55 2026
+
+Set parameter LogFile to value "data/results/instancias/R10/busqueda_continua_desde_tsn\logs\gurobi_AC-16.log"
+Set parameter Threads to value 3
+Set parameter SoftMemLimit to value 2
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 3 threads
+
+Non-default parameters:
+TimeLimit  60
+SoftMemLimit  2
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  60
+LogToConsole  0
+Threads  3
+
+Optimize a model with 54941 rows, 175173 columns and 717163 nonzeros (Max)
+Model fingerprint: 0x7b8a1385
+Model has 146601 linear objective coefficients
+Variable types: 151931 continuous, 23242 integer (23242 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 8e+04]
+  Bounds range     [7e-01, 5e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 2.62873e+06
+
+Presolve removed 25649 rows and 70221 columns (presolve time = 5s)...
+Presolve removed 26865 rows and 75591 columns (presolve time = 10s)...
+Presolve removed 26886 rows and 75591 columns
+Presolve time: 11.14s
+Presolved: 28055 rows, 99582 columns, 468865 nonzeros
+Variable types: 90614 continuous, 8968 integer (8968 binary)
+Starting NoRel heuristic
+Elapsed time for NoRel heuristic: 7s (best bound 4.14173e+06)
+Elapsed time for NoRel heuristic: 14s (best bound 3.66283e+06)
+Elapsed time for NoRel heuristic: 21s (best bound 3.41867e+06)
+Elapsed time for NoRel heuristic: 30s (best bound 3.38823e+06)
+Elapsed time for NoRel heuristic: 39s (best bound 3.38823e+06)
+Elapsed time for NoRel heuristic: 44s (best bound 3.37381e+06)
+NoRel heuristic complete
+
+Explored 0 nodes (0 simplex iterations) in 60.38 seconds (18.43 work units)
+Thread count was 3 (of 8 available processors)
+
+Solution count 2: 2.62873e+06 2.62873e+06 
+
+Time limit reached
+Best objective 2.628733555000e+06, best bound 3.373810264755e+06, gap 28.3436%

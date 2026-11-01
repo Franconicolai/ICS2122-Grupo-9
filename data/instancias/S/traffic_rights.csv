@@ -1,0 +1,43 @@
+operator,country,allowed
+AND,Alemania,1
+AND,Argentina,1
+AND,Brasil,1
+AND,Bélgica,1
+AND,Cabo Verde,1
+AND,Chile,1
+AND,Colombia,1
+AND,Costa Rica,1
+AND,Ecuador,1
+AND,El Salvador,1
+AND,España,1
+AND,Estados Unidos,1
+AND,Guatemala,1
+AND,Guyana,0
+AND,México,1
+AND,Panamá,1
+AND,Paraguay,1
+AND,Perú,1
+AND,República Dominicana,1
+AND,Uruguay,1
+AND,Venezuela,1
+BRA,Alemania,1
+BRA,Argentina,1
+BRA,Brasil,1
+BRA,Bélgica,1
+BRA,Cabo Verde,1
+BRA,Chile,1
+BRA,Colombia,1
+BRA,Costa Rica,1
+BRA,Ecuador,1
+BRA,El Salvador,1
+BRA,España,1
+BRA,Estados Unidos,1
+BRA,Guatemala,1
+BRA,Guyana,1
+BRA,México,1
+BRA,Panamá,1
+BRA,Paraguay,1
+BRA,Perú,1
+BRA,República Dominicana,1
+BRA,Uruguay,1
+BRA,Venezuela,1

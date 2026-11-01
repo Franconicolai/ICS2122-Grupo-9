@@ -1,0 +1,68 @@
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+[inicio] milp_continuo_norel | tiempo continuo | TTR_H = 2 h | margen validado 806,975 USD | 4 aviones x 20 vuelta(s) x 60 s | salida data/results/instancias/R4/busqueda_continua_desde_milp
+[vuelta 1] nivel avion: 4 vecindarios
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] AC-06: MEJORA | modelo 806,975 -> 813,327 | mejor validado 813,327 USD (+6,353) | 64 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] AC-07: MEJORA | modelo 813,327 -> 815,241 | mejor validado 815,241 USD (+8,267) | 63 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] AC-10: sin mejora | modelo 815,241 -> 815,241 | mejor validado 815,241 USD (+8,267) | 63 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] AC-15: sin mejora | modelo 815,241 -> 815,241 | mejor validado 815,241 USD (+8,267) | 63 s
+[vuelta 2] nivel avion: 4 vecindarios
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 2] AC-06: sin mejora | modelo 815,241 -> 815,241 | mejor validado 815,241 USD (+8,267) | 64 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 2] AC-07: sin mejora | modelo 815,241 -> 815,241 | mejor validado 815,241 USD (+8,267) | 63 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 2] AC-10: sin mejora | modelo 815,241 -> 815,241 | mejor validado 815,241 USD (+8,267) | 63 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 2] AC-15: sin mejora | modelo 815,241 -> 815,241 | mejor validado 815,241 USD (+8,267) | 63 s
+[vuelta 2] sin mejoras: pasa al nivel par
+[vuelta 3] nivel par: 6 vecindarios
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 3] AC-06+AC-15: sin mejora | modelo 815,241 -> 815,241 | mejor validado 815,241 USD (+8,267) | 67 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 3] AC-07+AC-15: sin mejora | modelo 815,241 -> 815,241 | mejor validado 815,241 USD (+8,267) | 65 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 3] AC-07+AC-10: sin mejora | modelo 815,241 -> 815,241 | mejor validado 815,241 USD (+8,267) | 66 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 3] AC-10+AC-15: sin mejora | modelo 815,241 -> 815,241 | mejor validado 815,241 USD (+8,267) | 65 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 3] AC-06+AC-07: sin mejora | modelo 815,241 -> 815,241 | mejor validado 815,241 USD (+8,267) | 67 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 3] AC-06+AC-10: sin mejora | modelo 815,241 -> 815,241 | mejor validado 815,241 USD (+8,267) | 69 s
+[vuelta 3] ningún vecindario mejoró: se detiene.
+
+==============================================================================
+Margen validado: 806,975 -> 815,241 USD (+8,267) | 2 mejoras aceptadas | 0.3 h
+Resultados en data/results/instancias/R4/busqueda_continua_desde_milp (progreso.csv tiene cada paso)

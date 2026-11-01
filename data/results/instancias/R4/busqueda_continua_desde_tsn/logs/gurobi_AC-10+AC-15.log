@@ -1,0 +1,56 @@
+
+Gurobi 13.0.2 (win64) logging started Sun Nov  1 14:38:33 2026
+
+Set parameter LogFile to value "data/results/instancias/R4/busqueda_continua_desde_tsn\logs\gurobi_AC-10+AC-15.log"
+Set parameter Threads to value 2
+Set parameter SoftMemLimit to value 1.5
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 2 threads
+
+Non-default parameters:
+TimeLimit  60
+SoftMemLimit  1.5
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  60
+LogToConsole  0
+Threads  2
+
+Optimize a model with 50988 rows, 100385 columns and 491495 nonzeros (Max)
+Model fingerprint: 0x5ee57f52
+Model has 76361 linear objective coefficients
+Variable types: 78621 continuous, 21764 integer (21764 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 7e+04]
+  Bounds range     [5e-01, 2e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 836861
+
+Presolve removed 7376 rows and 19427 columns (presolve time = 5s)...
+Presolve removed 7388 rows and 19483 columns
+Presolve time: 5.97s
+Presolved: 43600 rows, 80902 columns, 421299 nonzeros
+Variable types: 62265 continuous, 18637 integer (18637 binary)
+Starting NoRel heuristic
+Elapsed time for NoRel heuristic: 7s (best bound 2.78909e+06)
+Elapsed time for NoRel heuristic: 13s (best bound 2.77601e+06)
+Elapsed time for NoRel heuristic: 20s (best bound 2.21167e+06)
+Elapsed time for NoRel heuristic: 26s (best bound 2.21167e+06)
+Elapsed time for NoRel heuristic: 34s (best bound 1.85025e+06)
+Elapsed time for NoRel heuristic: 39s (best bound 1.84559e+06)
+Elapsed time for NoRel heuristic: 45s (best bound 1.7841e+06)
+Elapsed time for NoRel heuristic: 51s (best bound 1.7841e+06)
+NoRel heuristic complete
+
+Explored 0 nodes (0 simplex iterations) in 60.12 seconds (24.40 work units)
+Thread count was 2 (of 8 available processors)
+
+Solution count 2: 836861 836861 
+
+Time limit reached
+Best objective 8.368610840000e+05, best bound 1.781971668431e+06, gap 112.9352%

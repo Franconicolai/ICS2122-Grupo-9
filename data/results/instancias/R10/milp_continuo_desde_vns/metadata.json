@@ -1,0 +1,8 @@
+{
+  "version": "milp_continuo_desde_vns",
+  "fecha": "2026-11-01 11:08:25",
+  "descripcion": "MILP completo con warm start desde vns_dt05_desde_dt1",
+  "solver": "gurobi",
+  "dt": "continuo (MILP)",
+  "tlim": 600.0
+}

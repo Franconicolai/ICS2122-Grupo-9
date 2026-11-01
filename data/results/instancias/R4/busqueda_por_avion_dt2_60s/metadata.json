@@ -1,0 +1,8 @@
+{
+  "version": "busqueda_por_avion_dt2_60s",
+  "fecha": "2026-10-31 20:14:34",
+  "descripcion": "Búsqueda avión por avión (DT 2 h) desde heuristica_dt2",
+  "solver": "gurobi",
+  "dt": "2",
+  "tlim": null
+}

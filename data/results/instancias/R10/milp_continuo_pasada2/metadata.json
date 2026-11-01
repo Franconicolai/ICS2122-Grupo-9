@@ -1,0 +1,8 @@
+{
+  "version": "milp_continuo_pasada2",
+  "fecha": "2026-11-01 16:26:11",
+  "descripcion": "MILP completo con warm start desde busqueda_continua_desde_milp",
+  "solver": "gurobi",
+  "dt": "continuo (MILP)",
+  "tlim": 600.0
+}

@@ -1,0 +1,11 @@
+{
+  "version": "heuristica_dt1",
+  "descripcion": "Heurística DT 1 h, desde data/results/instancias/R10/heuristica_dt2",
+  "fecha": "2026-11-01 07:39:04",
+  "solver": "gurobi",
+  "dt": "1",
+  "tlim": "300",
+  "tlim_op": "420",
+  "start": "data/results/instancias/R10/heuristica_dt2",
+  "enlace_fuerte": "1"
+}

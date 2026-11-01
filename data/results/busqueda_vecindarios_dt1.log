@@ -1,0 +1,5 @@
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+[inicio] Heuristica_dt1_iter3_AND | DT = 1 h | TTR_H = 2 h | margen validado 6,345,128 USD | 19 aviones x 10 vuelta(s) x 900 s | salida data/results/Busqueda_vecindarios_dt1
+[vuelta 1] nivel avion: 19 vecindarios
+  [vuelta 1] AC-14: sin mejora | modelo 6,345,128 -> 6,366,035 | mejor validado 6,345,128 USD (+0) | 914 s

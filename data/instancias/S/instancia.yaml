@@ -1,0 +1,11 @@
+operadores:
+- AND
+- BRA
+aviones: 10
+aeropuertos: 44
+tramos: 151
+mercados: 57
+mercados_con_frecuencia: 25
+frecuencias_semanales: 55
+escala_demanda: 0.5263
+demanda_t_semana: 7040.0

@@ -1,0 +1,8 @@
+{
+  "version": "exacto_tsn_dt2",
+  "fecha": "2026-10-30 22:31:16",
+  "descripcion": "MILP integrado espacio-tiempo (DT 2 h), aviones libres: todos_enlace_fuerte, start desde heuristica_dt2",
+  "solver": "gurobi",
+  "dt": "2",
+  "tlim": 2400.0
+}

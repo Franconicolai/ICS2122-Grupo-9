@@ -1,0 +1,13 @@
+q,from_k,from_s,to_k,to_s,tons,airport,from_operator,to_operator
+"('GRU', 'BOG', 1)",AC-06,3,AC-10,19,0.1,VCP,BRA,BRA
+"('GRU', 'BOG', 1)",AC-18,1,AC-03,8,11.2,MAO,AND,AND
+"('MDE', 'BOG', 1)",AC-19,2,AC-05,2,3.8,MIA,AND,AND
+"('MIA', 'GRU', 1)",AC-19,2,AC-03,4,2.2,MIA,AND,AND
+"('MIA', 'VCP', 5)",AC-05,7,AC-10,18,7.9,MIA,AND,BRA
+"('MIA', 'VCP', 5)",AC-06,18,AC-10,18,5.4,MIA,BRA,BRA
+"('VCP', 'MIA', 3)",AC-03,6,AC-10,16,1.8,VCP,AND,BRA
+"('VCP', 'UIO', 1)",AC-06,5,AC-08,29,1.7,MIA,BRA,AND
+"('VCP', 'UIO', 3)",AC-10,17,AC-16,25,0.6,MIA,BRA,AND
+"('VCP', 'UIO', 3)",AC-10,17,AC-08,29,1.2,MIA,BRA,AND
+"('VCP', 'UIO', 3)",AC-03,6,AC-10,16,1.8,VCP,AND,BRA
+"('VCP', 'UIO', 5)",AC-10,17,AC-08,29,1.5,MIA,BRA,AND

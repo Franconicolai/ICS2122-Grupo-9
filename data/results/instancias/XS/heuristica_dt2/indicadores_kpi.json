@@ -1,0 +1,179 @@
+{
+  "kpis": {
+    "margen_usd": 561101.7869999986,
+    "ingresos_usd": 2576744.0,
+    "costo_vuelos_usd": 1938951.0130000014,
+    "costo_handling_usd": 76691.2,
+    "costo_operacional_usd": 2015642.2130000014,
+    "toneladas": 1688.9,
+    "pct_demanda": 61.14993301712589,
+    "vuelos": 61,
+    "aviones_usados": 4,
+    "horas_bloque": 245.13,
+    "ctk": 8534651.3,
+    "actk": 13057596.0,
+    "factor_ocupacion_pct": 65.36158187157882,
+    "factor_ocupacion_tramos_pct": 65.08333333333333,
+    "costo_usd_por_tkm": 0.23617159531754991,
+    "costo_usd_por_tonelada": 1193.4645112203216,
+    "vuelos_vacios": 3,
+    "pct_vuelos_vacios": 4.918032786885246,
+    "frecuencias_cumplidas_num": 22,
+    "frecuencias_exigidas_num": 22,
+    "frecuencias_cumplidas": "22/22",
+    "toneladas_directas": 1539.5,
+    "pct_carga_directa": 91.15400556575285,
+    "toneladas_multitramos": 149.4000000000001,
+    "pct_carga_multitramos": 8.845994434247148,
+    "satisfaccion_demanda_diaria": [
+      {
+        "dia": 1,
+        "nombre": "Lunes",
+        "demanda_t": 379.1000000000001,
+        "servida_t": 249.29999999999998,
+        "satisfaccion_pct": 65.7610129253495
+      },
+      {
+        "dia": 2,
+        "nombre": "Martes",
+        "demanda_t": 413.00000000000006,
+        "servida_t": 276.7,
+        "satisfaccion_pct": 66.99757869249393
+      },
+      {
+        "dia": 3,
+        "nombre": "Miércoles",
+        "demanda_t": 459.1,
+        "servida_t": 254.10000000000002,
+        "satisfaccion_pct": 55.34741886299282
+      },
+      {
+        "dia": 4,
+        "nombre": "Jueves",
+        "demanda_t": 319.2,
+        "servida_t": 147.0,
+        "satisfaccion_pct": 46.05263157894737
+      },
+      {
+        "dia": 5,
+        "nombre": "Viernes",
+        "demanda_t": 484.3,
+        "servida_t": 272.40000000000003,
+        "satisfaccion_pct": 56.2461284327896
+      },
+      {
+        "dia": 6,
+        "nombre": "Sábado",
+        "demanda_t": 414.1,
+        "servida_t": 315.0,
+        "satisfaccion_pct": 76.06858246800289
+      },
+      {
+        "dia": 7,
+        "nombre": "Domingo",
+        "demanda_t": 293.09999999999997,
+        "servida_t": 174.4,
+        "satisfaccion_pct": 59.50187649266463
+      }
+    ],
+    "satisfaccion_diaria_media_pct": 60.85360420760582,
+    "variabilidad_diaria_pp": 8.99022894109158,
+    "rango_satisfaccion_diaria_pp": 30.015950889055517,
+    "factor_desvio_global": 1.1262699426876073,
+    "factor_desvio_multitramos": 1.9996055269271227,
+    "commodities_sin_distancia_referencia": 0,
+    "toneladas_recortadas_regla_90min": 0.0,
+    "flujo_through_t": 281.5000000000002,
+    "flujo_transferido_t": 60.199999999999996,
+    "ttr_h": 2.0
+  },
+  "validador_ok": true,
+  "violaciones": [],
+  "calidad_optimizacion": {
+    "metodo": "secuencial_en_tres_pasos",
+    "gap_global_disponible": false,
+    "gap_global": null,
+    "nota": "No existe una cota común para la solución integrada: los gaps de los subproblemas no se pueden sumar ni promediar para formar un gap global.",
+    "punto_de_partida": null,
+    "paso_1_red_agregada": {
+      "estado": "Optimal",
+      "obj": 279102.31399892794,
+      "cota": 281893.05052783387,
+      "gap": 0.00999897309671407,
+      "tiempo": 526.4551908969879
+    },
+    "paso_2_por_operador": [
+      {
+        "operador": "BRA",
+        "estado": "Optimal",
+        "objetivo": -3131.617000000024,
+        "cota": -3131.617000000013,
+        "gap": 0.0,
+        "tiempo_s": 0.7095925807952881
+      },
+      {
+        "operador": "PAC",
+        "estado": "Optimal",
+        "objetivo": 314285.81728275685,
+        "cota": 317323.08591697534,
+        "gap": 0.009664033396346097,
+        "tiempo_s": 57.85217499732971
+      }
+    ],
+    "paso_3_carga_condicionada_itinerarios": {
+      "estado": "Optimal",
+      "objetivo_carga": 2500052.8,
+      "cota": 2500052.8,
+      "gap": 0.0,
+      "tiempo_s": 0.25928640365600586
+    }
+  },
+  "por_operador": [
+    {
+      "operador": "BRA",
+      "aviones": 2,
+      "tramos_candidatos": 118,
+      "enteras": 20240,
+      "estado": "Optimal",
+      "objetivo": -3131.617000000024,
+      "cota": -3131.617000000013,
+      "gap": 0.0,
+      "tiempo_s": 0.7095925807952881
+    },
+    {
+      "operador": "PAC",
+      "aviones": 2,
+      "tramos_candidatos": 105,
+      "enteras": 18504,
+      "estado": "Optimal",
+      "objetivo": 314285.81728275685,
+      "cota": 317323.08591697534,
+      "gap": 0.009664033396346097,
+      "tiempo_s": 57.85217499732971
+    }
+  ],
+  "modelo_carga": {
+    "ok": true,
+    "estado": "Optimal",
+    "objetivo_carga": 2500052.8,
+    "cota": 2500052.8,
+    "gap": 0.0,
+    "tiempo_s": 0.25928640365600586,
+    "estadisticas": {
+      "toneladas_entregadas": 1688.8999999999996,
+      "toneladas_directas": 1539.4999999999998,
+      "flujo_through_t": 281.5000000000002,
+      "flujo_transferido_t": 60.199999999999996,
+      "conexiones_transferencia_usadas": 14,
+      "transferencias_entre_operadores": 5
+    },
+    "tamano": {
+      "vuelos": 61,
+      "conexiones": 301,
+      "commodities_con_camino": 88,
+      "variables": 9415,
+      "variables_enteras": 62,
+      "restricciones": 4150
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "version": "par_AC-10,AC-15",
+  "fecha": "2026-10-30 23:39:56",
+  "descripcion": "MILP integrado espacio-tiempo (DT 2 h), aviones libres: AC-10_AC-15_enlace_fuerte, start desde busqueda_por_avion_dt2",
+  "solver": "gurobi",
+  "dt": "2",
+  "tlim": 300.0
+}

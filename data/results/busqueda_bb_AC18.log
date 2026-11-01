@@ -1,0 +1,10 @@
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+[inicio] Heuristica_dt1_iter3_AND | DT = 1 h | TTR_H = 2 h | margen validado 6,345,128 USD | 1 aviones x 1 vuelta(s) x 1,200 s | salida data/results/Busqueda_vecindarios_dt1_bb
+[vuelta 1] nivel avion: 1 vecindarios
+  [vuelta 1] AC-18: sin mejora | modelo 6,345,128 -> 6,345,128 | mejor validado 6,345,128 USD (+0) | 1208 s
+[vuelta 1] ningún vecindario mejoró: se detiene.
+
+==============================================================================
+Margen validado: 6,345,128 -> 6,345,128 USD (+0) | 0 mejoras aceptadas | 0.3 h
+Resultados en data/results/Busqueda_vecindarios_dt1_bb (progreso.csv tiene cada paso)

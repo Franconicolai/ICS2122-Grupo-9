@@ -1,0 +1,7 @@
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+[inicio] Heuristica_dt1_iter3_AND | DT = 1 h | TTR_H = 2 h | margen validado 6,345,128 USD | 19 aviones x 2 vuelta(s) x 300 s | salida data/results/Busqueda_por_avion_dt1_desde_iter3
+  [vuelta 1] AC-01: sin mejora | modelo 6,345,128 -> 6,345,128 | mejor validado 6,345,128 USD (+0) | 292 s
+  [vuelta 1] AC-02: sin mejora | modelo 6,345,128 -> 6,345,128 | mejor validado 6,345,128 USD (+0) | 356 s
+  [vuelta 1] AC-03: sin mejora | modelo 6,345,128 -> 6,345,128 | mejor validado 6,345,128 USD (+0) | 256 s
+  [vuelta 1] AC-04: sin mejora | modelo 6,345,128 -> 6,345,128 | mejor validado 6,345,128 USD (+0) | 130 s

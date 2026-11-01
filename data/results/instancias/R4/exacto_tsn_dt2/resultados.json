@@ -1,0 +1,1256 @@
+{
+  "aeropuertos": [
+    {
+      "iata": "BOG",
+      "country": "Colombia",
+      "region": "SAM",
+      "lat": 4.7,
+      "lon": -74.15
+    },
+    {
+      "iata": "GRU",
+      "country": "Brasil",
+      "region": "BRA",
+      "lat": -23.43,
+      "lon": -46.47
+    },
+    {
+      "iata": "GUA",
+      "country": "Guatemala",
+      "region": "CEAM",
+      "lat": 14.58,
+      "lon": -90.53
+    },
+    {
+      "iata": "LIM",
+      "country": "Per\u00fa",
+      "region": "SAM",
+      "lat": -12.02,
+      "lon": -77.11
+    },
+    {
+      "iata": "MAO",
+      "country": "Brasil",
+      "region": "BRA",
+      "lat": -3.04,
+      "lon": -60.05
+    },
+    {
+      "iata": "MDE",
+      "country": "Colombia",
+      "region": "SAM",
+      "lat": 6.17,
+      "lon": -75.43
+    },
+    {
+      "iata": "MIA",
+      "country": "Estados Unidos",
+      "region": "NAM",
+      "lat": 25.79,
+      "lon": -80.29
+    },
+    {
+      "iata": "SCL",
+      "country": "Chile",
+      "region": "SAM",
+      "lat": -33.39,
+      "lon": -70.79
+    },
+    {
+      "iata": "UIO",
+      "country": "Ecuador",
+      "region": "SAM",
+      "lat": -0.13,
+      "lon": -78.36
+    },
+    {
+      "iata": "VCP",
+      "country": "Brasil",
+      "region": "BRA",
+      "lat": -23.01,
+      "lon": -47.13
+    }
+  ],
+  "flota": [
+    {
+      "aircraft_id": "AC-06",
+      "operator": "BRA",
+      "payload_tons": 50
+    },
+    {
+      "aircraft_id": "AC-07",
+      "operator": "PAC",
+      "payload_tons": 52
+    },
+    {
+      "aircraft_id": "AC-10",
+      "operator": "BRA",
+      "payload_tons": 52
+    },
+    {
+      "aircraft_id": "AC-15",
+      "operator": "PAC",
+      "payload_tons": 50
+    }
+  ],
+  "rutas_catalogo": [
+    {
+      "origen": "GRU",
+      "destino": "VCP"
+    },
+    {
+      "origen": "VCP",
+      "destino": "GRU"
+    },
+    {
+      "origen": "GRU",
+      "destino": "MAO"
+    },
+    {
+      "origen": "MAO",
+      "destino": "GRU"
+    },
+    {
+      "origen": "MIA",
+      "destino": "UIO"
+    },
+    {
+      "origen": "UIO",
+      "destino": "MIA"
+    },
+    {
+      "origen": "MIA",
+      "destino": "SCL"
+    },
+    {
+      "origen": "SCL",
+      "destino": "LIM"
+    },
+    {
+      "origen": "LIM",
+      "destino": "BOG"
+    },
+    {
+      "origen": "BOG",
+      "destino": "MIA"
+    },
+    {
+      "origen": "MIA",
+      "destino": "BOG"
+    },
+    {
+      "origen": "MIA",
+      "destino": "VCP"
+    },
+    {
+      "origen": "VCP",
+      "destino": "SCL"
+    },
+    {
+      "origen": "SCL",
+      "destino": "MIA"
+    },
+    {
+      "origen": "MIA",
+      "destino": "GUA"
+    },
+    {
+      "origen": "GUA",
+      "destino": "MIA"
+    },
+    {
+      "origen": "VCP",
+      "destino": "BOG"
+    },
+    {
+      "origen": "MIA",
+      "destino": "MDE"
+    },
+    {
+      "origen": "MDE",
+      "destino": "MIA"
+    }
+  ],
+  "vuelos": [
+    {
+      "aeronave": "AC-06",
+      "pos": 1,
+      "operador": "BRA",
+      "origen": "GRU",
+      "destino": "VCP",
+      "hora_salida": 18.0,
+      "hora_llegada": 18.67,
+      "carga_tons": 22.3,
+      "costo_usd": 6493.57,
+      "handling_usd": 1159.6,
+      "ingreso_usd": 3513.35
+    },
+    {
+      "aeronave": "AC-06",
+      "pos": 2,
+      "operador": "BRA",
+      "origen": "VCP",
+      "destino": "GRU",
+      "hora_salida": 54.0,
+      "hora_llegada": 54.67,
+      "carga_tons": 23.1,
+      "costo_usd": 6423.57,
+      "handling_usd": 270.4,
+      "ingreso_usd": 3708.69
+    },
+    {
+      "aeronave": "AC-06",
+      "pos": 3,
+      "operador": "BRA",
+      "origen": "GRU",
+      "destino": "MAO",
+      "hora_salida": 130.0,
+      "hora_llegada": 133.83,
+      "carga_tons": 46.8,
+      "costo_usd": 31831.88,
+      "handling_usd": 1502.8,
+      "ingreso_usd": 53122.28
+    },
+    {
+      "aeronave": "AC-06",
+      "pos": 4,
+      "operador": "BRA",
+      "origen": "MAO",
+      "destino": "GRU",
+      "hora_salida": 136.0,
+      "hora_llegada": 139.75,
+      "carga_tons": 26.7,
+      "costo_usd": 31217.88,
+      "handling_usd": 1388.4,
+      "ingreso_usd": 30705.0
+    },
+    {
+      "aeronave": "AC-07",
+      "pos": 1,
+      "operador": "PAC",
+      "origen": "MIA",
+      "destino": "UIO",
+      "hora_salida": 0.0,
+      "hora_llegada": 4.17,
+      "carga_tons": 39.7,
+      "costo_usd": 32353.92,
+      "handling_usd": 1667.4,
+      "ingreso_usd": 72651.0
+    },
+    {
+      "aeronave": "AC-07",
+      "pos": 2,
+      "operador": "PAC",
+      "origen": "UIO",
+      "destino": "MIA",
+      "hora_salida": 6.0,
+      "hora_llegada": 10.0,
+      "carga_tons": 52.0,
+      "costo_usd": 31390.4,
+      "handling_usd": 2184.0,
+      "ingreso_usd": 72800.0
+    },
+    {
+      "aeronave": "AC-07",
+      "pos": 3,
+      "operador": "PAC",
+      "origen": "MIA",
+      "destino": "SCL",
+      "hora_salida": 12.0,
+      "hora_llegada": 20.33,
+      "carga_tons": 31.8,
+      "costo_usd": 64192.33,
+      "handling_usd": 1335.6,
+      "ingreso_usd": 53098.58
+    },
+    {
+      "aeronave": "AC-07",
+      "pos": 4,
+      "operador": "PAC",
+      "origen": "SCL",
+      "destino": "LIM",
+      "hora_salida": 22.0,
+      "hora_llegada": 25.75,
+      "carga_tons": 30.6,
+      "costo_usd": 29242.88,
+      "handling_usd": 399.0,
+      "ingreso_usd": 24604.59
+    },
+    {
+      "aeronave": "AC-07",
+      "pos": 5,
+      "operador": "PAC",
+      "origen": "LIM",
+      "destino": "BOG",
+      "hora_salida": 28.0,
+      "hora_llegada": 31.08,
+      "carga_tons": 25.0,
+      "costo_usd": 24244.31,
+      "handling_usd": 163.8,
+      "ingreso_usd": 17608.47
+    },
+    {
+      "aeronave": "AC-07",
+      "pos": 6,
+      "operador": "PAC",
+      "origen": "BOG",
+      "destino": "MIA",
+      "hora_salida": 34.0,
+      "hora_llegada": 37.67,
+      "carga_tons": 52.0,
+      "costo_usd": 28898.87,
+      "handling_usd": 2184.0,
+      "ingreso_usd": 71240.0
+    },
+    {
+      "aeronave": "AC-07",
+      "pos": 7,
+      "operador": "PAC",
+      "origen": "MIA",
+      "destino": "UIO",
+      "hora_salida": 40.0,
+      "hora_llegada": 44.17,
+      "carga_tons": 18.9,
+      "costo_usd": 32353.92,
+      "handling_usd": 793.8,
+      "ingreso_usd": 33486.72
+    },
+    {
+      "aeronave": "AC-07",
+      "pos": 8,
+      "operador": "PAC",
+      "origen": "UIO",
+      "destino": "MIA",
+      "hora_salida": 46.0,
+      "hora_llegada": 50.0,
+      "carga_tons": 52.0,
+      "costo_usd": 31390.4,
+      "handling_usd": 2184.0,
+      "ingreso_usd": 72800.0
+    },
+    {
+      "aeronave": "AC-07",
+      "pos": 9,
+      "operador": "PAC",
+      "origen": "MIA",
+      "destino": "UIO",
+      "hora_salida": 52.0,
+      "hora_llegada": 56.17,
+      "carga_tons": 12.4,
+      "costo_usd": 32353.92,
+      "handling_usd": 520.8,
+      "ingreso_usd": 22692.0
+    },
+    {
+      "aeronave": "AC-07",
+      "pos": 10,
+      "operador": "PAC",
+      "origen": "UIO",
+      "destino": "MIA",
+      "hora_salida": 58.0,
+      "hora_llegada": 62.0,
+      "carga_tons": 52.0,
+      "costo_usd": 31390.4,
+      "handling_usd": 2184.0,
+      "ingreso_usd": 72800.0
+    },
+    {
+      "aeronave": "AC-07",
+      "pos": 11,
+      "operador": "PAC",
+      "origen": "MIA",
+      "destino": "BOG",
+      "hora_salida": 64.0,
+      "hora_llegada": 67.5,
+      "carga_tons": 21.1,
+      "costo_usd": 27415.35,
+      "handling_usd": 886.2,
+      "ingreso_usd": 42622.0
+    },
+    {
+      "aeronave": "AC-07",
+      "pos": 12,
+      "operador": "PAC",
+      "origen": "BOG",
+      "destino": "MIA",
+      "hora_salida": 70.0,
+      "hora_llegada": 73.67,
+      "carga_tons": 52.0,
+      "costo_usd": 28898.87,
+      "handling_usd": 2184.0,
+      "ingreso_usd": 71240.0
+    },
+    {
+      "aeronave": "AC-07",
+      "pos": 13,
+      "operador": "PAC",
+      "origen": "MIA",
+      "destino": "BOG",
+      "hora_salida": 76.0,
+      "hora_llegada": 79.5,
+      "carga_tons": 10.0,
+      "costo_usd": 27415.35,
+      "handling_usd": 420.0,
+      "ingreso_usd": 20200.0
+    },
+    {
+      "aeronave": "AC-07",
+      "pos": 14,
+      "operador": "PAC",
+      "origen": "BOG",
+      "destino": "MIA",
+      "hora_salida": 82.0,
+      "hora_llegada": 85.67,
+      "carga_tons": 52.0,
+      "costo_usd": 28898.87,
+      "handling_usd": 2184.0,
+      "ingreso_usd": 71240.0
+    },
+    {
+      "aeronave": "AC-07",
+      "pos": 15,
+      "operador": "PAC",
+      "origen": "MIA",
+      "destino": "BOG",
+      "hora_salida": 88.0,
+      "hora_llegada": 91.5,
+      "carga_tons": 13.5,
+      "costo_usd": 27415.35,
+      "handling_usd": 567.0,
+      "ingreso_usd": 17751.29
+    },
+    {
+      "aeronave": "AC-07",
+      "pos": 16,
+      "operador": "PAC",
+      "origen": "BOG",
+      "destino": "MIA",
+      "hora_salida": 94.0,
+      "hora_llegada": 97.67,
+      "carga_tons": 52.0,
+      "costo_usd": 28898.87,
+      "handling_usd": 1932.0,
+      "ingreso_usd": 65747.64
+    },
+    {
+      "aeronave": "AC-07",
+      "pos": 17,
+      "operador": "PAC",
+      "origen": "MIA",
+      "destino": "VCP",
+      "hora_salida": 108.0,
+      "hora_llegada": 116.33,
+      "carga_tons": 52.0,
+      "costo_usd": 63992.33,
+      "handling_usd": 1932.0,
+      "ingreso_usd": 78888.26
+    },
+    {
+      "aeronave": "AC-07",
+      "pos": 18,
+      "operador": "PAC",
+      "origen": "VCP",
+      "destino": "SCL",
+      "hora_salida": 118.0,
+      "hora_llegada": 122.08,
+      "carga_tons": 52.0,
+      "costo_usd": 32104.41,
+      "handling_usd": 1570.8,
+      "ingreso_usd": 32615.19
+    },
+    {
+      "aeronave": "AC-07",
+      "pos": 19,
+      "operador": "PAC",
+      "origen": "SCL",
+      "destino": "MIA",
+      "hora_salida": 124.0,
+      "hora_llegada": 132.67,
+      "carga_tons": 45.8,
+      "costo_usd": 66649.37,
+      "handling_usd": 814.8,
+      "ingreso_usd": 46420.97
+    },
+    {
+      "aeronave": "AC-07",
+      "pos": 20,
+      "operador": "PAC",
+      "origen": "MIA",
+      "destino": "UIO",
+      "hora_salida": 136.0,
+      "hora_llegada": 140.17,
+      "carga_tons": 43.6,
+      "costo_usd": 32353.92,
+      "handling_usd": 1806.0,
+      "ingreso_usd": 78004.19
+    },
+    {
+      "aeronave": "AC-07",
+      "pos": 21,
+      "operador": "PAC",
+      "origen": "UIO",
+      "destino": "MIA",
+      "hora_salida": 142.0,
+      "hora_llegada": 146.0,
+      "carga_tons": 52.0,
+      "costo_usd": 31390.4,
+      "handling_usd": 2184.0,
+      "ingreso_usd": 72800.0
+    },
+    {
+      "aeronave": "AC-07",
+      "pos": 22,
+      "operador": "PAC",
+      "origen": "MIA",
+      "destino": "UIO",
+      "hora_salida": 148.0,
+      "hora_llegada": 152.17,
+      "carga_tons": 13.8,
+      "costo_usd": 32353.92,
+      "handling_usd": 579.6,
+      "ingreso_usd": 25254.0
+    },
+    {
+      "aeronave": "AC-07",
+      "pos": 23,
+      "operador": "PAC",
+      "origen": "UIO",
+      "destino": "MIA",
+      "hora_salida": 162.0,
+      "hora_llegada": 166.0,
+      "carga_tons": 52.0,
+      "costo_usd": 31390.4,
+      "handling_usd": 2184.0,
+      "ingreso_usd": 72800.0
+    },
+    {
+      "aeronave": "AC-10",
+      "pos": 1,
+      "operador": "BRA",
+      "origen": "MIA",
+      "destino": "BOG",
+      "hora_salida": 0.0,
+      "hora_llegada": 3.5,
+      "carga_tons": 10.0,
+      "costo_usd": 29165.35,
+      "handling_usd": 520.0,
+      "ingreso_usd": 6194.28
+    },
+    {
+      "aeronave": "AC-10",
+      "pos": 2,
+      "operador": "BRA",
+      "origen": "BOG",
+      "destino": "MIA",
+      "hora_salida": 28.0,
+      "hora_llegada": 31.67,
+      "carga_tons": 52.0,
+      "costo_usd": 30733.87,
+      "handling_usd": 2600.0,
+      "ingreso_usd": 69922.83
+    },
+    {
+      "aeronave": "AC-10",
+      "pos": 3,
+      "operador": "BRA",
+      "origen": "MIA",
+      "destino": "GUA",
+      "hora_salida": 34.0,
+      "hora_llegada": 36.58,
+      "carga_tons": 25.7,
+      "costo_usd": 22019.26,
+      "handling_usd": 1232.4,
+      "ingreso_usd": 11893.12
+    },
+    {
+      "aeronave": "AC-10",
+      "pos": 4,
+      "operador": "BRA",
+      "origen": "GUA",
+      "destino": "MIA",
+      "hora_salida": 40.0,
+      "hora_llegada": 42.5,
+      "carga_tons": 47.5,
+      "costo_usd": 21315.25,
+      "handling_usd": 1237.6,
+      "ingreso_usd": 47683.11
+    },
+    {
+      "aeronave": "AC-10",
+      "pos": 5,
+      "operador": "BRA",
+      "origen": "MIA",
+      "destino": "BOG",
+      "hora_salida": 46.0,
+      "hora_llegada": 49.5,
+      "carga_tons": 13.0,
+      "costo_usd": 29165.35,
+      "handling_usd": 0.0,
+      "ingreso_usd": 10188.19
+    },
+    {
+      "aeronave": "AC-10",
+      "pos": 6,
+      "operador": "BRA",
+      "origen": "BOG",
+      "destino": "MIA",
+      "hora_salida": 52.0,
+      "hora_llegada": 55.67,
+      "carga_tons": 46.9,
+      "costo_usd": 30733.87,
+      "handling_usd": 2397.2,
+      "ingreso_usd": 63238.65
+    },
+    {
+      "aeronave": "AC-10",
+      "pos": 7,
+      "operador": "BRA",
+      "origen": "MIA",
+      "destino": "BOG",
+      "hora_salida": 68.0,
+      "hora_llegada": 71.5,
+      "carga_tons": 0.0,
+      "costo_usd": 29165.35,
+      "handling_usd": 0.0,
+      "ingreso_usd": 0.0
+    },
+    {
+      "aeronave": "AC-10",
+      "pos": 8,
+      "operador": "BRA",
+      "origen": "BOG",
+      "destino": "MIA",
+      "hora_salida": 96.0,
+      "hora_llegada": 99.67,
+      "carga_tons": 52.0,
+      "costo_usd": 30733.87,
+      "handling_usd": 2704.0,
+      "ingreso_usd": 71240.0
+    },
+    {
+      "aeronave": "AC-10",
+      "pos": 9,
+      "operador": "BRA",
+      "origen": "MIA",
+      "destino": "BOG",
+      "hora_salida": 102.0,
+      "hora_llegada": 105.5,
+      "carga_tons": 0.0,
+      "costo_usd": 29165.35,
+      "handling_usd": 0.0,
+      "ingreso_usd": 0.0
+    },
+    {
+      "aeronave": "AC-10",
+      "pos": 10,
+      "operador": "BRA",
+      "origen": "BOG",
+      "destino": "MIA",
+      "hora_salida": 108.0,
+      "hora_llegada": 111.67,
+      "carga_tons": 52.0,
+      "costo_usd": 30733.87,
+      "handling_usd": 2704.0,
+      "ingreso_usd": 71240.0
+    },
+    {
+      "aeronave": "AC-10",
+      "pos": 11,
+      "operador": "BRA",
+      "origen": "MIA",
+      "destino": "BOG",
+      "hora_salida": 132.0,
+      "hora_llegada": 135.5,
+      "carga_tons": 0.0,
+      "costo_usd": 29165.35,
+      "handling_usd": 0.0,
+      "ingreso_usd": 0.0
+    },
+    {
+      "aeronave": "AC-10",
+      "pos": 12,
+      "operador": "BRA",
+      "origen": "BOG",
+      "destino": "MIA",
+      "hora_salida": 138.0,
+      "hora_llegada": 141.67,
+      "carga_tons": 52.0,
+      "costo_usd": 30733.87,
+      "handling_usd": 2704.0,
+      "ingreso_usd": 71240.0
+    },
+    {
+      "aeronave": "AC-15",
+      "pos": 1,
+      "operador": "PAC",
+      "origen": "MIA",
+      "destino": "BOG",
+      "hora_salida": 0.0,
+      "hora_llegada": 3.5,
+      "carga_tons": 0.0,
+      "costo_usd": 27415.35,
+      "handling_usd": 0.0,
+      "ingreso_usd": 0.0
+    },
+    {
+      "aeronave": "AC-15",
+      "pos": 2,
+      "operador": "PAC",
+      "origen": "BOG",
+      "destino": "MIA",
+      "hora_salida": 10.0,
+      "hora_llegada": 13.67,
+      "carga_tons": 50.0,
+      "costo_usd": 28898.87,
+      "handling_usd": 2100.0,
+      "ingreso_usd": 66179.57
+    },
+    {
+      "aeronave": "AC-15",
+      "pos": 3,
+      "operador": "PAC",
+      "origen": "MIA",
+      "destino": "VCP",
+      "hora_salida": 16.0,
+      "hora_llegada": 24.33,
+      "carga_tons": 41.5,
+      "costo_usd": 63992.33,
+      "handling_usd": 1671.6,
+      "ingreso_usd": 67516.95
+    },
+    {
+      "aeronave": "AC-15",
+      "pos": 4,
+      "operador": "PAC",
+      "origen": "VCP",
+      "destino": "BOG",
+      "hora_salida": 26.0,
+      "hora_llegada": 31.92,
+      "carga_tons": 38.6,
+      "costo_usd": 45686.59,
+      "handling_usd": 1239.0,
+      "ingreso_usd": 46457.16
+    },
+    {
+      "aeronave": "AC-15",
+      "pos": 5,
+      "operador": "PAC",
+      "origen": "BOG",
+      "destino": "MIA",
+      "hora_salida": 34.0,
+      "hora_llegada": 37.67,
+      "carga_tons": 50.0,
+      "costo_usd": 28898.87,
+      "handling_usd": 1717.8,
+      "ingreso_usd": 59191.96
+    },
+    {
+      "aeronave": "AC-15",
+      "pos": 6,
+      "operador": "PAC",
+      "origen": "MIA",
+      "destino": "MDE",
+      "hora_salida": 48.0,
+      "hora_llegada": 51.33,
+      "carga_tons": 27.4,
+      "costo_usd": 26051.83,
+      "handling_usd": 768.6,
+      "ingreso_usd": 32998.71
+    },
+    {
+      "aeronave": "AC-15",
+      "pos": 7,
+      "operador": "PAC",
+      "origen": "MDE",
+      "destino": "MIA",
+      "hora_salida": 56.0,
+      "hora_llegada": 59.33,
+      "carga_tons": 50.0,
+      "costo_usd": 26331.83,
+      "handling_usd": 1923.6,
+      "ingreso_usd": 65632.0
+    },
+    {
+      "aeronave": "AC-15",
+      "pos": 8,
+      "operador": "PAC",
+      "origen": "MIA",
+      "destino": "BOG",
+      "hora_salida": 62.0,
+      "hora_llegada": 65.5,
+      "carga_tons": 10.0,
+      "costo_usd": 27415.35,
+      "handling_usd": 319.2,
+      "ingreso_usd": 17221.4
+    },
+    {
+      "aeronave": "AC-15",
+      "pos": 9,
+      "operador": "PAC",
+      "origen": "BOG",
+      "destino": "MIA",
+      "hora_salida": 70.0,
+      "hora_llegada": 73.67,
+      "carga_tons": 50.0,
+      "costo_usd": 28898.87,
+      "handling_usd": 2100.0,
+      "ingreso_usd": 68500.0
+    },
+    {
+      "aeronave": "AC-15",
+      "pos": 10,
+      "operador": "PAC",
+      "origen": "MIA",
+      "destino": "BOG",
+      "hora_salida": 76.0,
+      "hora_llegada": 79.5,
+      "carga_tons": 10.0,
+      "costo_usd": 27415.35,
+      "handling_usd": 420.0,
+      "ingreso_usd": 20200.0
+    },
+    {
+      "aeronave": "AC-15",
+      "pos": 11,
+      "operador": "PAC",
+      "origen": "BOG",
+      "destino": "MIA",
+      "hora_salida": 82.0,
+      "hora_llegada": 85.67,
+      "carga_tons": 50.0,
+      "costo_usd": 28898.87,
+      "handling_usd": 2100.0,
+      "ingreso_usd": 68500.0
+    },
+    {
+      "aeronave": "AC-15",
+      "pos": 12,
+      "operador": "PAC",
+      "origen": "MIA",
+      "destino": "UIO",
+      "hora_salida": 88.0,
+      "hora_llegada": 92.17,
+      "carga_tons": 11.0,
+      "costo_usd": 32353.92,
+      "handling_usd": 462.0,
+      "ingreso_usd": 20130.0
+    },
+    {
+      "aeronave": "AC-15",
+      "pos": 13,
+      "operador": "PAC",
+      "origen": "UIO",
+      "destino": "MIA",
+      "hora_salida": 96.0,
+      "hora_llegada": 100.0,
+      "carga_tons": 50.0,
+      "costo_usd": 31390.4,
+      "handling_usd": 2100.0,
+      "ingreso_usd": 69665.33
+    },
+    {
+      "aeronave": "AC-15",
+      "pos": 14,
+      "operador": "PAC",
+      "origen": "MIA",
+      "destino": "BOG",
+      "hora_salida": 102.0,
+      "hora_llegada": 105.5,
+      "carga_tons": 10.0,
+      "costo_usd": 27415.35,
+      "handling_usd": 399.0,
+      "ingreso_usd": 18520.63
+    },
+    {
+      "aeronave": "AC-15",
+      "pos": 15,
+      "operador": "PAC",
+      "origen": "BOG",
+      "destino": "MIA",
+      "hora_salida": 108.0,
+      "hora_llegada": 111.67,
+      "carga_tons": 50.0,
+      "costo_usd": 28898.87,
+      "handling_usd": 2100.0,
+      "ingreso_usd": 67924.23
+    },
+    {
+      "aeronave": "AC-15",
+      "pos": 16,
+      "operador": "PAC",
+      "origen": "MIA",
+      "destino": "UIO",
+      "hora_salida": 114.0,
+      "hora_llegada": 118.17,
+      "carga_tons": 28.6,
+      "costo_usd": 32353.92,
+      "handling_usd": 1163.4,
+      "ingreso_usd": 51437.77
+    },
+    {
+      "aeronave": "AC-15",
+      "pos": 17,
+      "operador": "PAC",
+      "origen": "UIO",
+      "destino": "MIA",
+      "hora_salida": 120.0,
+      "hora_llegada": 124.0,
+      "carga_tons": 50.0,
+      "costo_usd": 31390.4,
+      "handling_usd": 2100.0,
+      "ingreso_usd": 70000.0
+    },
+    {
+      "aeronave": "AC-15",
+      "pos": 18,
+      "operador": "PAC",
+      "origen": "MIA",
+      "destino": "BOG",
+      "hora_salida": 126.0,
+      "hora_llegada": 129.5,
+      "carga_tons": 10.0,
+      "costo_usd": 27415.35,
+      "handling_usd": 420.0,
+      "ingreso_usd": 20200.0
+    },
+    {
+      "aeronave": "AC-15",
+      "pos": 19,
+      "operador": "PAC",
+      "origen": "BOG",
+      "destino": "MIA",
+      "hora_salida": 132.0,
+      "hora_llegada": 135.67,
+      "carga_tons": 50.0,
+      "costo_usd": 28898.87,
+      "handling_usd": 2100.0,
+      "ingreso_usd": 68500.0
+    },
+    {
+      "aeronave": "AC-15",
+      "pos": 20,
+      "operador": "PAC",
+      "origen": "MIA",
+      "destino": "BOG",
+      "hora_salida": 138.0,
+      "hora_llegada": 141.5,
+      "carga_tons": 10.0,
+      "costo_usd": 27415.35,
+      "handling_usd": 420.0,
+      "ingreso_usd": 19003.11
+    },
+    {
+      "aeronave": "AC-15",
+      "pos": 21,
+      "operador": "PAC",
+      "origen": "BOG",
+      "destino": "MIA",
+      "hora_salida": 148.0,
+      "hora_llegada": 151.67,
+      "carga_tons": 50.0,
+      "costo_usd": 28898.87,
+      "handling_usd": 2100.0,
+      "ingreso_usd": 68500.0
+    },
+    {
+      "aeronave": "AC-15",
+      "pos": 22,
+      "operador": "PAC",
+      "origen": "MIA",
+      "destino": "BOG",
+      "hora_salida": 154.0,
+      "hora_llegada": 157.5,
+      "carga_tons": 35.4,
+      "costo_usd": 27415.35,
+      "handling_usd": 1486.8,
+      "ingreso_usd": 29787.75
+    },
+    {
+      "aeronave": "AC-15",
+      "pos": 23,
+      "operador": "PAC",
+      "origen": "BOG",
+      "destino": "MIA",
+      "hora_salida": 162.0,
+      "hora_llegada": 165.67,
+      "carga_tons": 50.0,
+      "costo_usd": 28898.87,
+      "handling_usd": 2100.0,
+      "ingreso_usd": 68500.0
+    }
+  ],
+  "demanda_servida": [
+    {
+      "origen": "BOG",
+      "destino": "MIA",
+      "toneladas_servidas": 840.4,
+      "toneladas_disponibles": 987.4
+    },
+    {
+      "origen": "BOG",
+      "destino": "UIO",
+      "toneladas_servidas": 2.9000000000000004,
+      "toneladas_disponibles": 2.9
+    },
+    {
+      "origen": "BOG",
+      "destino": "VCP",
+      "toneladas_servidas": 1.7,
+      "toneladas_disponibles": 4.6
+    },
+    {
+      "origen": "GRU",
+      "destino": "BOG",
+      "toneladas_servidas": 4.4,
+      "toneladas_disponibles": 10.1
+    },
+    {
+      "origen": "GRU",
+      "destino": "MAO",
+      "toneladas_servidas": 46.8,
+      "toneladas_disponibles": 136.7
+    },
+    {
+      "origen": "GUA",
+      "destino": "MIA",
+      "toneladas_servidas": 23.8,
+      "toneladas_disponibles": 64.3
+    },
+    {
+      "origen": "LIM",
+      "destino": "BOG",
+      "toneladas_servidas": 3.9,
+      "toneladas_disponibles": 36.1
+    },
+    {
+      "origen": "MAO",
+      "destino": "GRU",
+      "toneladas_servidas": 26.7,
+      "toneladas_disponibles": 124.6
+    },
+    {
+      "origen": "MDE",
+      "destino": "BOG",
+      "toneladas_servidas": 2.4,
+      "toneladas_disponibles": 6.4
+    },
+    {
+      "origen": "MDE",
+      "destino": "MIA",
+      "toneladas_servidas": 43.4,
+      "toneladas_disponibles": 113.9
+    },
+    {
+      "origen": "MIA",
+      "destino": "BOG",
+      "toneladas_servidas": 135.1,
+      "toneladas_disponibles": 135.2
+    },
+    {
+      "origen": "MIA",
+      "destino": "GRU",
+      "toneladas_servidas": 5.2,
+      "toneladas_disponibles": 9.5
+    },
+    {
+      "origen": "MIA",
+      "destino": "GUA",
+      "toneladas_servidas": 2.0,
+      "toneladas_disponibles": 6.0
+    },
+    {
+      "origen": "MIA",
+      "destino": "LIM",
+      "toneladas_servidas": 2.2,
+      "toneladas_disponibles": 6.5
+    },
+    {
+      "origen": "MIA",
+      "destino": "MDE",
+      "toneladas_servidas": 23.2,
+      "toneladas_disponibles": 36.7
+    },
+    {
+      "origen": "MIA",
+      "destino": "SCL",
+      "toneladas_servidas": 25.3,
+      "toneladas_disponibles": 39.1
+    },
+    {
+      "origen": "MIA",
+      "destino": "UIO",
+      "toneladas_servidas": 164.5,
+      "toneladas_disponibles": 164.4
+    },
+    {
+      "origen": "MIA",
+      "destino": "VCP",
+      "toneladas_servidas": 62.900000000000006,
+      "toneladas_disponibles": 116.7
+    },
+    {
+      "origen": "SCL",
+      "destino": "BOG",
+      "toneladas_servidas": 2.2,
+      "toneladas_disponibles": 6.4
+    },
+    {
+      "origen": "SCL",
+      "destino": "LIM",
+      "toneladas_servidas": 7.3,
+      "toneladas_disponibles": 33.1
+    },
+    {
+      "origen": "SCL",
+      "destino": "MIA",
+      "toneladas_servidas": 19.4,
+      "toneladas_disponibles": 80.3
+    },
+    {
+      "origen": "UIO",
+      "destino": "BOG",
+      "toneladas_servidas": 0.5,
+      "toneladas_disponibles": 1.7
+    },
+    {
+      "origen": "UIO",
+      "destino": "MIA",
+      "toneladas_servidas": 359.5,
+      "toneladas_disponibles": 504.9
+    },
+    {
+      "origen": "VCP",
+      "destino": "BOG",
+      "toneladas_servidas": 50.2,
+      "toneladas_disponibles": 95.4
+    },
+    {
+      "origen": "VCP",
+      "destino": "MIA",
+      "toneladas_servidas": 0.7,
+      "toneladas_disponibles": 2.2
+    },
+    {
+      "origen": "VCP",
+      "destino": "SCL",
+      "toneladas_servidas": 11.0,
+      "toneladas_disponibles": 15.9
+    },
+    {
+      "origen": "VCP",
+      "destino": "UIO",
+      "toneladas_servidas": 0.6,
+      "toneladas_disponibles": 1.9
+    }
+  ],
+  "kpis": {
+    "margen_usd": 794792.9769999983,
+    "ingresos_usd": 2807821.0,
+    "costo_vuelos_usd": 1928435.8230000017,
+    "costo_handling_usd": 84592.20000000001,
+    "costo_operacional_usd": 2013028.0230000017,
+    "toneladas": 1868.2,
+    "pct_demanda": 67.63449424371878,
+    "vuelos": 62,
+    "aviones_usados": 4,
+    "horas_bloque": 243.22999999999993,
+    "ctk": 9328431.2,
+    "actk": 13315740.0,
+    "factor_ocupacion_pct": 70.05567245981071,
+    "factor_ocupacion_tramos_pct": 67.21451104100946,
+    "costo_usd_por_tkm": 0.2157949155480722,
+    "costo_usd_por_tonelada": 1077.522761481641,
+    "vuelos_vacios": 4,
+    "pct_vuelos_vacios": 6.451612903225806,
+    "frecuencias_cumplidas_num": 15,
+    "frecuencias_exigidas_num": 15,
+    "frecuencias_cumplidas": "15/15",
+    "toneladas_directas": 1733.7,
+    "pct_carga_directa": 92.8005566855797,
+    "toneladas_multitramos": 134.5,
+    "pct_carga_multitramos": 7.199443314420297,
+    "satisfaccion_demanda_diaria": [
+      {
+        "dia": 1,
+        "nombre": "Lunes",
+        "demanda_t": 351.99999999999994,
+        "servida_t": 255.10000000000002,
+        "satisfaccion_pct": 72.47159090909093
+      },
+      {
+        "dia": 2,
+        "nombre": "Martes",
+        "demanda_t": 426.80000000000007,
+        "servida_t": 289.20000000000005,
+        "satisfaccion_pct": 67.76007497656983
+      },
+      {
+        "dia": 3,
+        "nombre": "Mi\u00e9rcoles",
+        "demanda_t": 447.8,
+        "servida_t": 305.3,
+        "satisfaccion_pct": 68.17775792764627
+      },
+      {
+        "dia": 4,
+        "nombre": "Jueves",
+        "demanda_t": 320.70000000000005,
+        "servida_t": 192.5,
+        "satisfaccion_pct": 60.02494543186778
+      },
+      {
+        "dia": 5,
+        "nombre": "Viernes",
+        "demanda_t": 491.3,
+        "servida_t": 308.90000000000003,
+        "satisfaccion_pct": 62.87400773458173
+      },
+      {
+        "dia": 6,
+        "nombre": "S\u00e1bado",
+        "demanda_t": 421.9,
+        "servida_t": 340.4,
+        "satisfaccion_pct": 80.68262621474284
+      },
+      {
+        "dia": 7,
+        "nombre": "Domingo",
+        "demanda_t": 301.7,
+        "servida_t": 176.8,
+        "satisfaccion_pct": 58.60125952933378
+      }
+    ],
+    "satisfaccion_diaria_media_pct": 67.22746610340474,
+    "variabilidad_diaria_pp": 7.121087888537105,
+    "rango_satisfaccion_diaria_pp": 22.08136668540906,
+    "factor_desvio_global": 1.126551239952172,
+    "factor_desvio_multitramos": 2.380428691454862,
+    "commodities_sin_distancia_referencia": 0,
+    "flujo_through_t": 210.09999999999997,
+    "flujo_transferido_t": 52.4,
+    "conexiones_transferencia_usadas": 10,
+    "transferencias_entre_operadores": 6,
+    "ttr_h": 2.0
+  },
+  "validacion": {
+    "ok": true,
+    "violaciones": []
+  },
+  "calidad_optimizacion": {
+    "metodo": "MILP integrado espacio-tiempo",
+    "estado": "Limite de tiempo",
+    "objetivo_modelo": 794792.9769999998,
+    "cota_modelo": 1132379.1176969514,
+    "gap_modelo": 0.42474726182306416,
+    "tiempo_gurobi_s": 2400.185000181198,
+    "aviones_libres": [
+      "AC-06",
+      "AC-07",
+      "AC-10",
+      "AC-15"
+    ],
+    "gap_global_disponible": false,
+    "gap_global": null,
+    "nota": "La cota y el gap son los del modelo resuelto: sin transbordos dentro del MILP (warm_start_milp.py) o con los aviones no libres fijos (modelos con --libres). No son una cota del problema completo; el margen reportado es el validado despu\u00e9s del paso final con transbordos."
+  }
+}

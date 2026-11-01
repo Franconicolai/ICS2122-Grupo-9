@@ -90,9 +90,9 @@ def ejecutar_modelo():
 def generar_json_visualizacion(results_dir):
     try:
         import pandas as pd
-        ap = pd.read_csv(os.path.join('data', 'raw data', 'airports.csv'))
-        fl = pd.read_csv(os.path.join('data', 'raw data', 'fleet.csv'))
-        dem = pd.read_csv(os.path.join('data', 'raw data', 'demand_weekly.csv'))
+        ap = pd.read_csv(os.path.join(os.environ.get('RAW', os.path.join('data', 'raw data')), 'airports.csv'))
+        fl = pd.read_csv(os.path.join(os.environ.get('RAW', os.path.join('data', 'raw data')), 'fleet.csv'))
+        dem = pd.read_csv(os.path.join(os.environ.get('RAW', os.path.join('data', 'raw data')), 'demand_weekly.csv'))
         
         itin = pd.read_csv(os.path.join(results_dir, 'itinerario_vuelos.csv'))
         kpis = json.load(open(os.path.join(results_dir, 'indicadores_kpi.json'), 'r', encoding='utf-8'))

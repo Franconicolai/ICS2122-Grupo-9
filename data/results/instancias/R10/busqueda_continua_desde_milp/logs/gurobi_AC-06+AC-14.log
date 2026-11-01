@@ -1,0 +1,53 @@
+
+Gurobi 13.0.2 (win64) logging started Sun Nov  1 11:58:36 2026
+
+Set parameter LogFile to value "data/results/instancias/R10/busqueda_continua_desde_milp\logs\gurobi_AC-06+AC-14.log"
+Set parameter SoftMemLimit to value 5
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+SoftMemLimit  5
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  60
+LogToConsole  0
+
+Optimize a model with 116367 rows, 319033 columns and 1342247 nonzeros (Max)
+Model fingerprint: 0xa061fc1b
+Model has 266781 linear objective coefficients
+Variable types: 272111 continuous, 46922 integer (46922 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 8e+04]
+  Bounds range     [9e-01, 5e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 2.68234e+06
+
+Presolve removed 22968 rows and 66423 columns (presolve time = 5s)...
+Presolve removed 25378 rows and 76744 columns (presolve time = 10s)...
+Presolve removed 25495 rows and 77316 columns
+Presolve time: 13.38s
+Presolved: 90872 rows, 241717 columns, 1258407 nonzeros
+Variable types: 207859 continuous, 33858 integer (33858 binary)
+Starting NoRel heuristic
+Elapsed time for NoRel heuristic: 6s (best bound 4.91273e+06)
+Elapsed time for NoRel heuristic: 17s (best bound 4.9046e+06)
+Elapsed time for NoRel heuristic: 22s (best bound 4.9046e+06)
+Elapsed time for NoRel heuristic: 28s (best bound 4.9046e+06)
+Elapsed time for NoRel heuristic: 35s (best bound 4.9046e+06)
+Elapsed time for NoRel heuristic: 46s (best bound 4.88978e+06)
+NoRel heuristic complete
+
+Explored 0 nodes (0 simplex iterations) in 61.81 seconds (28.55 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 2: 2.68234e+06 2.68234e+06 
+
+Time limit reached
+Best objective 2.682343573000e+06, best bound 4.856544526200e+06, gap 81.0560%

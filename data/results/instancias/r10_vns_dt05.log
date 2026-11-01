@@ -1,0 +1,47 @@
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+[inicio] vns_dt1_60s | DT = 0.5 h | TTR_H = 2 h | margen validado 2,594,270 USD | 10 aviones x 20 vuelta(s) x 90 s | salida data/results/instancias/R10/vns_dt05_desde_dt1
+[vuelta 1] nivel avion: 10 vecindarios
+  [vuelta 1] AC-12: sin mejora | modelo 2,594,270 -> 2,594,270 | mejor validado 2,594,270 USD (+0) | 97 s
+  [vuelta 1] AC-14: sin mejora | modelo 2,594,270 -> 2,594,270 | mejor validado 2,594,270 USD (+0) | 97 s
+  [vuelta 1] AC-05: sin mejora | modelo 2,594,270 -> 2,594,270 | mejor validado 2,594,270 USD (+0) | 96 s
+  [vuelta 1] AC-19: sin mejora | modelo 2,594,270 -> 2,594,270 | mejor validado 2,594,270 USD (+0) | 94 s
+  [vuelta 1] AC-03: sin mejora | modelo 2,594,270 -> 2,594,270 | mejor validado 2,594,270 USD (+0) | 97 s
+  [vuelta 1] AC-18: sin mejora | modelo 2,594,270 -> 2,594,270 | mejor validado 2,594,270 USD (+0) | 96 s
+  [vuelta 1] AC-06: sin mejora | modelo 2,594,270 -> 2,594,270 | mejor validado 2,594,270 USD (+0) | 96 s
+  [vuelta 1] AC-10: MEJORA | modelo 2,594,270 -> 2,597,710 | mejor validado 2,597,710 USD (+3,440) | 96 s
+  [vuelta 1] AC-16: sin mejora | modelo 2,597,710 -> 2,597,710 | mejor validado 2,597,710 USD (+3,440) | 100 s
+  [vuelta 1] AC-08: sin mejora | modelo 2,597,710 -> 2,597,710 | mejor validado 2,597,710 USD (+3,440) | 97 s
+[vuelta 2] nivel avion: 10 vecindarios
+  [vuelta 2] AC-12: sin mejora | modelo 2,597,710 -> 2,597,710 | mejor validado 2,597,710 USD (+3,440) | 95 s
+  [vuelta 2] AC-14: sin mejora | modelo 2,597,710 -> 2,597,710 | mejor validado 2,597,710 USD (+3,440) | 95 s
+  [vuelta 2] AC-05: sin mejora | modelo 2,597,710 -> 2,597,710 | mejor validado 2,597,710 USD (+3,440) | 96 s
+  [vuelta 2] AC-19: sin mejora | modelo 2,597,710 -> 2,597,710 | mejor validado 2,597,710 USD (+3,440) | 96 s
+  [vuelta 2] AC-03: sin mejora | modelo 2,597,710 -> 2,597,710 | mejor validado 2,597,710 USD (+3,440) | 96 s
+  [vuelta 2] AC-18: sin mejora | modelo 2,597,710 -> 2,597,710 | mejor validado 2,597,710 USD (+3,440) | 98 s
+  [vuelta 2] AC-06: sin mejora | modelo 2,597,710 -> 2,597,710 | mejor validado 2,597,710 USD (+3,440) | 96 s
+  [vuelta 2] AC-10: sin mejora | modelo 2,597,710 -> 2,597,710 | mejor validado 2,597,710 USD (+3,440) | 95 s
+  [vuelta 2] AC-16: sin mejora | modelo 2,597,710 -> 2,597,710 | mejor validado 2,597,710 USD (+3,440) | 98 s
+  [vuelta 2] AC-08: sin mejora | modelo 2,597,710 -> 2,597,710 | mejor validado 2,597,710 USD (+3,440) | 96 s
+[vuelta 2] sin mejoras: pasa al nivel par
+[vuelta 3] nivel par: 15 vecindarios
+  [vuelta 3] AC-06+AC-10: sin mejora | modelo 2,597,710 -> 2,597,710 | mejor validado 2,597,710 USD (+3,440) | 106 s
+  [vuelta 3] AC-06+AC-18: sin mejora | modelo 2,597,710 -> 2,597,710 | mejor validado 2,597,710 USD (+3,440) | 102 s
+  [vuelta 3] AC-06+AC-19: sin mejora | modelo 2,597,710 -> 2,597,710 | mejor validado 2,597,710 USD (+3,440) | 100 s
+  [vuelta 3] AC-18+AC-19: sin mejora | modelo 2,597,710 -> 2,597,710 | mejor validado 2,597,710 USD (+3,440) | 104 s
+  [vuelta 3] AC-12+AC-14: sin mejora | modelo 2,597,710 -> 2,597,710 | mejor validado 2,597,710 USD (+3,440) | 103 s
+  [vuelta 3] AC-10+AC-19: sin mejora | modelo 2,597,710 -> 2,597,710 | mejor validado 2,597,710 USD (+3,440) | 101 s
+  [vuelta 3] AC-06+AC-16: sin mejora | modelo 2,597,710 -> 2,597,710 | mejor validado 2,597,710 USD (+3,440) | 102 s
+  [vuelta 3] AC-03+AC-05: sin mejora | modelo 2,597,710 -> 2,597,710 | mejor validado 2,597,710 USD (+3,440) | 101 s
+  [vuelta 3] AC-05+AC-19: sin mejora | modelo 2,597,710 -> 2,597,710 | mejor validado 2,597,710 USD (+3,440) | 97 s
+  [vuelta 3] AC-06+AC-12: sin mejora | modelo 2,597,710 -> 2,597,710 | mejor validado 2,597,710 USD (+3,440) | 102 s
+  [vuelta 3] AC-06+AC-14: sin mejora | modelo 2,597,710 -> 2,597,710 | mejor validado 2,597,710 USD (+3,440) | 100 s
+  [vuelta 3] AC-10+AC-18: sin mejora | modelo 2,597,710 -> 2,597,710 | mejor validado 2,597,710 USD (+3,440) | 101 s
+  [vuelta 3] AC-06+AC-08: sin mejora | modelo 2,597,710 -> 2,597,710 | mejor validado 2,597,710 USD (+3,440) | 104 s
+  [vuelta 3] AC-05+AC-16: sin mejora | modelo 2,597,710 -> 2,597,710 | mejor validado 2,597,710 USD (+3,440) | 98 s
+  [vuelta 3] AC-03+AC-19: sin mejora | modelo 2,597,710 -> 2,597,710 | mejor validado 2,597,710 USD (+3,440) | 96 s
+[vuelta 3] ningún vecindario mejoró: se detiene.
+
+==============================================================================
+Margen validado: 2,594,270 -> 2,597,710 USD (+3,440) | 1 mejoras aceptadas | 1.0 h
+Resultados en data/results/instancias/R10/vns_dt05_desde_dt1 (progreso.csv tiene cada paso)

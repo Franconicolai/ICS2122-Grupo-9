@@ -1,0 +1,8 @@
+{
+  "version": "busqueda_continua_desde_tsn",
+  "fecha": "2026-11-01 15:50:01",
+  "descripcion": "Búsqueda por vecindarios (MILP continuo con transbordos (sin grilla)) desde vns_dt05_desde_dt1",
+  "solver": "gurobi",
+  "dt": "continuo",
+  "tlim": null
+}

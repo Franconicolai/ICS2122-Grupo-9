@@ -1,0 +1,53 @@
+
+Gurobi 13.0.2 (win64) logging started Sun Nov  1 08:21:55 2026
+
+Set parameter LogFile to value "data/results/instancias/R10/vns_dt1_60s\logs\gurobi_AC-10+AC-16.log"
+Set parameter Threads to value 6
+Set parameter SoftMemLimit to value 3
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 6 threads
+
+Non-default parameters:
+TimeLimit  60
+SoftMemLimit  3
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  60
+LogToConsole  0
+Threads  6
+
+Optimize a model with 398483 rows, 538984 columns and 1707559 nonzeros (Max)
+Model fingerprint: 0xbad686ae
+Model has 75210 linear objective coefficients and an objective constant of 3.4975156719999993e+06
+Variable types: 502600 continuous, 24222 integer (24222 binary)
+Semi-Variable types: 12162 continuous, 0 integer
+Coefficient statistics:
+  Matrix range     [1e+00, 5e+01]
+  Objective range  [4e+01, 8e+04]
+  Bounds range     [1e+00, 5e+01]
+  RHS range        [1e+00, 5e+02]
+
+Loaded user MIP start with objective 2.54586e+06
+
+Presolve removed 119431 rows and 127590 columns (presolve time = 5s)...
+Presolve removed 119784 rows and 128265 columns (presolve time = 10s)...
+Presolve removed 120351 rows and 128706 columns
+Presolve time: 14.28s
+Presolved: 302440 rows, 422432 columns, 1516098 nonzeros
+Variable types: 387272 continuous, 35160 integer (35160 binary)
+Starting NoRel heuristic
+Elapsed time for NoRel heuristic: 6s (best bound 6.04057e+06)
+Elapsed time for NoRel heuristic: 12s (best bound 5.64423e+06)
+Elapsed time for NoRel heuristic: 39s (best bound 5.63587e+06)
+Elapsed time for NoRel heuristic: 47s (best bound 5.55042e+06)
+NoRel heuristic complete
+
+Explored 0 nodes (0 simplex iterations) in 62.31 seconds (25.57 work units)
+Thread count was 6 (of 8 available processors)
+
+Solution count 2: 2.54586e+06 2.54586e+06 
+
+Time limit reached
+Best objective 2.545862190000e+06, best bound 5.550416519203e+06, gap 118.0172%

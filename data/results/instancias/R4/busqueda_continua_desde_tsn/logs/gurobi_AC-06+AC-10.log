@@ -1,0 +1,55 @@
+
+Gurobi 13.0.2 (win64) logging started Sun Nov  1 14:40:48 2026
+
+Set parameter LogFile to value "data/results/instancias/R4/busqueda_continua_desde_tsn\logs\gurobi_AC-06+AC-10.log"
+Set parameter Threads to value 2
+Set parameter SoftMemLimit to value 1.5
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 2 threads
+
+Non-default parameters:
+TimeLimit  60
+SoftMemLimit  1.5
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  60
+LogToConsole  0
+Threads  2
+
+Optimize a model with 60573 rows, 123275 columns and 593893 nonzeros (Max)
+Model fingerprint: 0x99a09a56
+Model has 95411 linear objective coefficients
+Variable types: 97671 continuous, 25604 integer (25604 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 7e+04]
+  Bounds range     [5e-01, 2e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 838479
+
+Presolve removed 6456 rows and 16927 columns (presolve time = 5s)...
+Presolve removed 7196 rows and 20375 columns
+Presolve time: 9.58s
+Presolved: 53377 rows, 102900 columns, 523545 nonzeros
+Variable types: 80384 continuous, 22516 integer (22516 binary)
+Starting NoRel heuristic
+Elapsed time for NoRel heuristic: 7s (best bound 2.35652e+06)
+Elapsed time for NoRel heuristic: 14s (best bound 2.35652e+06)
+Elapsed time for NoRel heuristic: 20s (best bound 2.35652e+06)
+Elapsed time for NoRel heuristic: 27s (best bound 2.35652e+06)
+Elapsed time for NoRel heuristic: 36s (best bound 2.05107e+06)
+Elapsed time for NoRel heuristic: 42s (best bound 1.96457e+06)
+Elapsed time for NoRel heuristic: 49s (best bound 1.96457e+06)
+NoRel heuristic complete
+
+Explored 0 nodes (0 simplex iterations) in 60.88 seconds (18.15 work units)
+Thread count was 2 (of 8 available processors)
+
+Solution count 2: 838479 838479 
+
+Time limit reached
+Best objective 8.384792840000e+05, best bound 1.933407946701e+06, gap 130.5851%

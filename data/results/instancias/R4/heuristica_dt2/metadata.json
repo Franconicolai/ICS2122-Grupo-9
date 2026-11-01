@@ -1,0 +1,11 @@
+{
+  "version": "heuristica_dt2",
+  "descripcion": "Heurística DT 2 h",
+  "fecha": "2026-10-30 21:50:55",
+  "solver": "gurobi",
+  "dt": "2",
+  "tlim": "300",
+  "tlim_op": "120",
+  "start": "",
+  "enlace_fuerte": "1"
+}

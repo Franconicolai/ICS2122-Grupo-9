@@ -1,0 +1,5 @@
+fecha,vuelta,avion,estado,objetivo_start,objetivo_modelo,margen_validado,aceptado,mejor_margen,segundos
+2026-11-01 07:17:01,1,AC-01,Limite de memoria,6345128.42,6345128.42,,False,6345128.42,292.2
+2026-11-01 07:22:57,1,AC-02,Limite de tiempo,6345128.42,6345128.42,,False,6345128.42,355.7
+2026-11-01 07:27:13,1,AC-03,Limite de memoria,6345128.42,6345128.42,,False,6345128.42,255.7
+2026-11-01 07:29:23,1,AC-04,Limite de memoria,6345128.42,6345128.42,,False,6345128.42,130.3

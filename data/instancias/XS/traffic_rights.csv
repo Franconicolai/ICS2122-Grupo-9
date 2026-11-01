@@ -1,0 +1,43 @@
+operator,country,allowed
+BRA,Alemania,1
+BRA,Argentina,1
+BRA,Brasil,1
+BRA,Bélgica,1
+BRA,Cabo Verde,1
+BRA,Chile,1
+BRA,Colombia,1
+BRA,Costa Rica,1
+BRA,Ecuador,1
+BRA,El Salvador,1
+BRA,España,1
+BRA,Estados Unidos,1
+BRA,Guatemala,1
+BRA,Guyana,1
+BRA,México,1
+BRA,Panamá,1
+BRA,Paraguay,1
+BRA,Perú,1
+BRA,República Dominicana,1
+BRA,Uruguay,1
+BRA,Venezuela,1
+PAC,Alemania,0
+PAC,Argentina,1
+PAC,Brasil,1
+PAC,Bélgica,0
+PAC,Cabo Verde,0
+PAC,Chile,1
+PAC,Colombia,1
+PAC,Costa Rica,1
+PAC,Ecuador,1
+PAC,El Salvador,1
+PAC,España,1
+PAC,Estados Unidos,1
+PAC,Guatemala,0
+PAC,Guyana,0
+PAC,México,0
+PAC,Panamá,1
+PAC,Paraguay,1
+PAC,Perú,1
+PAC,República Dominicana,1
+PAC,Uruguay,1
+PAC,Venezuela,1

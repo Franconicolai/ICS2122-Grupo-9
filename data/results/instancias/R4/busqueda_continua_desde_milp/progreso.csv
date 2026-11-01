@@ -1,0 +1,15 @@
+fecha,vuelta,avion,estado,objetivo_start,objetivo_modelo,margen_validado,aceptado,mejor_margen,segundos,nivel,minutos_total
+2026-11-01 14:12:22,1,AC-06,Limite de tiempo,806974.65,813327.45,813327.45,True,813327.45,64.3,avion,1.1
+2026-11-01 14:13:25,1,AC-07,Limite de tiempo,813327.45,815241.45,815241.45,True,815241.45,62.9,avion,2.1
+2026-11-01 14:14:28,1,AC-10,Limite de tiempo,815241.45,815241.45,,False,815241.45,63.2,avion,3.2
+2026-11-01 14:15:31,1,AC-15,Limite de tiempo,815241.45,815241.46,,False,815241.45,62.8,avion,4.2
+2026-11-01 14:16:35,2,AC-06,Limite de tiempo,815241.45,815241.45,,False,815241.45,63.9,avion,5.3
+2026-11-01 14:17:37,2,AC-07,Limite de tiempo,815241.45,815241.46,,False,815241.45,62.7,avion,6.4
+2026-11-01 14:18:40,2,AC-10,Limite de tiempo,815241.45,815241.45,,False,815241.45,63.0,avion,7.4
+2026-11-01 14:19:43,2,AC-15,Limite de tiempo,815241.45,815241.46,,False,815241.45,62.9,avion,8.5
+2026-11-01 14:20:50,3,AC-06+AC-15,Limite de tiempo,815241.45,815241.45,,False,815241.45,67.1,par,9.6
+2026-11-01 14:21:56,3,AC-07+AC-15,Limite de tiempo,815241.45,815241.45,,False,815241.45,65.3,par,10.7
+2026-11-01 14:23:02,3,AC-07+AC-10,Limite de tiempo,815241.45,815241.45,,False,815241.45,66.4,par,11.8
+2026-11-01 14:24:07,3,AC-10+AC-15,Limite de tiempo,815241.45,815241.45,,False,815241.45,65.2,par,12.9
+2026-11-01 14:25:15,3,AC-06+AC-07,Limite de tiempo,815241.45,815241.45,,False,815241.45,67.5,par,14.0
+2026-11-01 14:26:23,3,AC-06+AC-10,Limite de tiempo,815241.45,815241.45,,False,815241.45,68.6,par,15.1
