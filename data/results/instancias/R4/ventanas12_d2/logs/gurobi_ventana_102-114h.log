@@ -1,0 +1,63 @@
+
+Gurobi 13.0.2 (win64) logging started Mon Nov  2 04:41:25 2026
+
+Set parameter LogFile to value "data/results/instancias/R4/ventanas12_d2\logs\gurobi_ventana_102-114h.log"
+Set parameter Threads to value 1
+Set parameter SoftMemLimit to value 1
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 1 threads
+
+Non-default parameters:
+TimeLimit  120
+SoftMemLimit  1
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  15
+LogToConsole  0
+Threads  1
+
+Optimize a model with 14929 rows, 40766 columns and 185619 nonzeros (Max)
+Model fingerprint: 0xc3aae49b
+Model has 31581 linear objective coefficients
+Variable types: 33841 continuous, 6925 integer (6925 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 7e+04]
+  Bounds range     [5e-01, 2e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 868027
+
+Presolve removed 13138 rows and 36560 columns
+Presolve time: 0.39s
+Presolved: 1791 rows, 4206 columns, 13815 nonzeros
+Variable types: 4015 continuous, 191 integer (190 binary)
+Starting NoRel heuristic
+Elapsed time for NoRel heuristic: 5s (best bound 908906)
+Elapsed time for NoRel heuristic: 10s (best bound 908906)
+Elapsed time for NoRel heuristic: 15s (best bound 908906)
+NoRel heuristic complete
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+       0    1.2160564e+06   9.000133e+02   0.000000e+00     15s
+    1132    9.0890632e+05   0.000000e+00   0.000000e+00     16s
+
+Root relaxation: objective 9.089063e+05, 1132 iterations, 0.04 seconds (0.02 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 infeasible    0      868026.699 868026.699  0.00%     -   15s
+
+Explored 1 nodes (1182 simplex iterations) in 15.53 seconds (6.10 work units)
+Thread count was 1 (of 8 available processors)
+
+Solution count 2: 868027 868027 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 8.680266990000e+05, best bound 8.680266990000e+05, gap 0.0000%

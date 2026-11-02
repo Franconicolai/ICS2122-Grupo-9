@@ -1,0 +1,82 @@
+
+Gurobi 13.0.2 (win64) logging started Mon Nov  2 02:04:12 2026
+
+Set parameter LogFile to value "data/results/instancias/R10/ventanas_desplazar\logs\gurobi_AC-10+AC-16.log"
+Set parameter Threads to value 3
+Set parameter SoftMemLimit to value 1.5
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 3 threads
+
+Non-default parameters:
+TimeLimit  120
+SoftMemLimit  1.5
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  15
+LogToConsole  0
+Threads  3
+
+Optimize a model with 103549 rows, 266245 columns and 1158923 nonzeros (Max)
+Model fingerprint: 0x45d6568d
+Model has 217961 linear objective coefficients
+Variable types: 223291 continuous, 42954 integer (42954 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 8e+04]
+  Bounds range     [9e-01, 5e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 2.69288e+06
+
+Presolve removed 23645 rows and 66387 columns (presolve time = 5s)...
+Presolve removed 23645 rows and 66387 columns (presolve time = 10s)...
+Presolve removed 25508 rows and 73926 columns (presolve time = 15s)...
+Presolve removed 25575 rows and 74269 columns
+Presolve time: 18.71s
+Presolved: 77974 rows, 191976 columns, 932229 nonzeros
+Variable types: 161934 continuous, 30042 integer (30042 binary)
+Starting NoRel heuristic
+Elapsed time for NoRel heuristic: 8s (best bound 5.99786e+06)
+Elapsed time for NoRel heuristic: 20s (best bound 5.99786e+06)
+NoRel heuristic complete
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Elapsed ordering time = 5s
+Elapsed ordering time = 10s
+Elapsed ordering time = 15s
+Elapsed ordering time = 20s
+Elapsed ordering time = 25s
+Elapsed ordering time = 30s
+Elapsed ordering time = 35s
+Elapsed ordering time = 40s
+Elapsed ordering time = 45s
+Elapsed ordering time = 47s
+Elapsed ordering time = 50s
+Elapsed ordering time = 55s
+Ordering time: 56.89s
+
+Barrier performed 0 iterations in 98.93 seconds (37.17 work units)
+Memory limit reached
+
+
+
+Root relaxation: memory limit, 0 iterations, 59.70 seconds (23.79 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0          -    0      2692881.41 5997859.09   123%     -   98s
+
+Explored 1 nodes (0 simplex iterations) in 99.04 seconds (37.17 work units)
+Thread count was 3 (of 8 available processors)
+
+Solution count 2: 2.69288e+06 2.69288e+06 
+
+Memory limit reached
+Best objective 2.692881413000e+06, best bound 5.997859092000e+06, gap 122.7302%

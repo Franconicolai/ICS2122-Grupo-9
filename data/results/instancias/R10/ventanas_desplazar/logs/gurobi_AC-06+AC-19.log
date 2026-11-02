@@ -1,0 +1,88 @@
+
+Gurobi 13.0.2 (win64) logging started Mon Nov  2 01:55:02 2026
+
+Set parameter LogFile to value "data/results/instancias/R10/ventanas_desplazar\logs\gurobi_AC-06+AC-19.log"
+Set parameter Threads to value 3
+Set parameter SoftMemLimit to value 1.5
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 3 threads
+
+Non-default parameters:
+TimeLimit  120
+SoftMemLimit  1.5
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  15
+LogToConsole  0
+Threads  3
+
+Optimize a model with 113892 rows, 308875 columns and 1307197 nonzeros (Max)
+Model fingerprint: 0xacfce420
+Model has 257391 linear objective coefficients
+Variable types: 262721 continuous, 46154 integer (46154 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 8e+04]
+  Bounds range     [9e-01, 5e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 2.69288e+06
+
+Presolve removed 23124 rows and 65526 columns (presolve time = 5s)...
+Presolve removed 23124 rows and 65526 columns (presolve time = 10s)...
+Presolve removed 23124 rows and 65526 columns (presolve time = 15s)...
+Presolve removed 23124 rows and 65526 columns (presolve time = 20s)...
+Presolve removed 23124 rows and 65526 columns (presolve time = 25s)...
+Presolve removed 25276 rows and 74114 columns (presolve time = 30s)...
+Presolve removed 25276 rows and 74125 columns (presolve time = 35s)...
+Presolve removed 25385 rows and 74871 columns
+Presolve time: 39.20s
+Presolved: 88507 rows, 234004 columns, 1126528 nonzeros
+Variable types: 200831 continuous, 33173 integer (33173 binary)
+Starting NoRel heuristic
+Elapsed time for NoRel heuristic: 7s (best bound 4.99765e+06)
+Elapsed time for NoRel heuristic: 18s (best bound 4.99765e+06)
+NoRel heuristic complete
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Elapsed ordering time = 5s
+Elapsed ordering time = 10s
+Elapsed ordering time = 15s
+Elapsed ordering time = 20s
+Elapsed ordering time = 25s
+Elapsed ordering time = 30s
+Elapsed ordering time = 33s
+Elapsed ordering time = 35s
+Elapsed ordering time = 40s
+Elapsed ordering time = 45s
+Elapsed ordering time = 51s
+Elapsed ordering time = 55s
+Elapsed ordering time = 59s
+Elapsed ordering time = 60s
+Ordering time: 59.98s
+
+Barrier performed 0 iterations in 122.25 seconds (30.94 work units)
+Memory limit reached
+
+
+
+Root relaxation: time limit, 25991 iterations, 64.54 seconds (16.45 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0          -    0      2692881.41 4997650.53  85.6%     -  122s
+
+Explored 1 nodes (25991 simplex iterations) in 122.44 seconds (29.99 work units)
+Thread count was 3 (of 8 available processors)
+
+Solution count 2: 2.69288e+06 2.69288e+06 
+
+Time limit reached
+Best objective 2.692881413000e+06, best bound 4.997650532000e+06, gap 85.5875%

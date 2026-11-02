@@ -1,0 +1,48 @@
+
+Gurobi 13.0.2 (win64) logging started Mon Nov  2 04:57:40 2026
+
+Set parameter LogFile to value "data/results/Busqueda_ventanas_desplazar_d2\logs\gurobi_ventana_102-114h.log"
+Set parameter Threads to value 4
+Set parameter SoftMemLimit to value 4
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  300
+SoftMemLimit  4
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  60
+LogToConsole  0
+Threads  4
+
+Optimize a model with 200802 rows, 654256 columns and 3170406 nonzeros (Max)
+Model fingerprint: 0x668fbb11
+Model has 555872 linear objective coefficients
+Variable types: 522218 continuous, 132038 integer (132038 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 8e+04]
+  Bounds range     [1e+00, 8e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 6.47505e+06
+
+Presolve removed 171043 rows and 451352 columns
+Presolve time: 2.21s
+Presolved: 29759 rows, 202904 columns, 629799 nonzeros
+Variable types: 198907 continuous, 3997 integer (3997 binary)
+Performing another presolve...
+Presolve removed 409 rows and 2651 columns
+Presolve time: 1.67s
+
+Explored 1 nodes (0 simplex iterations) in 4.33 seconds (2.97 work units)
+Thread count was 4 (of 8 available processors)
+
+Solution count 2: 6.47505e+06 6.47505e+06 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 6.475054973000e+06, best bound 6.475054973000e+06, gap 0.0000%

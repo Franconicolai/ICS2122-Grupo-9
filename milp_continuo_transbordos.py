@@ -33,6 +33,7 @@ import pandas as pd
 
 import warm_start_milp as ws   # deja la raíz como directorio de trabajo y agrega src/ (submodelo de carga y validador)
 import gurobi_model as gm
+import gurobipy as gp
 from gurobipy import GRB
 
 from modelo_integrado_espacio_tiempo import interpretar_libres
@@ -94,6 +95,151 @@ def enumerar_pares(datos, itinerario, libres, ttr, solo_contar=False):
     return pares, dict(cuenta)
 
 
+def enumerar_pares_posiciones(datos, itinerario, libres, cotas, ttr):
+    """Como enumerar_pares, pero los libres son posiciones (k, s) y no aviones completos (vecindarios por ventana de
+    tiempo). cotas[k] = (lo, hi): las posiciones libres de k salen después de lo (llegada del vuelo fijo anterior) y
+    antes de hi (salida del vuelo fijo siguiente); los pares que no caben en ese intervalo se descartan."""
+    ok, llegan, salen, _ = preparar(datos, itinerario, set(), ttr)
+    fijos = [(k, l['pos'], l['tramo'][0], l['tramo'][1], l['t_dep'], l['t_arr'])
+             for k, legs in itinerario.items() for l in legs if (k, l['pos']) not in libres]
+    pares, cuenta = [], defaultdict(int)
+    salidas_fijas = defaultdict(list)
+    for f in fijos:
+        salidas_fijas[f[2]].append(f)
+
+    def nuevo(tipo, i, j, aps, t_i=None, t_j=None):
+        cuenta[tipo] += 1
+        cuenta['binarias'] += 0 if tipo == 'FF' else len(aps)
+        pares.append({'tipo': tipo, 'i': i, 'j': j, 'aps': aps, 't_i': t_i, 't_j': t_j})
+
+    for k, s, o, d, td, ta in fijos:                                     # fijo -> fijo
+        for k2, s2, o2, d2, td2, ta2 in salidas_fijas.get(d, []):
+            if k2 != k and ok(d, k, k2) and td2 >= ta + ttr - 1e-9:
+                nuevo('FF', (k, s), (k2, s2), [d])
+    libres = sorted(libres)
+    for k, s in libres:
+        lo, hi = cotas[k]
+        for k2, s2, o2, d2, td2, ta2 in fijos:                            # libre -> fijo
+            if k2 != k and o2 in llegan[k] and ok(o2, k, k2) and td2 - ttr > lo:
+                nuevo('LF', (k, s), (k2, s2), [o2], t_j=td2)
+        for k1, s1, o1, d1, td1, ta1 in fijos:                            # fijo -> libre
+            if k1 != k and d1 in salen[k] and ok(d1, k1, k) and ta1 + ttr < hi:
+                nuevo('FL', (k1, s1), (k, s), [d1], t_i=ta1)
+        for k2, s2 in libres:                                             # libre -> libre
+            if k2 != k and cotas[k][0] + ttr < cotas[k2][1]:
+                aps = sorted(a for a in llegan[k] & salen[k2] if ok(a, k, k2))
+                if aps:
+                    nuevo('LL', (k, s), (k2, s2), aps)
+    return pares, dict(cuenta)
+
+
+def enumerar_pares_flexibles(datos, itinerario, info, ttr):
+    """Pares de transbordo para las ventanas con desplazamiento. info[(k, s)] = (alternativas, salida_min, salida_max,
+    llegada_min) de cada posición libre: alternativas es None si la posición puede tomar cualquier tramo y horario
+    (vuelo de la ventana), o la lista de vuelos (tramo, salida, llegada) que puede ocupar (vuelo posterior a la ventana,
+    que se corre de posición sin cambiar tramo ni horario).
+    Tipos: FF fijo->fijo; SS cuando ninguno de los dos vuelos es de la ventana y toda combinación de alternativas que
+    calza en el aeropuerto cumple el TTR (sin binaria: basta que los tramos calcen); LF, FL y LL como en enumerar_pares,
+    con binaria y TTR por horarios variables. Los pares que no caben en los aeropuertos u horarios se descartan."""
+    ok, llegan, salen, _ = preparar(datos, itinerario, set(), ttr)
+    alt = {}                                          # alternativas (tramo, salida, llegada) o None, por vuelo
+    for k, legs in itinerario.items():
+        for l in legs:
+            if (k, l['pos']) not in info:
+                alt[k, l['pos']] = [(tuple(l['tramo']), l['t_dep'], l['t_arr'])]
+    for p, (cands, _, _, _) in info.items():
+        alt[p] = cands
+    libre = lambda p: p in info
+    llega = {p: (llegan[p[0]] if c is None else {e[1] for e, _, _ in c}) for p, c in alt.items()}
+    sale = {p: (salen[p[0]] if c is None else {e[0] for e, _, _ in c}) for p, c in alt.items()}
+    t_llega_min = {p: (info[p][3] if c is None else min(ta for _, _, ta in c)) for p, c in alt.items()}
+    t_sale_max = {p: (info[p][2] if c is None else max(td for _, td, _ in c)) for p, c in alt.items()}
+    salen_de = defaultdict(list)
+    for p in alt:
+        for a in sale[p]:
+            salen_de[a].append(p)
+    pares, cuenta = [], defaultdict(int)
+
+    def nuevo(tipo, i, j, aps, t_i=None, t_j=None, **extra):
+        cuenta[tipo] += 1
+        cuenta['binarias'] += 0 if tipo in ('FF', 'SS') else len(aps)
+        pares.append(dict({'tipo': tipo, 'i': i, 'j': j, 'aps': aps, 't_i': t_i, 't_j': t_j}, **extra))
+
+    for i in sorted(alt):
+        k = i[0]
+        por_j = defaultdict(list)                     # aeropuertos donde i puede entregar a j
+        for a in sorted(llega[i]):
+            for j in salen_de.get(a, []):
+                if j[0] != k and ok(a, k, j[0]) and t_llega_min[i] + ttr <= t_sale_max[j] + 1e-9:
+                    por_j[j].append(a)
+        for j, aps in por_j.items():
+            ci, cj = alt[i], alt[j]
+            if not libre(i) and not libre(j):
+                nuevo('FF', i, j, aps)
+                continue
+            if ci is not None and cj is not None and all(   # horarios conocidos que cumplen el TTR
+                    max(ta for e, _, ta in ci if e[1] == a) + ttr <= min(td for e, td, _ in cj if e[0] == a) + 1e-9
+                    for a in aps):
+                for a in aps:
+                    nuevo('SS', i, j, [a], i_libre=libre(i), j_libre=libre(j))
+            elif libre(i) and libre(j):
+                nuevo('LL', i, j, aps)
+            elif libre(i):
+                nuevo('LF', i, j, aps, t_j=cj[0][1])
+            else:
+                nuevo('FL', i, j, aps, t_i=ci[0][2])
+    return pares, dict(cuenta)
+
+
+def agregar_desplazamientos(modelo, sufijos):
+    """Ventanas con desplazamiento: los vuelos posteriores a la ventana de cada avión mantienen tramo y horario, pero
+    todos pueden correrse delta posiciones (dmin <= delta <= dmax), para que la ventana gane o pierda vuelos.
+    sufijos[k] = {'b': última posición de la ventana, 'n': vuelos del avión, 'dmin', 'dmax', 'vuelos': [(p, tramo,
+    salida)]}. Devuelve z[k, delta] (binaria: el avión k usa el desplazamiento delta)."""
+    v = modelo._v
+    y, u, t_dep = v['y'], v['u'], v['t_dep']
+    S, Ek = modelo._datos['S_max_k'], modelo._datos['Ek']
+    z = {}
+    for k, sf in sufijos.items():
+        deltas = range(sf['dmin'], sf['dmax'] + 1)
+        for dl in deltas:
+            z[k, dl] = modelo.addVar(vtype=GRB.BINARY, name=f'z_desp[{k},{dl}]')
+        modelo.addConstr(gp.quicksum(z[k, dl] for dl in deltas) == 1, name=f'desp_uno[{k}]')
+        posibles = defaultdict(set)                  # tramos que puede tomar cada posición que solo es de sufijo
+        for p, e, td in sf['vuelos']:
+            for dl in deltas:
+                modelo.addConstr(y[k, p + dl, e] >= z[k, dl], name=f'desp_tramo[{k},{p},{dl}]')
+                modelo.addConstr(t_dep[k, p + dl] >= td - gm.H * (1 - z[k, dl]), name=f'desp_ini[{k},{p},{dl}]')
+                modelo.addConstr(t_dep[k, p + dl] <= td + gm.H * (1 - z[k, dl]), name=f'desp_fin[{k},{p},{dl}]')
+                posibles[p + dl].add(e)
+        for dl in deltas:
+            if sf['n'] + dl + 1 <= S[k]:
+                modelo.addConstr(u[k, sf['n'] + dl + 1] <= 1 - z[k, dl], name=f'desp_fin_rot[{k},{dl}]')
+        for s, tramos in posibles.items():
+            if s > sf['b'] + sf['dmax']:             # posición que no puede ser de la ventana
+                for e in Ek[k]:
+                    if e not in tramos:
+                        y[k, s, e].UB = 0
+    modelo.update()
+    return z
+
+
+def fijar_posiciones(modelo, st, libres):
+    """Como fijar_aviones, pero libera solo las posiciones (k, s) de `libres`. La marca de última posición (l) y el
+    mantenimiento después del vuelo s (m) quedan libres también si la posición siguiente es libre."""
+    v = modelo._v
+    for nombre in ('y', 'u', 'l', 't_dep', 't_arr', 'dia', 'm0', 'm'):
+        for clave, var in v[nombre].items():
+            if nombre == 'm0':
+                libre = (clave, 1) in libres
+            else:
+                k, s = clave[0], clave[1]
+                libre = (k, s) in libres or (nombre in ('l', 'm') and (k, s + 1) in libres)
+            if not libre:
+                var.LB = var.UB = st.get(var, 0.0)
+    modelo.update()
+
+
 def agregar_transbordos(modelo, datos, pares, ttr):
     """Variables y restricciones de los transbordos sobre el MILP de gurobi_model.py (con transbordos=True)."""
     v = modelo._v
@@ -114,11 +260,18 @@ def agregar_transbordos(modelo, datos, pares, ttr):
     tr = modelo.addVars(claves_tr, lb=0,
                         ub=[min(P[pares[p]['i'][0]], P[pares[p]['j'][0]]) for p, d in claves_tr],
                         obj=[-h_k[pares[p]['j'][0]] for p, d in claves_tr], name='tr')
-    claves_c = [(p, a) for p, par in enumerate(pares) if par['tipo'] != 'FF' for a in par['aps']]
+    claves_c = [(p, a) for p, par in enumerate(pares) if par['tipo'] not in ('FF', 'SS') for a in par['aps']]
     c = modelo.addVars(claves_c, vtype=GRB.BINARY, name='c')
     for p, par in enumerate(pares):
         (k, s), (k2, s2) = par['i'], par['j']
         cap = min(P[k], P[k2])
+        if par['tipo'] == 'SS':                  # horarios conocidos que cumplen el TTR: basta que los tramos calcen
+            a = par['aps'][0]
+            if par['i_libre']:
+                modelo.addConstr(gp.quicksum(tr[p, d] for d in dests) <= cap * llega_a(k, s, a), name=f'T_ss_i[{p}]')
+            if par['j_libre']:
+                modelo.addConstr(gp.quicksum(tr[p, d] for d in dests) <= cap * sale_de(k2, s2, a), name=f'T_ss_j[{p}]')
+            continue
         activo = 1 if par['tipo'] == 'FF' else gp.quicksum(c[p, a] for a in par['aps'])
         modelo.addConstr(gp.quicksum(tr[p, d] for d in dests) <= cap * activo, name=f'T_cap[{p}]')
         if par['tipo'] in ('LF', 'LL'):          # el vuelo libre que entrega llega a ese aeropuerto
@@ -157,14 +310,14 @@ def armar_start(modelo, datos, itinerario, solucion, pares):
             st[v['tin'][d, k, s]] += r['transfer_in']
         if r.get('transfer_out', 0) > 1e-12:
             st[v['tout'][d, k, s]] += r['transfer_out']
-    par_de = {(par['i'], par['j']): p for p, par in enumerate(pares)}
+    par_de = {(par['i'], par['j'], a): p for p, par in enumerate(pares) for a in par['aps']}
     for t in solucion['transferencias']:
-        clave = ((t['from_k'], int(t['from_s'])), (t['to_k'], int(t['to_s'])))
+        clave = ((t['from_k'], int(t['from_s'])), (t['to_k'], int(t['to_s'])), t['airport'])
         if clave not in par_de:
             raise ValueError(f'el transbordo {t} no está entre los pares del modelo')
         p = par_de[clave]
         st[v['tr'][p, tuple(t['q'])[1]]] += t['tons']
-        if pares[p]['tipo'] != 'FF':
+        if pares[p]['tipo'] not in ('FF', 'SS'):
             st[v['c'][p, t['airport']]] = 1
     return st
 

@@ -1,0 +1,50 @@
+
+Gurobi 13.0.2 (win64) logging started Sun Nov  1 23:49:00 2026
+
+Set parameter LogFile to value "data/results/Busqueda_vns_tras_ventanas\logs\gurobi_AC-17.log"
+Set parameter Threads to value 4
+Set parameter SoftMemLimit to value 4
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  240
+SoftMemLimit  4
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  60
+LogToConsole  0
+Threads  4
+
+Optimize a model with 171203 rows, 786134 columns and 3405028 nonzeros (Max)
+Model fingerprint: 0x68217c99
+Model has 706169 linear objective coefficients
+Variable types: 672515 continuous, 113619 integer (113619 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 8e+04]
+  Bounds range     [1e+00, 8e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 6.46608e+06
+
+Presolve removed 89909 rows and 280938 columns (presolve time = 5s)...
+Presolve removed 89909 rows and 280938 columns (presolve time = 10s)...
+Presolve removed 89909 rows and 280938 columns (presolve time = 15s)...
+Presolve removed 89909 rows and 280938 columns (presolve time = 20s)...
+Presolve removed 90018 rows and 281608 columns (presolve time = 25s)...
+Presolve removed 90018 rows and 281610 columns
+Presolve time: 27.58s
+Presolved: 81185 rows, 504524 columns, 2186907 nonzeros
+Variable types: 479955 continuous, 24569 integer (24569 binary)
+Starting NoRel heuristic
+Elapsed time for NoRel heuristic: 9s (best bound 9.26252e+06)
+Elapsed time for NoRel heuristic: 15s (best bound 9.26252e+06)
+Elapsed time for NoRel heuristic: 20s (best bound 9.26252e+06)
+Elapsed time for NoRel heuristic: 26s (best bound 9.26252e+06)
+Elapsed time for NoRel heuristic: 52s (best bound 9.26252e+06)
+Elapsed time for NoRel heuristic: 62s (best bound 9.26252e+06)
+NoRel heuristic complete

@@ -1,0 +1,98 @@
+
+Gurobi 13.0.2 (win64) logging started Sun Nov  1 23:42:06 2026
+
+Set parameter LogFile to value "data/results/instancias/R4/ventanas_desplazar\logs\gurobi_ventana_36-60h.log"
+Set parameter Threads to value 2
+Set parameter SoftMemLimit to value 1
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 2 threads
+
+Non-default parameters:
+TimeLimit  60
+SoftMemLimit  1
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  10
+LogToConsole  0
+Threads  2
+
+Optimize a model with 19781 rows, 48867 columns and 228601 nonzeros (Max)
+Model fingerprint: 0x14bf71da
+Model has 37881 linear objective coefficients
+Variable types: 40141 continuous, 8726 integer (8726 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 7e+04]
+  Bounds range     [5e-01, 2e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 851602
+
+Presolve removed 18511 rows and 46313 columns
+Presolve time: 0.79s
+Presolved: 1270 rows, 2554 columns, 8434 nonzeros
+Variable types: 2387 continuous, 167 integer (167 binary)
+Starting NoRel heuristic
+Found phase-1 solution: relaxation 1016.58
+Found phase-1 solution: relaxation 595.56
+NoRel heuristic complete
+
+Explored 0 nodes (0 simplex iterations) in 0.86 seconds (0.26 work units)
+Thread count was 2 (of 8 available processors)
+
+Solution count 1: 851602 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 8.516023670000e+05, best bound 8.516023670000e+05, gap 0.0000%
+
+Gurobi 13.0.2 (win64) logging started Sun Nov  1 23:48:43 2026
+
+Set parameter LogFile to value "data/results/instancias/R4/ventanas_desplazar\logs\gurobi_ventana_36-60h.log"
+Set parameter Threads to value 2
+Set parameter SoftMemLimit to value 1
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 2 threads
+
+Non-default parameters:
+TimeLimit  60
+SoftMemLimit  1
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  10
+LogToConsole  0
+Threads  2
+
+Optimize a model with 19761 rows, 48902 columns and 228861 nonzeros (Max)
+Model fingerprint: 0xdaafada1
+Model has 37931 linear objective coefficients
+Variable types: 40191 continuous, 8711 integer (8711 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 7e+04]
+  Bounds range     [5e-01, 2e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 851847
+
+Presolve removed 18460 rows and 46201 columns
+Presolve time: 0.53s
+Presolved: 1301 rows, 2701 columns, 8868 nonzeros
+Variable types: 2536 continuous, 165 integer (165 binary)
+Starting NoRel heuristic
+Found phase-1 solution: relaxation 1008.2
+Found phase-1 solution: relaxation 611.6
+NoRel heuristic complete
+
+Explored 0 nodes (0 simplex iterations) in 0.59 seconds (0.26 work units)
+Thread count was 2 (of 8 available processors)
+
+Solution count 1: 851847 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 8.518474670000e+05, best bound 8.518474670000e+05, gap 0.0000%

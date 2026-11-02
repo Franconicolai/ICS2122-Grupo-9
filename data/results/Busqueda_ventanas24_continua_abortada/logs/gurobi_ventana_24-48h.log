@@ -1,0 +1,33 @@
+
+Gurobi 13.0.2 (win64) logging started Sun Nov  1 21:12:15 2026
+
+Set parameter LogFile to value "data/results/Busqueda_ventanas_continua\logs\gurobi_ventana_24-48h.log"
+Set parameter Threads to value 4
+Set parameter SoftMemLimit to value 4
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  300
+SoftMemLimit  4
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  30
+LogToConsole  0
+Threads  4
+
+Optimize a model with 262963 rows, 702596 columns and 3528315 nonzeros (Max)
+Model fingerprint: 0x4239b9e1
+Model has 573909 linear objective coefficients
+Variable types: 540255 continuous, 162341 integer (162341 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 8e+04]
+  Bounds range     [1e+00, 8e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 6.45132e+06
+

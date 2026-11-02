@@ -1,0 +1,174 @@
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+[inicio] Busqueda_ventanas_desplazar | tiempo continuo | TTR_H = 2 h | margen validado 6,469,241 USD | 19 aviones x 30 vuelta(s) x 240 s | salida data/results/Busqueda_ventanas_desplazar_m10
+[vuelta 1] nivel ventana: 28 vecindarios
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_0-12h: sin mejora | modelo 6,469,241 -> 6,469,241 | mejor validado 6,469,241 USD (+0) | 280 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_6-18h: MEJORA | modelo 6,469,241 -> 6,469,251 | mejor validado 6,469,251 USD (+11) | 248 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_12-24h: sin mejora | modelo 6,469,251 -> 6,469,251 | mejor validado 6,469,251 USD (+11) | 170 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_18-30h: sin mejora | modelo 6,469,251 -> 6,469,251 | mejor validado 6,469,251 USD (+11) | 267 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_24-36h: sin mejora | modelo 6,469,251 -> 6,469,251 | mejor validado 6,469,251 USD (+11) | 146 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_30-42h: sin mejora | modelo 6,469,251 -> 6,469,251 | mejor validado 6,469,251 USD (+11) | 125 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_36-48h: MEJORA | modelo 6,469,251 -> 6,471,283 | mejor validado 6,471,283 USD (+2,042) | 286 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_42-54h: sin mejora | modelo 6,471,283 -> 6,471,283 | mejor validado 6,471,283 USD (+2,042) | 169 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_48-60h: sin mejora | modelo 6,471,283 -> 6,471,283 | mejor validado 6,471,283 USD (+2,042) | 259 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_54-66h: sin mejora | modelo 6,471,283 -> 6,471,283 | mejor validado 6,471,283 USD (+2,042) | 132 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_60-72h: sin mejora | modelo 6,471,283 -> 6,471,283 | mejor validado 6,471,283 USD (+2,042) | 139 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_66-78h: sin mejora | modelo 6,471,283 -> 6,471,283 | mejor validado 6,471,283 USD (+2,042) | 34 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_72-84h: sin mejora | modelo 6,471,283 -> 6,471,283 | mejor validado 6,471,283 USD (+2,042) | 104 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_78-90h: sin mejora | modelo 6,471,283 -> 6,471,283 | mejor validado 6,471,283 USD (+2,042) | 111 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_84-96h: sin mejora | modelo 6,471,283 -> 6,471,283 | mejor validado 6,471,283 USD (+2,042) | 138 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_90-102h: sin mejora | modelo 6,471,283 -> 6,471,283 | mejor validado 6,471,283 USD (+2,042) | 278 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_96-108h: sin mejora | modelo 6,471,283 -> 6,471,283 | mejor validado 6,471,283 USD (+2,042) | 271 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_102-114h: sin mejora | modelo 6,471,283 -> 6,471,283 | mejor validado 6,471,283 USD (+2,042) | 26 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_108-120h: sin mejora | modelo 6,471,283 -> 6,471,283 | mejor validado 6,471,283 USD (+2,042) | 277 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_114-126h: sin mejora | modelo 6,471,283 -> 6,471,283 | mejor validado 6,471,283 USD (+2,042) | 265 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_120-132h: sin mejora | modelo 6,471,283 -> 6,471,283 | mejor validado 6,471,283 USD (+2,042) | 271 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_126-138h: sin mejora | modelo 6,471,283 -> 6,471,283 | mejor validado 6,471,283 USD (+2,042) | 138 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_132-144h: sin mejora | modelo 6,471,283 -> 6,471,283 | mejor validado 6,471,283 USD (+2,042) | 138 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_138-150h: sin mejora | modelo 6,471,283 -> 6,471,283 | mejor validado 6,471,283 USD (+2,042) | 276 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_144-156h: sin mejora | modelo 6,471,283 -> 6,471,283 | mejor validado 6,471,283 USD (+2,042) | 283 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_150-162h: sin mejora | modelo 6,471,283 -> 6,471,283 | mejor validado 6,471,283 USD (+2,042) | 265 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_156-168h: sin mejora | modelo 6,471,283 -> 6,471,283 | mejor validado 6,471,283 USD (+2,042) | 268 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_162-168h: sin mejora | modelo 6,471,283 -> 6,471,283 | mejor validado 6,471,283 USD (+2,042) | 263 s
+[vuelta 2] nivel ventana: 28 vecindarios
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 2] ventana_0-12h: sin mejora | modelo 6,471,283 -> 6,471,283 | mejor validado 6,471,283 USD (+2,042) | 148 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 2] ventana_6-18h: sin mejora | modelo 6,471,283 -> 6,471,283 | mejor validado 6,471,283 USD (+2,042) | 99 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 2] ventana_12-24h: MEJORA | modelo 6,471,283 -> 6,471,303 | mejor validado 6,471,303 USD (+2,062) | 163 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 2] ventana_18-30h: sin mejora | modelo 6,471,303 -> 6,471,303 | mejor validado 6,471,303 USD (+2,062) | 154 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 2] ventana_24-36h: sin mejora | modelo 6,471,303 -> 6,471,303 | mejor validado 6,471,303 USD (+2,062) | 70 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 2] ventana_30-42h: sin mejora | modelo 6,471,303 -> 6,471,303 | mejor validado 6,471,303 USD (+2,062) | 113 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 2] ventana_36-48h: sin mejora | modelo 6,471,303 -> 6,471,303 | mejor validado 6,471,303 USD (+2,062) | 35 s
+  [vuelta 2] ventana_42-54h: sin cambios en su región desde que no mejoró, se salta
+  [vuelta 2] ventana_48-60h: sin cambios en su región desde que no mejoró, se salta
+  [vuelta 2] ventana_54-66h: sin cambios en su región desde que no mejoró, se salta
+  [vuelta 2] ventana_60-72h: sin cambios en su región desde que no mejoró, se salta
+  [vuelta 2] ventana_66-78h: sin cambios en su región desde que no mejoró, se salta
+  [vuelta 2] ventana_72-84h: sin cambios en su región desde que no mejoró, se salta
+  [vuelta 2] ventana_78-90h: sin cambios en su región desde que no mejoró, se salta
+  [vuelta 2] ventana_84-96h: sin cambios en su región desde que no mejoró, se salta
+  [vuelta 2] ventana_90-102h: sin cambios en su región desde que no mejoró, se salta
+  [vuelta 2] ventana_96-108h: sin cambios en su región desde que no mejoró, se salta
+  [vuelta 2] ventana_102-114h: sin cambios en su región desde que no mejoró, se salta
+  [vuelta 2] ventana_108-120h: sin cambios en su región desde que no mejoró, se salta
+  [vuelta 2] ventana_114-126h: sin cambios en su región desde que no mejoró, se salta
+  [vuelta 2] ventana_120-132h: sin cambios en su región desde que no mejoró, se salta
+  [vuelta 2] ventana_126-138h: sin cambios en su región desde que no mejoró, se salta
+  [vuelta 2] ventana_132-144h: sin cambios en su región desde que no mejoró, se salta
+  [vuelta 2] ventana_138-150h: sin cambios en su región desde que no mejoró, se salta
+  [vuelta 2] ventana_144-156h: sin cambios en su región desde que no mejoró, se salta
+  [vuelta 2] ventana_150-162h: sin cambios en su región desde que no mejoró, se salta
+  [vuelta 2] ventana_156-168h: sin cambios en su región desde que no mejoró, se salta
+  [vuelta 2] ventana_162-168h: sin cambios en su región desde que no mejoró, se salta
+[vuelta 2] mejora menor que --mejora-minima: pasa al nivel avion
+[vuelta 3] nivel avion: 19 vecindarios
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 3] AC-05: sin mejora | modelo 6,471,303 -> 6,471,303 | mejor validado 6,471,303 USD (+2,062) | 270 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28

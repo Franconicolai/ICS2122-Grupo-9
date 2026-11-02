@@ -1,0 +1,22 @@
+fecha,vuelta,avion,estado,objetivo_start,objetivo_modelo,margen_validado,aceptado,mejor_margen,segundos,nivel,minutos_total
+2026-11-01 21:07:09,1,ventana_0-48h,Limite de tiempo,849366.88,849366.88,,False,849366.88,64.2,ventana48,1.1
+2026-11-01 21:08:11,1,ventana_24-72h,Limite de tiempo,849366.88,849366.88,,False,849366.88,62.3,ventana48,2.1
+2026-11-01 21:09:14,1,ventana_48-96h,Limite de tiempo,849366.88,849366.88,,False,849366.88,63.0,ventana48,3.2
+2026-11-01 21:10:17,1,ventana_72-120h,Limite de tiempo,849366.88,849366.88,,False,849366.88,62.8,ventana48,4.2
+2026-11-01 21:11:20,1,ventana_96-144h,Limite de tiempo,849366.88,849366.88,,False,849366.88,62.7,ventana48,5.3
+2026-11-01 21:12:23,1,ventana_120-168h,Limite de tiempo,849366.88,849366.88,,False,849366.88,63.0,ventana48,6.3
+2026-11-01 21:12:52,1,ventana_144-168h,Optimo,849366.88,849366.88,,False,849366.88,29.4,ventana48,6.8
+2026-11-01 21:13:56,2,ventana_0-84h,Limite de tiempo,849366.88,849366.88,,False,849366.88,63.6,ventana84,7.9
+2026-11-01 21:14:59,2,ventana_42-126h,Limite de tiempo,849366.88,849366.88,,False,849366.88,63.5,ventana84,8.9
+2026-11-01 21:16:02,2,ventana_84-168h,Limite de tiempo,849366.88,849366.88,,False,849366.88,62.5,ventana84,10.0
+2026-11-01 21:17:05,2,ventana_126-168h,Limite de tiempo,849366.88,849366.88,,False,849366.88,62.8,ventana84,11.0
+2026-11-01 21:18:08,3,AC-06,Limite de tiempo,849366.88,849366.88,,False,849366.88,63.6,avion,12.1
+2026-11-01 21:19:10,3,AC-07,Limite de tiempo,849366.88,849366.88,,False,849366.88,62.0,avion,13.1
+2026-11-01 21:20:13,3,AC-10,Limite de tiempo,849366.88,849366.88,,False,849366.88,63.1,avion,14.2
+2026-11-01 21:21:16,3,AC-15,Limite de tiempo,849366.88,849366.88,,False,849366.88,62.5,avion,15.2
+2026-11-01 21:22:21,4,AC-06+AC-07,Limite de tiempo,849366.88,849366.88,,False,849366.88,65.2,par,16.3
+2026-11-01 21:23:25,4,AC-07+AC-10,Limite de tiempo,849366.88,849366.88,,False,849366.88,63.7,par,17.4
+2026-11-01 21:24:30,4,AC-07+AC-15,Limite de tiempo,849366.88,849366.88,,False,849366.88,65.6,par,18.4
+2026-11-01 21:25:34,4,AC-06+AC-15,Limite de tiempo,849366.88,849366.88,,False,849366.88,64.0,par,19.5
+2026-11-01 21:26:40,4,AC-10+AC-15,Limite de tiempo,849366.88,849366.88,,False,849366.88,66.1,par,20.6
+2026-11-01 21:27:33,4,AC-06+AC-10,Limite de memoria,849366.88,849366.88,,False,849366.88,53.0,par,21.5

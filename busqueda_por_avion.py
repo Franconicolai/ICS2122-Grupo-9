@@ -10,7 +10,10 @@ A diferencia de src/reoptimizacion_por_avion.py (paso de la heurística), aquí 
 red se reoptimizan junto con las rotaciones del avión liberado.
 
 Vecindarios (--vecindario): 'avion' libera un avión; 'par', dos aviones que comparten aeropuertos o transbordos
-(los pares más afines primero); 'operador', la flota de un operador. Con varios niveles (--vecindario avion,par) es una
+(los pares más afines primero); 'trio', cada par afín más el avión más afín a ambos; 'operador', la flota de un
+operador; 'ventana' (solo --modelo continuo), todos los vuelos que salen en una ventana de tiempo de --ventana-h horas, en
+todos los aviones, con el resto de la semana fijo ('ventana48': ventanas de 48 h). Las ventanas liberan juntos los
+vuelos de un mismo transbordo, que van en aviones distintos y que los vecindarios por avión rara vez liberan a la vez. Con varios niveles (--vecindario avion,par) es una
 búsqueda por vecindarios variables: recorre el primer nivel hasta que una vuelta no mejora, pasa al siguiente y,
 apenas una vuelta de un nivel mayor mejora, vuelve al primero. Se detiene cuando ningún nivel mejora o se cumple --horas.
 
@@ -56,11 +59,30 @@ def resolver_continuo(datos, ttr, itinerario, multi, grupo, args):
     tiempo de bloque + TAT. Devuelve (itinerario, info) como resolver_avion."""
     import milp_continuo_transbordos as mct
     avion = '+'.join(grupo)
+    ventana = ventana_de(grupo)
     modelo = gm.construir_modelo_completo(datos, transbordos=True)
-    pares, _ = mct.enumerar_pares(datos, itinerario, set(grupo), ttr)
+    sufijos = {}
+    if ventana and args.desplazar:
+        info_pos, sufijos = posiciones_ventana_flexible(itinerario, datos, *ventana, args.desplazar,
+                                                       args.desplazar_aviones, args.ventana_extra,
+                                                       args.desplazar_presupuesto)
+        libres = set(info_pos)
+        pares, _ = mct.enumerar_pares_flexibles(datos, itinerario, info_pos, ttr)
+    elif ventana:
+        libres, cotas = posiciones_ventana(itinerario, datos, *ventana, args.ventana_extra)
+        pares, _ = mct.enumerar_pares_posiciones(datos, itinerario, libres, cotas, ttr)
+    else:
+        pares, _ = mct.enumerar_pares(datos, itinerario, set(grupo), ttr)
     mct.agregar_transbordos(modelo, datos, pares, ttr)
     st = mct.armar_start(modelo, datos, itinerario, multi['solucion'], pares)
-    mct.fijar_aviones(modelo, st, set(grupo))
+    if sufijos:
+        z = mct.agregar_desplazamientos(modelo, sufijos)
+        for k in sufijos:
+            st[z[k, 0]] = 1                     # la solución actual no desplaza nada
+    if ventana:
+        mct.fijar_posiciones(modelo, st, libres)
+    else:
+        mct.fijar_aviones(modelo, st, set(grupo))
     xs, violaciones, obj_start = ws.verificar_start(modelo, st, tol=ws.TOL_HORAS)   # horas redondeadas a 5 decimales
     if violaciones:
         raise RuntimeError(f'el start no cumple el modelo: { {f: len(l) for f, l in violaciones.items()} }')
@@ -105,6 +127,123 @@ def ajustar_a_grilla(itinerario, dt, datos):
             return None
         nuevo[k] = salida
     return nuevo
+
+
+def ventana_de(grupo):
+    """(t_ini, t_fin) si el vecindario es una ventana de tiempo ('ventana_48-72h'); None si es un grupo de aviones."""
+    if len(grupo) == 1 and grupo[0].startswith('ventana_'):
+        t_ini, t_fin = grupo[0][len('ventana_'):-1].split('-')
+        return float(t_ini), float(t_fin)
+    return None
+
+
+def posiciones_ventana(itinerario, datos, t_ini, t_fin, extra):
+    """Posiciones (k, s) que libera una ventana de tiempo: en todos los aviones, los vuelos que salen en [t_ini, t_fin).
+    Como las posiciones se ocupan sin huecos, cada avión mantiene su número de vuelos en la ventana, salvo cuando la
+    ventana llega a su último vuelo o al fin de la semana: ahí se liberan además hasta `extra` posiciones vacías, para
+    agregar o quitar vuelos al final de la rotación. Devuelve (libres, cotas), con cotas[k] = (lo, hi): llegada del
+    vuelo fijo anterior y salida del vuelo fijo siguiente (0 y H si no hay)."""
+    libres, cotas = set(), {}
+    for k in datos['K']:
+        legs = sorted(itinerario.get(k, []), key=lambda l: l['pos'])
+        n = len(legs)
+        dentro = [l['pos'] for l in legs if t_ini <= l['t_dep'] < t_fin]
+        if n and (dentro and dentro[-1] == n or t_fin >= gm.H - 1e-9):
+            dentro += list(range(n + 1, min(datos['S_max_k'][k], n + extra) + 1))
+        if not dentro:
+            continue
+        libres.update((k, s) for s in dentro)
+        antes = [l for l in legs if l['pos'] < dentro[0]]
+        despues = [l for l in legs if l['pos'] > dentro[-1]]
+        cotas[k] = (antes[-1]['t_arr'] if antes else 0.0, despues[0]['t_dep'] if despues else gm.H)
+    return libres, cotas
+
+
+def ocio_en_ventana(legs, datos, k, t_ini, t_fin):
+    """Horas en que el avión k está en tierra sin cumplir TAT ni mantenimiento dentro de [t_ini, t_fin)."""
+    H, tat = gm.H, datos['TAT_e']
+    libres = [(0.0, legs[0]['t_dep'])] if legs else [(0.0, H)]
+    for l1, l2 in zip(legs, legs[1:]):
+        libres.append((l1['t_arr'] + tat[tuple(l1['tramo'])], l2['t_dep']))
+    if legs:
+        libres.append((legs[-1]['t_arr'] + tat[tuple(legs[-1]['tramo'])], H))
+    _, m_ini, m_fin = datos['mant'][k]
+    horas = 0.0
+    for a, b in libres:
+        a, b = max(a, t_ini), min(b, t_fin)
+        if b > a:
+            horas += b - a - max(0.0, min(b, m_fin) - max(a, m_ini))
+    return horas
+
+
+def posiciones_ventana_flexible(itinerario, datos, t_ini, t_fin, desplazar, max_aviones, extra, presupuesto=0):
+    """Ventana con desplazamiento. Libera las posiciones de la ventana como posiciones_ventana y, en los max_aviones
+    aviones con más horas ociosas dentro de la ventana (sin pasar de `presupuesto` vuelos desplazables), permite ganar o perder hasta `desplazar` vuelos en cualquier
+    parte de la semana: sus vuelos posteriores a la ventana mantienen tramo y horario y se corren todos delta
+    posiciones (milp_continuo_transbordos.agregar_desplazamientos). Un avión sin vuelos en la ventana también puede
+    desplazarse, para usar un hueco largo.
+    Devuelve (info, sufijos): info[(k, s)] = (alternativas, salida_min, salida_max, llegada_min) de cada posición libre
+    (alternativas: None si es un vuelo de la ventana, o la lista de vuelos (tramo, salida, llegada) que puede ocupar), y
+    sufijos[k] los datos del desplazamiento de cada avión que se desplaza."""
+    H, S = gm.H, datos['S_max_k']
+    piernas = {k: sorted(itinerario.get(k, []), key=lambda l: l['pos']) for k in datos['K']}
+    ocio = {k: ocio_en_ventana(piernas[k], datos, k, t_ini, t_fin) for k in datos['K'] if piernas[k]}
+    desplazan, usados = set(), 0
+    for k in sorted((k for k in ocio if ocio[k] >= 3.0), key=lambda k: -ocio[k])[:max_aviones]:
+        posteriores = sum(1 for l in piernas[k] if l['t_dep'] >= t_ini)   # vuelos que se correrían de posición
+        if presupuesto and usados + posteriores > presupuesto:
+            continue
+        desplazan.add(k)
+        usados += posteriores
+    info, sufijos = {}, {}
+    for k, legs in piernas.items():
+        n = len(legs)
+        if not n:
+            continue
+        dentro = [l['pos'] for l in legs if t_ini <= l['t_dep'] < t_fin]
+        if dentro:
+            a, b = dentro[0], dentro[-1]
+        elif k in desplazan:                     # sin vuelos en la ventana: la ventana es el hueco antes del vuelo a
+            a = next((l['pos'] for l in legs if l['t_dep'] >= t_fin), n + 1)
+            b = a - 1
+        else:
+            continue
+        lo = legs[a - 2]['t_arr'] if a >= 2 else 0.0
+        if b == n or t_fin >= H - 1e-9:          # la ventana llega al final de la rotación: posiciones vacías al final
+            for s in range(a, min(S[k], n + extra) + 1):
+                info[k, s] = (None, lo, H, lo)
+            continue
+        if k not in desplazan:                   # ventana normal: mantiene el número de vuelos
+            for s in range(a, b + 1):
+                info[k, s] = (None, lo, legs[b]['t_dep'], lo)
+            continue
+        dmin, dmax = -min(desplazar, b - a + 1), min(desplazar, S[k] - n)
+        suf = legs[b:]                           # vuelos b+1..n, con tramo y horario fijos
+        sufijos[k] = {'b': b, 'n': n, 'dmin': dmin, 'dmax': dmax,
+                      'vuelos': [(l['pos'], tuple(l['tramo']), l['t_dep']) for l in suf]}
+        tope = suf[0]['t_dep']                   # los vuelos de la ventana terminan antes del primer vuelo del sufijo
+        for s in range(a, n + dmax + 1):
+            cand = [(tuple(l['tramo']), l['t_dep'], l['t_arr']) for l in suf if dmin <= s - l['pos'] <= dmax]
+            if s <= b + dmax:                    # puede ser un vuelo de la ventana
+                info[k, s] = (None, min([lo] + [c[1] for c in cand]), max([tope] + [c[1] for c in cand]),
+                              min([lo] + [c[2] for c in cand]))
+            else:
+                info[k, s] = (cand, min(c[1] for c in cand), max(c[1] for c in cand), min(c[2] for c in cand))
+    return info, sufijos
+
+
+def huella_region(grupo, itinerario, multi, args):
+    """Vuelos de la región de un vecindario: los que salen en la ventana +- --ventana-h, o los de los aviones del
+    grupo y de los aviones que les transbordan carga. Si no cambió desde que el vecindario no mejoró, se salta."""
+    ventana = ventana_de(grupo)
+    if ventana:
+        t_ini, t_fin = ventana[0] - args.ventana_h, ventana[1] + args.ventana_h
+        return frozenset(v for v in vuelos(itinerario) if t_ini <= v[2] < t_fin)
+    socios = set(grupo)
+    for tr in multi['solucion'].get('transferencias', []):
+        if tr['from_k'] in grupo or tr['to_k'] in grupo:
+            socios.update((tr['from_k'], tr['to_k']))
+    return frozenset(v for v in vuelos(itinerario) if v[0] in socios)
 
 
 def vuelos(itinerario):
@@ -152,7 +291,14 @@ def vecindarios(nivel, aviones, itinerario, multi, datos, args):
             if trio not in trios:
                 trios.append(trio)
         return trios[:args.max_pares] if args.max_pares else trios
-    raise ValueError(f'vecindario desconocido: {nivel} (use avion, par, trio u operador)')
+    if nivel.startswith('ventana'):                             # ventanas de tiempo que se traslapan
+        # 'ventana' usa --ventana-h y --ventana-paso; 'ventana48' usa ventanas de 48 h con paso de 24 h
+        ancho = float(nivel[len('ventana'):]) if nivel != 'ventana' else args.ventana_h
+        paso = ancho / 2 if nivel != 'ventana' else args.ventana_paso
+        desde, hasta = (float(x) for x in args.ventana_rango.split('-'))
+        inicios = np.arange(desde, hasta - ancho / 2 + 1e-9, paso)
+        return [(f'ventana_{t:g}-{min(t + ancho, hasta):g}h',) for t in inicios]
+    raise ValueError(f'vecindario desconocido: {nivel} (use avion, par, trio, operador o ventana)')
 
 
 def resolver_avion(datos, dt, ttr, itinerario, multi, grupo, args):
@@ -200,7 +346,7 @@ def resolver_avion(datos, dt, ttr, itinerario, multi, grupo, args):
 
 def exportar_mejor(salida, itinerario, multi, val, datos, dt, ttr, origen, historial):
     red = f'modelo integrado espacio-tiempo (DT {dt:g} h)' if dt else 'MILP continuo con transbordos (sin grilla)'
-    info = {'modelo': f'Búsqueda por vecindarios de aviones, {red}',
+    info = {'modelo': f'Búsqueda por vecindarios (aviones o ventanas de tiempo), {red}',
             'corrida_start': origen, 'estado': 'Búsqueda local', 'aviones_libres': 'por vecindarios',
             'tiempo_limite_s': None, 'dt_h': dt or None, 'ttr_h': ttr, 'pasos_aceptados': historial}
     kpis = ws.exportar(salida, itinerario, multi, val, datos, info, ttr)
@@ -229,7 +375,8 @@ def main():
     ap.add_argument('--desde', default=None, help='empieza el recorrido en este avión (para reanudar)')
     ap.add_argument('--vueltas', type=int, default=1, help='vueltas completas sobre los vecindarios. Por defecto 1')
     ap.add_argument('--vecindario', default='avion',
-                    help='niveles de vecindario, en orden: avion, par, trio, operador (p. ej. avion,par). Por defecto avion')
+                    help='niveles de vecindario, en orden: avion, par, trio, operador, ventana, ventanaNN (ventanas de NN h; solo '
+                         'con --modelo continuo). P. ej. avion,par o ventana,ventana48,par. Por defecto avion')
     ap.add_argument('--ajustar-grilla', action='store_true',
                     help='lleva las salidas de la solución de partida a la grilla de DT (para partir del MILP continuo, '
                          'cuyos tiempos no caen en la grilla); el margen validado de partida es el de la solución ajustada')
@@ -244,6 +391,31 @@ def main():
     ap.add_argument('--mejora-minima', type=float, default=0,
                     help='USD que debe ganar una vuelta para volver al vecindario más chico; si gana menos, pasa al '
                          'nivel siguiente (evita que una mejora marginal impida probar los pares). Por defecto 0')
+    ap.add_argument('--ventana-h', type=float, default=24,
+                    help='nivel ventana (solo --modelo continuo): horas de cada ventana de tiempo. Por defecto 24')
+    ap.add_argument('--ventana-paso', type=float, default=12,
+                    help='nivel ventana: horas entre el inicio de dos ventanas seguidas. Por defecto 12')
+    ap.add_argument('--ventana-rango', default=f'0-{gm.H:g}',
+                    help='nivel ventana: horas de la semana que recorren las ventanas (p. ej. 108-168). Por defecto toda')
+    ap.add_argument('--desplazar', type=int, default=0,
+                    help='nivel ventana: cada avión puede ganar o perder hasta N vuelos dentro de la ventana, en '
+                         'cualquier parte de la semana (los vuelos posteriores se corren de posición sin cambiar tramo '
+                         'ni horario). 0 = mantiene el número de vuelos salvo al final de la rotación. Por defecto 0')
+    ap.add_argument('--desplazar-aviones', type=int, default=3,
+                    help='con --desplazar: cuántos aviones por ventana pueden desplazarse (los de más horas ociosas '
+                         'en la ventana). Por defecto 3')
+    ap.add_argument('--desplazar-presupuesto', type=int, default=0,
+                    help='con --desplazar: tope al total de vuelos que se corren de posición en una ventana (suma sobre '
+                         'los aviones que se desplazan). En las ventanas del comienzo de la semana todo lo posterior se '
+                         'corre y el modelo crece mucho; 0 = sin tope. Por defecto 0')
+    ap.add_argument('--ventana-extra', type=int, default=2,
+                    help='nivel ventana: posiciones vacías que se liberan al final de la rotación. Por defecto 2')
+    ap.add_argument('--umbral-aceptar', type=float, default=1.0,
+                    help='USD que debe ganar un vecindario para aceptar la solución (las mejoras de unos pocos USD '
+                         'son reprogramaciones casi equivalentes que obligan a reevaluar la región). Por defecto 1')
+    ap.add_argument('--saltar-sin-cambios', action='store_true',
+                    help='no repite un vecindario que no mejoró mientras no cambien los vuelos de su región (la '
+                         'ventana +- --ventana-h, o los aviones del grupo y los que les transbordan carga)')
     ap.add_argument('--horas', type=float, default=0, help='detiene la búsqueda tras estas horas (0 = sin límite)')
     ap.add_argument('--sin-enlace-fuerte', dest='enlace_fuerte', action='store_false',
                     help='omite las desigualdades de enlace fuerte (por defecto se agregan: con ellas NoRel encontró '
@@ -258,6 +430,8 @@ def main():
 
     t0 = time.time()
     continuo = args.modelo == 'continuo'
+    if 'ventana' in args.vecindario and not continuo:
+        sys.exit('el nivel ventana necesita --modelo continuo')
     dt = 0 if continuo else args.dt
     args.salida = args.salida or os.path.join('data', 'results', 'Busqueda_continua' if continuo
                                               else f'Busqueda_por_avion_dt{dt:g}')
@@ -297,6 +471,7 @@ def main():
         exportar_mejor(args.salida, itinerario, multi, val, datos, dt, ttr, os.path.basename(corrida), historial)
     mantener_despierto(True)
     niveles = [n.strip() for n in args.vecindario.split(',') if n.strip()]
+    evaluados = {}                                      # vecindario -> huella de su región cuando no mejoró
     try:
         nivel = 0
         for vuelta in range(1, args.vueltas + 1):
@@ -308,6 +483,10 @@ def main():
                     raise TimeoutError
                 avion = '+'.join(grupo)
                 t1 = time.time()
+                huella = huella_region(grupo, itinerario, multi, args) if args.saltar_sin_cambios else None
+                if huella is not None and evaluados.get(grupo) == huella:
+                    print(f'  [vuelta {vuelta}] {avion}: sin cambios en su región desde que no mejoró, se salta', flush=True)
+                    continue
                 try:
                     if continuo:
                         nuevo, info = resolver_continuo(datos, ttr, itinerario, multi, grupo, args)
@@ -323,15 +502,18 @@ def main():
                         and vuelos(nuevo) != vuelos(itinerario)):
                     multi_n, val_n = ws.resolver_carga(nuevo, ttr)
                     margen_nuevo = val_n['margen']
-                    if val_n['ok'] and margen_nuevo > mejor + 1.0:
+                    if val_n['ok'] and margen_nuevo > mejor + args.umbral_aceptar:
                         acepta = True
                         itinerario, multi, val = nuevo, multi_n, val_n
+                        evaluados.pop(grupo, None)
                         historial.append({'vuelta': vuelta, 'avion': avion, 'margen': margen_nuevo,
                                           'mejora': margen_nuevo - mejor})
                         mejor = margen_nuevo
                         mejoras_vuelta += 1
                         exportar_mejor(args.salida, itinerario, multi, val, datos, dt, ttr,
                                        os.path.basename(corrida), historial)
+                if huella is not None and not acepta:
+                    evaluados[grupo] = huella
                 fila = {'fecha': time.strftime('%Y-%m-%d %H:%M:%S'), 'vuelta': vuelta, 'avion': avion,
                         'estado': info['estado'], 'objetivo_start': round(info['objetivo_start'], 2),
                         'objetivo_modelo': None if info['objetivo_modelo'] is None else round(info['objetivo_modelo'], 2),

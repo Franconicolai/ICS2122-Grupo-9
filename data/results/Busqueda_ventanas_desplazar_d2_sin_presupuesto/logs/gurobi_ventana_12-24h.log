@@ -1,0 +1,75 @@
+
+Gurobi 13.0.2 (win64) logging started Mon Nov  2 03:53:05 2026
+
+Set parameter LogFile to value "data/results/Busqueda_ventanas_desplazar_d2\logs\gurobi_ventana_12-24h.log"
+Set parameter Threads to value 4
+Set parameter SoftMemLimit to value 4
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  300
+SoftMemLimit  4
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  60
+LogToConsole  0
+Threads  4
+
+Optimize a model with 297412 rows, 1047760 columns and 5587236 nonzeros (Max)
+Model fingerprint: 0x00293c4b
+Model has 923361 linear objective coefficients
+Variable types: 889707 continuous, 158053 integer (158053 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 8e+04]
+  Bounds range     [1e+00, 8e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 6.4713e+06
+
+Presolve removed 160573 rows and 375479 columns (presolve time = 5s)...
+Presolve removed 195088 rows and 507678 columns (presolve time = 10s)...
+Presolve removed 202032 rows and 524824 columns (presolve time = 15s)...
+Presolve removed 202905 rows and 526075 columns (presolve time = 20s)...
+Presolve removed 203283 rows and 526570 columns
+Presolve time: 21.22s
+Presolve removed 189275 rows and 482734 columns (presolve time = 5s)...
+Presolve removed 202059 rows and 523815 columns (presolve time = 10s)...
+Presolve removed 214936 rows and 586283 columns (presolve time = 15s)...
+Presolve removed 227899 rows and 626526 columns (presolve time = 20s)...
+Presolve removed 227899 rows and 626526 columns
+Presolve time: 20.01s
+Presolved: 69513 rows, 421234 columns, 1440030 nonzeros
+Variable types: 402754 continuous, 18480 integer (18396 binary)
+Starting NoRel heuristic
+Found phase-1 solution: relaxation 1547.29
+Found phase-1 solution: relaxation 413.893
+Found phase-1 solution: relaxation 1.00007
+Elapsed time for NoRel heuristic: 7s (best bound 8.76348e+06)
+Found phase-1 solution: relaxation 0
+Transition to phase 2
+Elapsed time for NoRel heuristic: 12s (best bound 8.19066e+06)
+Elapsed time for NoRel heuristic: 20s (best bound 7.4285e+06)
+Elapsed time for NoRel heuristic: 27s (best bound 7.25767e+06)
+Elapsed time for NoRel heuristic: 39s (best bound 7.22169e+06)
+Elapsed time for NoRel heuristic: 48s (best bound 7.20631e+06)
+Elapsed time for NoRel heuristic: 56s (best bound 7.14942e+06)
+NoRel heuristic complete
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Elapsed ordering time = 5s
+Elapsed ordering time = 10s
+Elapsed ordering time = 15s
+Elapsed ordering time = 20s
+Elapsed ordering time = 22s
+Elapsed ordering time = 25s
+Elapsed ordering time = 30s
+Elapsed ordering time = 35s
+Elapsed ordering time = 36s

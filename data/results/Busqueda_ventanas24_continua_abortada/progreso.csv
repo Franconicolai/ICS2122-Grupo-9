@@ -1,0 +1,3 @@
+fecha,vuelta,avion,estado,objetivo_start,objetivo_modelo,margen_validado,aceptado,mejor_margen,segundos,nivel,minutos_total
+2026-11-01 21:06:25,1,ventana_0-24h,Limite de tiempo,6451322.19,6451322.19,,False,6451322.19,334.8,ventana,6.4
+2026-11-01 21:11:50,1,ventana_12-36h,Limite de tiempo,6451322.19,6451322.19,,False,6451322.19,325.5,ventana,11.9

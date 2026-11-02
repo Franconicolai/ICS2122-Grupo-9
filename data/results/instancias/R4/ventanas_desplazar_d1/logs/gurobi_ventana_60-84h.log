@@ -1,0 +1,80 @@
+
+Gurobi 13.0.2 (win64) logging started Mon Nov  2 01:28:54 2026
+
+Set parameter LogFile to value "data/results/instancias/R4/ventanas_desplazar_d1\logs\gurobi_ventana_60-84h.log"
+Set parameter Threads to value 1
+Set parameter SoftMemLimit to value 1
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 1 threads
+
+Non-default parameters:
+TimeLimit  60
+SoftMemLimit  1
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  10
+LogToConsole  0
+Threads  1
+
+Optimize a model with 18784 rows, 48584 columns and 229466 nonzeros (Max)
+Model fingerprint: 0xe6a1c041
+Model has 38341 linear objective coefficients
+Variable types: 40601 continuous, 7983 integer (7983 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 7e+04]
+  Bounds range     [5e-01, 2e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 855700
+
+Presolve removed 17081 rows and 44468 columns
+Presolve time: 0.98s
+Presolved: 1703 rows, 4116 columns, 13643 nonzeros
+Variable types: 3902 continuous, 214 integer (214 binary)
+Starting NoRel heuristic
+Found phase-1 solution: relaxation 1168.88
+Found phase-1 solution: relaxation 545.9
+Found phase-1 solution: relaxation 0
+Transition to phase 2
+Elapsed time for NoRel heuristic: 5s (best bound 878484)
+Elapsed time for NoRel heuristic: 10s (best bound 878484)
+NoRel heuristic complete
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+       0    1.1676482e+06   8.051226e+02   0.000000e+00     11s
+    1275    8.7834467e+05   0.000000e+00   0.000000e+00     11s
+
+Root relaxation: objective 8.783447e+05, 1275 iterations, 0.05 seconds (0.03 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 878344.674    0   23 855699.859 878344.674  2.65%     -   11s
+     0     0 868888.645    0   21 855699.859 868888.645  1.54%     -   11s
+     0     0 868868.600    0   21 855699.859 868868.600  1.54%     -   11s
+     0     0 856866.866    0   21 855699.859 856866.866  0.14%     -   11s
+     0     0 855865.593    0   21 855699.859 855865.593  0.02%     -   11s
+     0     0          -    0      855699.859 855783.432  0.01%     -   11s
+
+Cutting planes:
+  Gomory: 1
+  Implied bound: 9
+  MIR: 7
+  Flow cover: 8
+  Network: 1
+  RLT: 1
+  Relax-and-lift: 3
+
+Explored 1 nodes (1820 simplex iterations) in 11.39 seconds (4.36 work units)
+Thread count was 1 (of 8 available processors)
+
+Solution count 1: 855700 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 8.556998590000e+05, best bound 8.557834318749e+05, gap 0.0098%

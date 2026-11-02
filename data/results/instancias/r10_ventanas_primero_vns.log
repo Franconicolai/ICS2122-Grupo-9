@@ -1,0 +1,259 @@
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+[inicio] ventanas_primero | tiempo continuo | TTR_H = 2 h | margen validado 2,688,968 USD | 10 aviones x 40 vuelta(s) x 120 s | salida data/results/instancias/R10/ventanas_primero_vns
+[vuelta 1] nivel ventana: 14 vecindarios
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_0-24h: sin mejora | modelo 2,688,968 -> 2,688,968 | mejor validado 2,688,968 USD (+0) | 90 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_12-36h: sin mejora | modelo 2,688,968 -> 2,688,968 | mejor validado 2,688,968 USD (+0) | 80 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_24-48h: sin mejora | modelo 2,688,968 -> 2,688,968 | mejor validado 2,688,968 USD (+0) | 131 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_36-60h: sin mejora | modelo 2,688,968 -> 2,688,968 | mejor validado 2,688,968 USD (+0) | 129 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_48-72h: sin mejora | modelo 2,688,968 -> 2,688,968 | mejor validado 2,688,968 USD (+0) | 129 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_60-84h: sin mejora | modelo 2,688,968 -> 2,688,968 | mejor validado 2,688,968 USD (+0) | 129 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_72-96h: sin mejora | modelo 2,688,968 -> 2,688,968 | mejor validado 2,688,968 USD (+0) | 50 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_84-108h: sin mejora | modelo 2,688,968 -> 2,688,968 | mejor validado 2,688,968 USD (+0) | 37 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_96-120h: sin mejora | modelo 2,688,968 -> 2,688,968 | mejor validado 2,688,968 USD (+0) | 127 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_108-132h: sin mejora | modelo 2,688,968 -> 2,688,968 | mejor validado 2,688,968 USD (+0) | 94 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_120-144h: sin mejora | modelo 2,688,968 -> 2,688,968 | mejor validado 2,688,968 USD (+0) | 130 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_132-156h: sin mejora | modelo 2,688,968 -> 2,688,968 | mejor validado 2,688,968 USD (+0) | 130 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_144-168h: sin mejora | modelo 2,688,968 -> 2,688,968 | mejor validado 2,688,968 USD (+0) | 132 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_156-168h: sin mejora | modelo 2,688,968 -> 2,688,968 | mejor validado 2,688,968 USD (+0) | 39 s
+[vuelta 1] sin mejoras: pasa al nivel avion
+[vuelta 2] nivel avion: 10 vecindarios
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 2] AC-14: sin mejora | modelo 2,688,968 -> 2,688,968 | mejor validado 2,688,968 USD (+0) | 131 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 2] AC-12: sin mejora | modelo 2,688,968 -> 2,688,968 | mejor validado 2,688,968 USD (+0) | 133 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 2] AC-19: MEJORA | modelo 2,688,968 -> 2,689,063 | mejor validado 2,689,063 USD (+95) | 141 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 2] AC-03: sin mejora | modelo 2,689,063 -> 2,689,063 | mejor validado 2,689,063 USD (+95) | 134 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 2] AC-18: sin mejora | modelo 2,689,063 -> 2,689,063 | mejor validado 2,689,063 USD (+95) | 133 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 2] AC-05: sin mejora | modelo 2,689,063 -> 2,689,063 | mejor validado 2,689,063 USD (+95) | 132 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 2] AC-06: sin mejora | modelo 2,689,063 -> 2,689,063 | mejor validado 2,689,063 USD (+95) | 128 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 2] AC-10: MEJORA | modelo 2,689,063 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 137 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 2] AC-16: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 129 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 2] AC-08: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 130 s
+[vuelta 3] nivel ventana: 14 vecindarios
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 3] ventana_0-24h: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 70 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 3] ventana_12-36h: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 60 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 3] ventana_24-48h: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 131 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 3] ventana_36-60h: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 130 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 3] ventana_48-72h: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 131 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 3] ventana_60-84h: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 40 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 3] ventana_72-96h: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 131 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 3] ventana_84-108h: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 38 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 3] ventana_96-120h: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 128 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 3] ventana_108-132h: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 56 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 3] ventana_120-144h: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 127 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 3] ventana_132-156h: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 128 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 3] ventana_144-168h: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 131 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 3] ventana_156-168h: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 36 s
+[vuelta 3] sin mejoras: pasa al nivel avion
+[vuelta 4] nivel avion: 10 vecindarios
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 4] AC-14: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 132 s
+  [vuelta 4] AC-12: sin cambios en su región desde que no mejoró, se salta
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 4] AC-19: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 132 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 4] AC-03: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 127 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 4] AC-18: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 132 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 4] AC-05: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 131 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 4] AC-06: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 127 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 4] AC-10: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 130 s
+  [vuelta 4] AC-16: sin cambios en su región desde que no mejoró, se salta
+  [vuelta 4] AC-08: sin cambios en su región desde que no mejoró, se salta
+[vuelta 4] sin mejoras: pasa al nivel par
+[vuelta 5] nivel par: 15 vecindarios
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 5] AC-06+AC-10: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 131 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 5] AC-06+AC-19: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 138 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 5] AC-10+AC-19: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 138 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 5] AC-18+AC-19: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 140 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 5] AC-08+AC-10: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 121 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 5] AC-10+AC-16: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 137 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 5] AC-05+AC-10: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 138 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 5] AC-10+AC-18: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 137 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 5] AC-06+AC-08: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 129 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 5] AC-06+AC-18: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 132 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 5] AC-14+AC-16: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 137 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 5] AC-08+AC-19: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 139 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 5] AC-08+AC-16: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 127 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 5] AC-06+AC-16: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 114 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 5] AC-06+AC-14: sin mejora | modelo 2,692,881 -> 2,692,881 | mejor validado 2,692,881 USD (+3,913) | 139 s
+[vuelta 5] ningún vecindario mejoró: se detiene.
+
+==============================================================================
+Margen validado: 2,688,968 -> 2,692,881 USD (+3,913) | 2 mejoras aceptadas | 1.9 h
+Resultados en data/results/instancias/R10/ventanas_primero_vns (progreso.csv tiene cada paso)

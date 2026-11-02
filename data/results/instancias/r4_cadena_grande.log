@@ -1,0 +1,31 @@
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+[inicio] cadena_ventanas_desde_milp | tiempo continuo | TTR_H = 2 h | margen validado 839,809 USD | 4 aviones x 6 vuelta(s) x 300 s | salida data/results/instancias/R4/cadena_grande
+[vuelta 1] nivel trio: 3 vecindarios
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] AC-07+AC-10+AC-15: sin mejora | modelo 839,809 -> 839,809 | mejor validado 839,809 USD (+0) | 167 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] AC-06+AC-10+AC-15: sin mejora | modelo 839,809 -> 839,809 | mejor validado 839,809 USD (+0) | 220 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] AC-06+AC-07+AC-15: sin mejora | modelo 839,809 -> 839,809 | mejor validado 839,809 USD (+0) | 186 s
+[vuelta 1] sin mejoras: pasa al nivel operador
+[vuelta 2] nivel operador: 2 vecindarios
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 2] AC-06+AC-10: sin mejora | modelo 839,809 -> 839,809 | mejor validado 839,809 USD (+0) | 112 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 2] AC-07+AC-15: sin mejora | modelo 839,809 -> 839,809 | mejor validado 839,809 USD (+0) | 305 s
+[vuelta 2] ningún vecindario mejoró: se detiene.
+
+==============================================================================
+Margen validado: 839,809 -> 839,809 USD (+0) | 0 mejoras aceptadas | 0.3 h
+Resultados en data/results/instancias/R4/cadena_grande (progreso.csv tiene cada paso)

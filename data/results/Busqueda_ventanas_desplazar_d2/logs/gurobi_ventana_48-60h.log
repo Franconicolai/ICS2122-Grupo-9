@@ -1,0 +1,252 @@
+
+Gurobi 13.0.2 (win64) logging started Mon Nov  2 04:23:15 2026
+
+Set parameter LogFile to value "data/results/Busqueda_ventanas_desplazar_d2\logs\gurobi_ventana_48-60h.log"
+Set parameter Threads to value 4
+Set parameter SoftMemLimit to value 4
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  300
+SoftMemLimit  4
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  60
+LogToConsole  0
+Threads  4
+
+Optimize a model with 228485 rows, 742477 columns and 3625232 nonzeros (Max)
+Model fingerprint: 0xced827f0
+Model has 633426 linear objective coefficients
+Variable types: 599772 continuous, 142705 integer (142705 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 8e+04]
+  Bounds range     [1e+00, 8e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 6.4713e+06
+
+Presolve removed 182004 rows and 450080 columns (presolve time = 5s)...
+Presolve removed 182979 rows and 454922 columns (presolve time = 10s)...
+Presolve removed 182979 rows and 454922 columns (presolve time = 15s)...
+Presolve removed 182979 rows and 454922 columns (presolve time = 20s)...
+Presolve removed 182979 rows and 454922 columns (presolve time = 25s)...
+Presolve removed 182979 rows and 454922 columns (presolve time = 30s)...
+Presolve removed 182979 rows and 454922 columns (presolve time = 35s)...
+Presolve removed 196326 rows and 540290 columns
+Presolve time: 35.83s
+Presolved: 32159 rows, 202187 columns, 627034 nonzeros
+Variable types: 197605 continuous, 4582 integer (4581 binary)
+Performing another presolve...
+Presolve removed 1724 rows and 1972 columns (presolve time = 5s)...
+Presolve removed 1724 rows and 1972 columns (presolve time = 10s)...
+Presolve removed 1724 rows and 1972 columns (presolve time = 15s)...
+Presolve removed 1724 rows and 1972 columns (presolve time = 20s)...
+Presolve removed 3395 rows and 41288 columns (presolve time = 25s)...
+Presolve removed 3397 rows and 41289 columns (presolve time = 31s)...
+Presolve removed 5188 rows and 50049 columns (presolve time = 35s)...
+Presolve removed 5188 rows and 50670 columns
+Presolve time: 36.11s
+Starting NoRel heuristic
+Found phase-1 solution: relaxation 162.923
+Found phase-1 solution: relaxation 158.833
+Elapsed time for NoRel heuristic: 8s (best bound 7.18549e+06)
+Found phase-1 solution: relaxation 105.333
+Found phase-1 solution: relaxation 91.7333
+Elapsed time for NoRel heuristic: 13s (best bound 6.85033e+06)
+Found phase-1 solution: relaxation 50.8333
+Found phase-1 solution: relaxation 17.9333
+Found phase-1 solution: relaxation 4.33336
+Found phase-1 solution: relaxation 0.333355
+Found phase-1 solution: relaxation 0
+Transition to phase 2
+Elapsed time for NoRel heuristic: 19s (best bound 6.7896e+06)
+Elapsed time for NoRel heuristic: 25s (best bound 6.72888e+06)
+Elapsed time for NoRel heuristic: 33s (best bound 6.72173e+06)
+Elapsed time for NoRel heuristic: 38s (best bound 6.7213e+06)
+Elapsed time for NoRel heuristic: 44s (best bound 6.7213e+06)
+Elapsed time for NoRel heuristic: 49s (best bound 6.7213e+06)
+Elapsed time for NoRel heuristic: 55s (best bound 6.7213e+06)
+Elapsed time for NoRel heuristic: 61s (best bound 6.7213e+06)
+NoRel heuristic complete
+Deterministic concurrent LP optimizer: primal and dual simplex
+Showing primal log only...
+
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+       0   -1.0512230e+07   8.552943e+01   9.152013e+07    135s
+   12111   -8.9694674e+06   0.000000e+00   2.710251e+08    136s
+   20299   -5.5406996e+06   0.000000e+00   1.995074e+09    140s
+   27116   -4.2184656e+06   0.000000e+00   1.564394e+09    145s
+Concurrent spin time: 1.44s (can be avoided by choosing Method=3)
+
+Solved with dual simplex
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+   15075    6.7213041e+06   0.000000e+00   0.000000e+00    147s
+
+Extra simplex iterations after uncrush: 238
+
+Root relaxation: objective 6.721304e+06, 15075 iterations, 13.22 seconds (4.73 work units)
+Total elapsed time = 147.10s (DegenMoves)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 infeasible    0      6471302.89 6471302.89  0.00%     -  148s
+
+Explored 1 nodes (16780 simplex iterations) in 148.75 seconds (45.00 work units)
+Thread count was 4 (of 8 available processors)
+
+Solution count 2: 6.4713e+06 6.4713e+06 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 6.471302890000e+06, best bound 6.471302890000e+06, gap 0.0000%
+
+Gurobi 13.0.2 (win64) logging started Mon Nov  2 05:59:04 2026
+
+Set parameter LogFile to value "data/results/Busqueda_ventanas_desplazar_d2\logs\gurobi_ventana_48-60h.log"
+Set parameter Threads to value 4
+Set parameter SoftMemLimit to value 4
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  300
+SoftMemLimit  4
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  60
+LogToConsole  0
+Threads  4
+
+Optimize a model with 223152 rows, 709843 columns and 3459479 nonzeros (Max)
+Model fingerprint: 0xa37c3196
+Model has 602112 linear objective coefficients
+Variable types: 568458 continuous, 141385 integer (141385 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 8e+04]
+  Bounds range     [1e+00, 8e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 6.47505e+06
+
+Presolve removed 188594 rows and 475590 columns
+Presolve time: 2.83s
+Presolved: 34558 rows, 234253 columns, 737592 nonzeros
+Variable types: 228231 continuous, 6022 integer (6022 binary)
+Performing another presolve...
+Presolve removed 3652 rows and 16276 columns (presolve time = 5s)...
+Presolve removed 12387 rows and 107434 columns (presolve time = 10s)...
+Presolve removed 12551 rows and 107752 columns
+Presolve time: 10.76s
+Starting NoRel heuristic
+Found phase-1 solution: relaxation 1.00006
+Found phase-1 solution: relaxation 1.00005
+Found phase-1 solution: relaxation 1.00003
+Found phase-1 solution: relaxation 1.00003
+Found phase-1 solution: relaxation 1.00001
+Found phase-1 solution: relaxation 0
+Transition to phase 2
+Elapsed time for NoRel heuristic: 5s (best bound 6.66065e+06)
+Elapsed time for NoRel heuristic: 11s (best bound 6.60328e+06)
+Elapsed time for NoRel heuristic: 17s (best bound 6.60327e+06)
+Elapsed time for NoRel heuristic: 23s (best bound 6.60327e+06)
+Elapsed time for NoRel heuristic: 28s (best bound 6.60327e+06)
+Elapsed time for NoRel heuristic: 34s (best bound 6.60327e+06)
+Elapsed time for NoRel heuristic: 42s (best bound 6.60327e+06)
+Elapsed time for NoRel heuristic: 49s (best bound 6.60327e+06)
+Elapsed time for NoRel heuristic: 56s (best bound 6.60327e+06)
+Elapsed time for NoRel heuristic: 62s (best bound 6.60327e+06)
+NoRel heuristic complete
+Deterministic concurrent LP optimizer: primal and dual simplex
+Showing primal log only...
+
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+       0   -1.0650419e+07   2.972238e+01   1.455724e+08     77s
+    4094   -7.6699665e+06   0.000000e+00   2.885691e+08     77s
+   12181   -5.4933516e+06   0.000000e+00   2.006225e+09     80s
+Concurrent spin time: 0.47s
+
+Solved with dual simplex
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+   13850    6.6032676e+06   0.000000e+00   0.000000e+00     82s
+
+Extra simplex iterations after uncrush: 93
+
+Root relaxation: objective 6.603268e+06, 13850 iterations, 6.16 seconds (3.07 work units)
+Total elapsed time = 82.51s (DegenMoves)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 6603267.55    0  104 6475054.97 6603267.55  1.98%     -   85s
+     0     0 6581202.34    0  116 6475054.97 6581202.34  1.64%     -   87s
+     0     0 6560105.39    0  141 6475054.97 6560105.39  1.31%     -  105s
+     0     0 6553786.25    0  135 6475054.97 6553786.25  1.22%     -  115s
+     0     0 6553707.43    0  137 6475054.97 6553707.43  1.21%     -  117s
+     0     0 6553668.97    0  140 6475054.97 6553668.97  1.21%     -  118s
+     0     0 6553668.97    0  141 6475054.97 6553668.97  1.21%     -  118s
+     0     0 6542808.76    0  145 6475054.97 6542808.76  1.05%     -  134s
+     0     0 6514382.07    0  154 6475054.97 6514382.07  0.61%     -  145s
+     0     0 6514382.07    0  163 6475054.97 6514382.07  0.61%     -  148s
+     0     0 6514372.07    0  163 6475054.97 6514372.07  0.61%     -  149s
+     0     0 6514372.07    0  165 6475054.97 6514372.07  0.61%     -  149s
+     0     0 6511057.72    0  180 6475054.97 6511057.72  0.56%     -  169s
+     0     0 6510107.81    0  183 6475054.97 6510107.81  0.54%     -  182s
+     0     0 6509582.95    0  180 6475054.97 6509582.95  0.53%     -  186s
+     0     0 6509462.89    0  182 6475054.97 6509462.89  0.53%     -  189s
+     0     0 6509448.53    0  200 6475054.97 6509448.53  0.53%     -  190s
+     0     0 6509292.28    0  176 6475054.97 6509292.28  0.53%     -  191s
+     0     0 6509292.28    0  179 6475054.97 6509292.28  0.53%     -  192s
+     0     0 6507390.88    0  219 6475054.97 6507390.88  0.50%     -  209s
+     0     0 6506695.37    0  232 6475054.97 6506695.37  0.49%     -  216s
+     0     0 6506206.65    0  227 6475054.97 6506206.65  0.48%     -  219s
+     0     0 6506082.97    0  234 6475054.97 6506082.97  0.48%     -  220s
+     0     0 6506082.97    0  249 6475054.97 6506082.97  0.48%     -  221s
+     0     0 6506060.54    0  232 6475054.97 6506060.54  0.48%     -  221s
+     0     0 6506051.79    0  230 6475054.97 6506051.79  0.48%     -  222s
+     0     0 6506051.79    0  231 6475054.97 6506051.79  0.48%     -  222s
+     0     0 6506007.34    0  244 6475054.97 6506007.34  0.48%     -  227s
+     0     0 6506007.34    0  244 6475054.97 6506007.34  0.48%     -  227s
+     0     0 6506007.34    0  216 6475054.97 6506007.34  0.48%     -  228s
+     0     2 6506007.34    0  213 6475054.97 6506007.34  0.48%     -  294s
+
+Cutting planes:
+  Learned: 2
+  Lift-and-project: 11
+  Cover: 11
+  Implied bound: 35
+  Clique: 4
+  MIR: 78
+  StrongCG: 1
+  Flow cover: 95
+  RLT: 8
+  Relax-and-lift: 10
+
+Explored 1 nodes (35073 simplex iterations) in 300.14 seconds (133.53 work units)
+Thread count was 4 (of 8 available processors)
+
+Solution count 2: 6.47505e+06 6.47505e+06 
+
+Time limit reached
+Best objective 6.475054973000e+06, best bound 6.506007335388e+06, gap 0.4780%

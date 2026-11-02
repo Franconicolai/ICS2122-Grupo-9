@@ -1,0 +1,94 @@
+
+Gurobi 13.0.2 (win64) logging started Mon Nov  2 04:44:20 2026
+
+Set parameter LogFile to value "data/results/instancias/R4/ventanas12_d2\logs\gurobi_ventana_156-168h.log"
+Set parameter Threads to value 1
+Set parameter SoftMemLimit to value 1
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 1 threads
+
+Non-default parameters:
+TimeLimit  120
+SoftMemLimit  1
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  15
+LogToConsole  0
+Threads  1
+
+Optimize a model with 16181 rows, 43454 columns and 197116 nonzeros (Max)
+Model fingerprint: 0x4c616a13
+Model has 33731 linear objective coefficients
+Variable types: 35991 continuous, 7463 integer (7463 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 7e+04]
+  Bounds range     [5e-01, 2e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 868027
+
+Presolve removed 13864 rows and 38078 columns
+Presolve time: 1.02s
+Presolved: 2317 rows, 5376 columns, 18075 nonzeros
+Variable types: 5028 continuous, 348 integer (348 binary)
+Starting NoRel heuristic
+Elapsed time for NoRel heuristic: 5s (best bound 903671)
+Elapsed time for NoRel heuristic: 11s (best bound 903671)
+NoRel heuristic complete
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+       0    1.1783801e+06   7.499400e+02   0.000000e+00     16s
+    1534    9.0367149e+05   0.000000e+00   0.000000e+00     16s
+
+Root relaxation: objective 9.036715e+05, 1534 iterations, 0.11 seconds (0.05 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 903671.493    0   41 868026.699 903671.493  4.11%     -   16s
+     0     0 885669.021    0   56 868026.699 885669.021  2.03%     -   16s
+     0     0 885580.103    0   55 868026.699 885580.103  2.02%     -   16s
+     0     0 885580.103    0   55 868026.699 885580.103  2.02%     -   16s
+     0     0 881972.447    0   59 868026.699 881972.447  1.61%     -   16s
+     0     0 881698.745    0   60 868026.699 881698.745  1.58%     -   16s
+     0     0 881625.185    0   64 868026.699 881625.185  1.57%     -   16s
+     0     0 881499.493    0   58 868026.699 881499.493  1.55%     -   16s
+     0     0 881496.141    0   61 868026.699 881496.141  1.55%     -   16s
+     0     0 881496.141    0   61 868026.699 881496.141  1.55%     -   16s
+     0     0 881295.080    0   52 868026.699 881295.080  1.53%     -   17s
+     0     0 881009.662    0   52 868026.699 881009.662  1.50%     -   17s
+     0     0 880969.838    0   54 868026.699 880969.838  1.49%     -   17s
+     0     0 880969.336    0   54 868026.699 880969.336  1.49%     -   17s
+     0     0 880694.689    0   53 868026.699 880694.689  1.46%     -   17s
+     0     0 880539.036    0   53 868026.699 880539.036  1.44%     -   17s
+     0     0 880529.128    0   57 868026.699 880529.128  1.44%     -   17s
+     0     0 880524.902    0   58 868026.699 880524.902  1.44%     -   17s
+     0     0 880524.902    0   58 868026.699 880524.902  1.44%     -   17s
+     0     0 880312.360    0   55 868026.699 880312.360  1.42%     -   17s
+     0     0 880312.360    0   55 868026.699 880312.360  1.42%     -   17s
+     0     0 880312.360    0   52 868026.699 880312.360  1.42%     -   17s
+     0     2 880304.606    0   51 868026.699 880304.606  1.41%     -   18s
+
+Cutting planes:
+  Gomory: 1
+  Cover: 2
+  Implied bound: 11
+  MIR: 12
+  Flow cover: 28
+  RLT: 4
+  Relax-and-lift: 6
+  BQP: 1
+
+Explored 16 nodes (3190 simplex iterations) in 18.63 seconds (4.33 work units)
+Thread count was 1 (of 8 available processors)
+
+Solution count 2: 868027 868027 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 8.680266990000e+05, best bound 8.680678990164e+05, gap 0.0047%

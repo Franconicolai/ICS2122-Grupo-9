@@ -1,0 +1,114 @@
+
+Gurobi 13.0.2 (win64) logging started Mon Nov  2 03:02:06 2026
+
+Set parameter LogFile to value "data/results/Busqueda_ventanas_desplazar_m10\logs\gurobi_ventana_132-144h.log"
+Set parameter Threads to value 4
+Set parameter SoftMemLimit to value 4
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  240
+SoftMemLimit  4
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  60
+LogToConsole  0
+Threads  4
+
+Optimize a model with 184340 rows, 628588 columns and 3022856 nonzeros (Max)
+Model fingerprint: 0x19e6aef6
+Model has 537767 linear objective coefficients
+Variable types: 504113 continuous, 124475 integer (124475 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 8e+04]
+  Bounds range     [1e+00, 8e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 6.47128e+06
+
+Presolve removed 157608 rows and 445312 columns
+Presolve time: 3.16s
+Presolved: 26732 rows, 183276 columns, 561099 nonzeros
+Variable types: 180038 continuous, 3238 integer (3238 binary)
+Performing another presolve...
+Presolve removed 1017 rows and 3827 columns (presolve time = 5s)...
+Presolve removed 3931 rows and 22101 columns
+Presolve time: 8.19s
+Starting NoRel heuristic
+Elapsed time for NoRel heuristic: 5s (best bound 6.90567e+06)
+Elapsed time for NoRel heuristic: 11s (best bound 6.90567e+06)
+Elapsed time for NoRel heuristic: 16s (best bound 6.90567e+06)
+Elapsed time for NoRel heuristic: 22s (best bound 6.76967e+06)
+Elapsed time for NoRel heuristic: 29s (best bound 6.76967e+06)
+Elapsed time for NoRel heuristic: 36s (best bound 6.76967e+06)
+Elapsed time for NoRel heuristic: 44s (best bound 6.62556e+06)
+Elapsed time for NoRel heuristic: 49s (best bound 6.62556e+06)
+Elapsed time for NoRel heuristic: 56s (best bound 6.62556e+06)
+Elapsed time for NoRel heuristic: 62s (best bound 6.59647e+06)
+NoRel heuristic complete
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Ordering time: 4.60s
+
+Barrier statistics:
+ Dense cols : 51
+ AA' NZ     : 6.897e+05
+ Factor NZ  : 1.968e+07 (roughly 230 MB of memory)
+ Factor Ops : 4.519e+10 (roughly 2 seconds per iteration)
+ Threads    : 2
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0  -1.37614234e+09  2.79686623e+10  5.35e+03 5.36e+03  9.14e+05    81s
+   1  -7.03992294e+08  2.27657467e+10  2.73e+03 4.05e+03  4.51e+05    86s
+
+Barrier performed 1 iterations in 86.71 seconds (19.32 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+Concurrent spin time: 0.14s
+
+Solved with dual simplex
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+   11389    6.5062800e+06   0.000000e+00   0.000000e+00     87s
+
+Extra simplex iterations after uncrush: 302
+
+Root relaxation: objective 6.506280e+06, 11389 iterations, 13.38 seconds (3.20 work units)
+Total elapsed time = 87.24s (DegenMoves)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 6506280.03    0   68 6471282.89 6506280.03  0.54%     -   89s
+     0     0 6488983.74    0   76 6471282.89 6488983.74  0.27%     -   95s
+
+Cutting planes:
+  Gomory: 2
+  Cover: 2
+  Implied bound: 11
+  Clique: 2
+  MIR: 24
+  Flow cover: 48
+  GUB cover: 1
+  RLT: 7
+  Relax-and-lift: 6
+  BQP: 4
+
+Explored 1 nodes (13339 simplex iterations) in 103.60 seconds (21.12 work units)
+Thread count was 4 (of 8 available processors)
+
+Solution count 3: 6.47128e+06 6.47128e+06 6.47128e+06 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 6.471282890000e+06, best bound 6.471282890000e+06, gap 0.0000%

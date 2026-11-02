@@ -1,0 +1,149 @@
+
+Gurobi 13.0.2 (win64) logging started Mon Nov  2 01:23:04 2026
+
+Set parameter LogFile to value "data/results/instancias/R4/prueba_saltar\logs\gurobi_ventana_24-48h.log"
+Set parameter Threads to value 1
+Set parameter SoftMemLimit to value 1
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 1 threads
+
+Non-default parameters:
+TimeLimit  20
+SoftMemLimit  1
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  5
+LogToConsole  0
+Threads  1
+
+Optimize a model with 18607 rows, 46258 columns and 216748 nonzeros (Max)
+Model fingerprint: 0xdd4366e6
+Model has 35701 linear objective coefficients
+Variable types: 37961 continuous, 8297 integer (8297 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 7e+04]
+  Bounds range     [5e-01, 2e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 855680
+
+Presolve removed 17075 rows and 42694 columns
+Presolve time: 2.16s
+Presolved: 1532 rows, 3564 columns, 11545 nonzeros
+Variable types: 3375 continuous, 189 integer (189 binary)
+Starting NoRel heuristic
+Elapsed time for NoRel heuristic: 5s (best bound 870696)
+NoRel heuristic complete
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+       0    1.2063589e+06   7.148354e+02   0.000000e+00      7s
+     976    8.7069643e+05   0.000000e+00   0.000000e+00      7s
+
+Root relaxation: objective 8.706964e+05, 976 iterations, 0.06 seconds (0.02 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 870696.426    0   19 855679.859 870696.426  1.75%     -    7s
+     0     0 862263.385    0   13 855679.859 862263.385  0.77%     -    7s
+     0     0 862175.740    0   22 855679.859 862175.740  0.76%     -    7s
+     0     0 862168.144    0   22 855679.859 862168.144  0.76%     -    7s
+     0     0 862166.915    0   21 855679.859 862166.915  0.76%     -    7s
+     0     0 861958.143    0   18 855679.859 861958.143  0.73%     -    7s
+     0     0 861954.605    0   18 855679.859 861954.605  0.73%     -    7s
+     0     0 861954.605    0   17 855679.859 861954.605  0.73%     -    7s
+     0     0 861594.206    0   15 855679.859 861594.206  0.69%     -    7s
+     0     0 861593.567    0   18 855679.859 861593.567  0.69%     -    7s
+     0     0 861591.024    0   14 855679.859 861591.024  0.69%     -    8s
+     0     0 861590.978    0   15 855679.859 861590.978  0.69%     -    8s
+     0     0 861590.962    0   15 855679.859 861590.962  0.69%     -    8s
+     0     0 861590.962    0   15 855679.859 861590.962  0.69%     -    8s
+     0     0 861590.962    0   13 855679.859 861590.962  0.69%     -    8s
+     0     2 861590.714    0   13 855679.859 861590.714  0.69%     -    8s
+*    9     4               7    855699.85900 861582.858  0.69%  53.1    8s
+
+Cutting planes:
+  Gomory: 3
+  Implied bound: 11
+  Clique: 1
+  MIR: 12
+  Flow cover: 15
+  RLT: 1
+  Relax-and-lift: 1
+
+Explored 16 nodes (2293 simplex iterations) in 8.81 seconds (1.90 work units)
+Thread count was 1 (of 8 available processors)
+
+Solution count 2: 855700 855680 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 8.556998590000e+05, best bound 8.556998590000e+05, gap 0.0000%
+
+Gurobi 13.0.2 (win64) logging started Mon Nov  2 01:26:01 2026
+
+Set parameter LogFile to value "data/results/instancias/R4/prueba_saltar\logs\gurobi_ventana_24-48h.log"
+Set parameter Threads to value 1
+Set parameter SoftMemLimit to value 1
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 1 threads
+
+Non-default parameters:
+TimeLimit  20
+SoftMemLimit  1
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  5
+LogToConsole  0
+Threads  1
+
+Optimize a model with 18607 rows, 46258 columns and 216748 nonzeros (Max)
+Model fingerprint: 0x150f9f8f
+Model has 35701 linear objective coefficients
+Variable types: 37961 continuous, 8297 integer (8297 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 7e+04]
+  Bounds range     [5e-01, 2e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 855700
+
+Presolve removed 16461 rows and 41213 columns
+Presolve time: 1.62s
+Presolve removed 13235 rows and 34580 columns
+Presolve time: 0.64s
+Presolved: 5372 rows, 11678 columns, 43636 nonzeros
+Variable types: 9715 continuous, 1963 integer (1943 binary)
+Starting NoRel heuristic
+Elapsed time for NoRel heuristic: 5s (best bound 1.20866e+06)
+NoRel heuristic complete
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+       0    2.2046629e+06   1.017568e+03   0.000000e+00      7s
+    3743    1.0054490e+06   0.000000e+00   0.000000e+00      8s
+
+Root relaxation: objective 1.005449e+06, 3743 iterations, 0.66 seconds (0.24 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 infeasible    0      855699.859 855699.859  0.00%     -    8s
+
+Explored 1 nodes (4499 simplex iterations) in 8.36 seconds (1.80 work units)
+Thread count was 1 (of 8 available processors)
+
+Solution count 1: 855700 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 8.556998590000e+05, best bound 8.556998590000e+05, gap 0.0000%

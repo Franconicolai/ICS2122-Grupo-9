@@ -1,0 +1,75 @@
+
+Gurobi 13.0.2 (win64) logging started Mon Nov  2 04:40:02 2026
+
+Set parameter LogFile to value "data/results/instancias/R4/ventanas12_d2\logs\gurobi_ventana_78-90h.log"
+Set parameter Threads to value 1
+Set parameter SoftMemLimit to value 1
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 1 threads
+
+Non-default parameters:
+TimeLimit  120
+SoftMemLimit  1
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  15
+LogToConsole  0
+Threads  1
+
+Optimize a model with 16378 rows, 44856 columns and 204397 nonzeros (Max)
+Model fingerprint: 0xb3f51f80
+Model has 35291 linear objective coefficients
+Variable types: 37551 continuous, 7305 integer (7305 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 7e+04]
+  Bounds range     [5e-01, 2e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 868027
+
+Presolve removed 14967 rows and 41603 columns
+Presolve time: 0.42s
+Presolved: 1411 rows, 3253 columns, 10531 nonzeros
+Variable types: 3093 continuous, 160 integer (159 binary)
+Starting NoRel heuristic
+Elapsed time for NoRel heuristic: 5s (best bound 871653)
+Elapsed time for NoRel heuristic: 10s (best bound 871653)
+NoRel heuristic complete
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+       0    1.1023269e+06   7.436615e+02   0.000000e+00     16s
+     796    8.7165265e+05   0.000000e+00   0.000000e+00     16s
+
+Root relaxation: objective 8.716527e+05, 796 iterations, 0.04 seconds (0.01 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 871652.653    0   10 868026.699 871652.653  0.42%     -   15s
+     0     0 868280.899    0    6 868026.699 868280.899  0.03%     -   15s
+     0     0 868168.375    0    6 868026.699 868168.375  0.02%     -   15s
+     0     0 868168.375    0    6 868026.699 868168.375  0.02%     -   15s
+     0     0          -    0      868026.699 868112.421  0.01%     -   15s
+
+Cutting planes:
+  Gomory: 5
+  Implied bound: 7
+  MIR: 8
+  Flow cover: 14
+  Network: 2
+  RLT: 1
+  Relax-and-lift: 1
+
+Explored 1 nodes (945 simplex iterations) in 15.72 seconds (4.33 work units)
+Thread count was 1 (of 8 available processors)
+
+Solution count 2: 868027 868027 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 8.680266990000e+05, best bound 8.681124209084e+05, gap 0.0099%

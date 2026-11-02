@@ -1,0 +1,117 @@
+
+Gurobi 13.0.2 (win64) logging started Sun Nov  1 22:16:29 2026
+
+Set parameter LogFile to value "data/results/Busqueda_ventanas_continua\logs\gurobi_ventana_144-156h.log"
+Set parameter Threads to value 4
+Set parameter SoftMemLimit to value 4
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  240
+SoftMemLimit  4
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  60
+LogToConsole  0
+Threads  4
+
+Optimize a model with 193039 rows, 627962 columns and 3034933 nonzeros (Max)
+Model fingerprint: 0xd29e0047
+Model has 532463 linear objective coefficients
+Variable types: 498809 continuous, 129153 integer (129153 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 8e+04]
+  Bounds range     [1e+00, 8e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 6.46608e+06
+
+Presolve removed 158402 rows and 420158 columns (presolve time = 5s)...
+Presolve removed 158402 rows and 430750 columns (presolve time = 10s)...
+Presolve removed 163098 rows and 438946 columns (presolve time = 15s)...
+Presolve removed 163481 rows and 440279 columns (presolve time = 20s)...
+Presolve removed 163597 rows and 440294 columns
+Presolve time: 22.74s
+Presolved: 29442 rows, 187668 columns, 707470 nonzeros
+Variable types: 183333 continuous, 4335 integer (4335 binary)
+Starting NoRel heuristic
+Elapsed time for NoRel heuristic: 7s (best bound 7.44821e+06)
+Elapsed time for NoRel heuristic: 14s (best bound 7.32063e+06)
+Elapsed time for NoRel heuristic: 20s (best bound 7.32063e+06)
+Elapsed time for NoRel heuristic: 26s (best bound 6.83226e+06)
+Elapsed time for NoRel heuristic: 32s (best bound 6.83226e+06)
+Elapsed time for NoRel heuristic: 62s (best bound 6.7649e+06)
+NoRel heuristic complete
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Elapsed ordering time = 5s
+Ordering time: 5.84s
+
+Barrier statistics:
+ Dense cols : 307
+ AA' NZ     : 9.758e+05
+ Factor NZ  : 2.989e+07 (roughly 300 MB of memory)
+ Factor Ops : 8.250e+10 (roughly 6 seconds per iteration)
+ Threads    : 2
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0  -1.75131522e+09  3.13845487e+10  8.68e+03 2.84e+03  9.33e+05    94s
+
+Barrier performed 0 iterations in 100.82 seconds (45.18 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+Concurrent spin time: 0.09s
+
+Solved with dual simplex
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+   14342    6.6500140e+06   0.000000e+00   0.000000e+00    102s
+
+Extra simplex iterations after uncrush: 639
+
+Root relaxation: objective 6.650014e+06, 14342 iterations, 15.97 seconds (5.35 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 6650013.97    0  303 6466083.44 6650013.97  2.84%     -  110s
+     0     0 6633995.46    0  338 6466083.44 6633995.46  2.60%     -  181s
+     0     0 6633923.11    0  349 6466083.44 6633923.11  2.60%     -  192s
+     0     0 6633917.25    0  358 6466083.44 6633917.25  2.60%     -  193s
+     0     0 6633911.98    0  346 6466083.44 6633911.98  2.60%     -  194s
+     0     0 6633909.88    0  339 6466083.44 6633909.88  2.60%     -  195s
+     0     0 6633909.88    0  339 6466083.44 6633909.88  2.60%     -  196s
+     0     0 6629502.04    0  361 6466083.44 6629502.04  2.53%     -  223s
+     0     0 6629337.91    0  378 6466083.44 6629337.91  2.52%     -  230s
+     0     0 6629330.80    0  385 6466083.44 6629330.80  2.52%     -  231s
+     0     0 6629330.63    0  389 6466083.44 6629330.63  2.52%     -  233s
+
+Cutting planes:
+  Gomory: 1
+  Cover: 3
+  Implied bound: 28
+  MIR: 109
+  StrongCG: 3
+  Flow cover: 160
+  RLT: 17
+  Relax-and-lift: 11
+  BQP: 13
+
+Explored 1 nodes (25997 simplex iterations) in 240.47 seconds (75.11 work units)
+Thread count was 4 (of 8 available processors)
+
+Solution count 2: 6.46608e+06 6.46608e+06 
+
+Time limit reached
+Best objective 6.466083436000e+06, best bound 6.629330626103e+06, gap 2.5247%

@@ -1,0 +1,98 @@
+
+Gurobi 13.0.2 (win64) logging started Mon Nov  2 01:31:10 2026
+
+Set parameter LogFile to value "data/results/instancias/R10/ventanas_desplazar\logs\gurobi_AC-14.log"
+Set parameter Threads to value 3
+Set parameter SoftMemLimit to value 1.5
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 3 threads
+
+Non-default parameters:
+TimeLimit  120
+SoftMemLimit  1.5
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  15
+LogToConsole  0
+Threads  3
+
+Optimize a model with 62947 rows, 212673 columns and 843839 nonzeros (Max)
+Model fingerprint: 0xb80caf0f
+Model has 181861 linear objective coefficients
+Variable types: 187191 continuous, 25482 integer (25482 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 8e+04]
+  Bounds range     [9e-01, 5e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 2.69288e+06
+
+Presolve removed 24983 rows and 72388 columns (presolve time = 5s)...
+Presolve removed 26699 rows and 79543 columns (presolve time = 10s)...
+Presolve removed 26699 rows and 79543 columns (presolve time = 16s)...
+Presolve removed 26867 rows and 80356 columns
+Presolve time: 18.84s
+Presolved: 36080 rows, 132317 columns, 630603 nonzeros
+Variable types: 121235 continuous, 11082 integer (11082 binary)
+Starting NoRel heuristic
+Elapsed time for NoRel heuristic: 5s (best bound 4.56118e+06)
+Elapsed time for NoRel heuristic: 13s (best bound 4.55793e+06)
+Elapsed time for NoRel heuristic: 20s (best bound 4.55793e+06)
+NoRel heuristic complete
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Elapsed ordering time = 5s
+Ordering time: 7.60s
+
+Barrier statistics:
+ Dense cols : 739
+ AA' NZ     : 1.017e+06
+ Factor NZ  : 1.877e+07 (roughly 200 MB of memory)
+ Factor Ops : 4.350e+10 (roughly 4 seconds per iteration)
+ Threads    : 1
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0  -1.81566250e+10  1.40478478e+10  2.85e+05 1.40e+03  6.65e+06    57s
+   1  -1.13166245e+10  1.48786677e+10  1.78e+05 5.16e+03  4.25e+06    63s
+   2  -2.53863054e+09  1.54830108e+10  3.98e+04 2.07e-01  1.02e+06    68s
+   3  -3.82676126e+08  1.31635194e+10  5.93e+03 1.20e-01  1.84e+05    73s
+   4  -9.78912143e+07  7.72634552e+09  1.46e+03 2.23e-02  5.52e+04    79s
+   5  -2.02276661e+07  2.21683302e+09  2.57e+02 2.86e-03  1.16e+04    84s
+   6  -7.15600628e+06  6.77285400e+08  4.92e+01 9.54e-04  3.02e+03    89s
+   7  -2.89169310e+06  7.38195414e+07  2.16e+00 4.85e-04  2.92e+02    93s
+   8  -1.08641777e+06  2.82017571e+07  7.89e-01 2.50e-04  1.08e+02    97s
+   9  -2.43927300e+05  1.63369509e+07  5.29e-01 1.42e-04  6.06e+01   102s
+  10   3.37322066e+04  1.43549355e+07  4.60e-01 1.39e-04  5.21e+01   106s
+  11   4.90482425e+05  1.12505821e+07  3.76e-01 1.15e-04  3.91e+01   110s
+  12   1.75670444e+06  7.22414319e+06  1.67e-01 4.51e-04  1.97e+01   115s
+  13   2.10132794e+06  5.74396094e+06  1.17e-01 3.58e-04  1.31e+01   120s
+
+Barrier performed 13 iterations in 119.70 seconds (40.56 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+Concurrent spin time: 4.96s
+
+Solved with dual simplex
+
+Root relaxation: time limit, 25030 iterations, 81.13 seconds (33.32 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0          -    0      2692881.41 4557928.68  69.3%     -  120s
+
+Explored 1 nodes (25030 simplex iterations) in 120.16 seconds (45.46 work units)
+Thread count was 3 (of 8 available processors)
+
+Solution count 2: 2.69288e+06 2.69288e+06 
+
+Time limit reached
+Best objective 2.692881413000e+06, best bound 4.557928679000e+06, gap 69.2584%

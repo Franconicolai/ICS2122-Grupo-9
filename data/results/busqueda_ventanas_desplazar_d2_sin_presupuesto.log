@@ -1,0 +1,15 @@
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+[inicio] Busqueda_ventanas_desplazar_m10 | tiempo continuo | TTR_H = 2 h | margen validado 6,471,303 USD | 19 aviones x 30 vuelta(s) x 300 s | salida data/results/Busqueda_ventanas_desplazar_d2
+[vuelta 1] nivel ventana: 28 vecindarios
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_0-12h: sin mejora | modelo 6,471,303 -> 6,471,303 | mejor validado 6,471,303 USD (+0) | 345 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_6-18h: sin mejora | modelo 6,471,303 -> 6,471,303 | mejor validado 6,471,303 USD (+0) | 71 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0

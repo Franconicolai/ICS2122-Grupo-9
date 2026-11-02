@@ -1,0 +1,130 @@
+
+Gurobi 13.0.2 (win64) logging started Sun Nov  1 20:44:42 2026
+
+Set parameter LogFile to value "data/results/instancias/R10/prueba_ventana_bb\logs\gurobi_ventana_0-24h.log"
+Set parameter Threads to value 4
+Set parameter SoftMemLimit to value 4
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  120
+SoftMemLimit  4
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  10
+LogToConsole  0
+Threads  4
+
+Optimize a model with 47558 rows, 135860 columns and 595530 nonzeros (Max)
+Model fingerprint: 0x3132fdb2
+Model has 109291 linear objective coefficients
+Variable types: 114621 continuous, 21239 integer (21239 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 8e+04]
+  Bounds range     [1e+00, 5e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 2.68525e+06
+
+Presolve removed 37732 rows and 101874 columns
+Presolve time: 3.32s
+Presolved: 9826 rows, 33986 columns, 122079 nonzeros
+Variable types: 31861 continuous, 2125 integer (2125 binary)
+Starting NoRel heuristic
+Elapsed time for NoRel heuristic: 5s (best bound 2.99679e+06)
+Elapsed time for NoRel heuristic: 11s (best bound 2.94496e+06)
+NoRel heuristic complete
+Deterministic concurrent LP optimizer: primal and dual simplex
+Showing primal log only...
+
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+       0   -5.3677547e+06   9.904625e+01   9.660640e+07     14s
+    4528   -3.8338201e+06   0.000000e+00   2.670532e+08     15s
+Concurrent spin time: 0.22s (can be avoided by choosing Method=3)
+
+Solved with dual simplex
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+    5329    2.8891293e+06   0.000000e+00   0.000000e+00     16s
+
+Extra simplex iterations after uncrush: 32
+
+Root relaxation: objective 2.889129e+06, 5329 iterations, 1.39 seconds (0.81 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 2889129.32    0  117 2685252.03 2889129.32  7.59%     -   16s
+     0     0 2872480.91    0  137 2685252.03 2872480.91  6.97%     -   18s
+     0     0 2872470.64    0  138 2685252.03 2872470.64  6.97%     -   18s
+     0     0 2862298.10    0  117 2685252.03 2862298.10  6.59%     -   21s
+     0     0 2860356.25    0  136 2685252.03 2860356.25  6.52%     -   21s
+     0     0 2859884.37    0  117 2685252.03 2859884.37  6.50%     -   22s
+     0     0 2859884.37    0  116 2685252.03 2859884.37  6.50%     -   22s
+     0     0 2846585.48    0  151 2685252.03 2846585.48  6.01%     -   27s
+     0     0 2844677.76    0  156 2685252.03 2844677.76  5.94%     -   29s
+     0     0 2844288.95    0  145 2685252.03 2844288.95  5.92%     -   30s
+     0     0 2843903.85    0  152 2685252.03 2843903.85  5.91%     -   30s
+     0     0 2843844.97    0  149 2685252.03 2843844.97  5.91%     -   30s
+     0     0 2843657.91    0  150 2685252.03 2843657.91  5.90%     -   30s
+     0     0 2843657.91    0  151 2685252.03 2843657.91  5.90%     -   31s
+     0     0 2835734.45    0  159 2685252.03 2835734.45  5.60%     -   36s
+     0     0 2828667.38    0  148 2685252.03 2828667.38  5.34%     -   38s
+     0     0 2826245.88    0  146 2685252.03 2826245.88  5.25%     -   39s
+     0     0 2824798.49    0  129 2685252.03 2824798.49  5.20%     -   40s
+     0     0 2824334.74    0  129 2685252.03 2824334.74  5.18%     -   40s
+     0     0 2824127.41    0  134 2685252.03 2824127.41  5.17%     -   41s
+     0     0 2823686.87    0  138 2685252.03 2823686.87  5.16%     -   41s
+     0     0 2823591.08    0  137 2685252.03 2823591.08  5.15%     -   41s
+     0     0 2823583.29    0  137 2685252.03 2823583.29  5.15%     -   41s
+     0     0 2823582.93    0  137 2685252.03 2823582.93  5.15%     -   41s
+     0     0 2822080.75    0  154 2685252.03 2822080.75  5.10%     -   44s
+     0     0 2821833.74    0  172 2685252.03 2821833.74  5.09%     -   46s
+     0     0 2821752.41    0  161 2685252.03 2821752.41  5.08%     -   46s
+     0     0 2821750.67    0  163 2685252.03 2821750.67  5.08%     -   46s
+     0     0 2821140.81    0  137 2685252.03 2821140.81  5.06%     -   48s
+     0     0 2821140.81    0  137 2685252.03 2821140.81  5.06%     -   48s
+     0     0 2821140.81    0  137 2685252.03 2821140.81  5.06%     -   48s
+     0     2 2821140.81    0  135 2685252.03 2821140.81  5.06%     -   62s
+     3     8 2806137.17    2  112 2685252.03 2818854.94  4.98%  1829   65s
+    25    23 2789902.84    8   94 2685252.03 2815955.30  4.87%   766   70s
+    39    30 2766908.86   10   58 2685252.03 2815955.30  4.87%   886   75s
+    59    44     cutoff   13      2685252.03 2815955.30  4.87%   828   80s
+    82    43 2752125.95    8   92 2685252.03 2815955.30  4.87%   780   85s
+   122    57     cutoff   16      2685252.03 2803571.14  4.41%   666   90s
+   162    80     cutoff   11      2685252.03 2803571.14  4.41%   630   95s
+   228    88 2758156.20    7   88 2685252.03 2801249.89  4.32%   595  100s
+   290   103 2777537.86   10   93 2685252.03 2798202.17  4.21%   571  106s
+   313   114 2741197.13   15   46 2685252.03 2798202.17  4.21%   561  112s
+   344   117     cutoff   22      2685252.03 2794489.84  4.07%   547  115s
+   407   133     cutoff   10      2685252.03 2794404.52  4.06%   538  120s
+
+Cutting planes:
+  Lift-and-project: 13
+  Cover: 5
+  Implied bound: 69
+  Clique: 6
+  MIR: 115
+  Flow cover: 231
+  GUB cover: 1
+  RLT: 19
+  Relax-and-lift: 22
+  BQP: 1
+
+Explored 409 nodes (239944 simplex iterations) in 120.05 seconds (88.26 work units)
+Thread count was 4 (of 8 available processors)
+
+Solution count 2: 2.68525e+06 2.68525e+06 
+
+Time limit reached
+Best objective 2.685252033000e+06, best bound 2.794404524302e+06, gap 4.0649%

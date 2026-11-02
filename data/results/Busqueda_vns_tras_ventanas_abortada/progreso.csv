@@ -1,0 +1,5 @@
+fecha,vuelta,avion,estado,objetivo_start,objetivo_modelo,margen_validado,aceptado,mejor_margen,segundos,nivel,minutos_total
+2026-11-01 23:34:50,1,AC-05,Limite de tiempo,6466083.44,6466083.44,,False,6466083.44,267.4,avion,5.0
+2026-11-01 23:39:17,1,AC-14,Limite de tiempo,6466083.44,6466083.44,,False,6466083.44,266.8,avion,9.4
+2026-11-01 23:43:49,1,AC-18,Limite de tiempo,6466083.44,6466083.44,,False,6466083.44,271.6,avion,14.0
+2026-11-01 23:48:26,1,AC-03,Limite de tiempo,6466083.44,6466083.44,,False,6466083.44,277.4,avion,18.6

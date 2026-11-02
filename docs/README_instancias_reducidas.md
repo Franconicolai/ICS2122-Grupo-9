@@ -286,7 +286,11 @@ Desde la solución de la heurística, dos ramas independientes, que pueden corre
 
 **Rama A (aviones saturados; ganó en R10 y es la que tiene hoy el mejor resultado en la instancia completa):**
 1. MILP continuo global con NoRel (`warm_start_milp.py --norel ...`). Repetirlo varias veces (distintas semillas o número de hilos) y quedarse con el mejor.
-2. Búsqueda continua por vecindarios: `busqueda_por_avion.py --modelo continuo --vecindario avion,par,trio --mejora-minima 2000`. Cada vecindario usa el MILP de posiciones con transbordos exactos; los demás aviones quedan con sus vuelos y horarios.
+2. Búsqueda continua por vecindarios, alternando ventanas de tiempo (secciones 12 y 13) y grupos de aviones:
+   ```
+   python busqueda_por_avion.py --modelo continuo --corrida <solución> --vecindario ventana,avion,par        --ventana-h 12 --ventana-paso 6 --desplazar 2 --desplazar-aviones 10 --desplazar-presupuesto 60        --tiempo 300 --norel 60 --saltar-sin-cambios --umbral-aceptar 100 --mejora-minima 2000 --orden uso
+   ```
+   En instancias donde los aviones van llenos (como R10), el desplazamiento no aporta y agranda el modelo: conviene `--desplazar 0` o `--desplazar-aviones 3`. Cada vecindario usa el MILP de posiciones con transbordos exactos; los demás aviones quedan con sus vuelos y horarios.
 
 **Rama B (con holgura de tiempo; ganó en R4):**
 1. Búsqueda en la red espacio-tiempo: `busqueda_por_avion.py --dt 1 --vecindario avion,par`.
@@ -306,12 +310,131 @@ Desde la solución de la heurística, dos ramas independientes, que pueden corre
 
 | Instancia | Heurística | Mejor | Cadena |
 |---|---|---|---|
-| R4 | 770.625 | **845.742 (+9,7 %)** | B |
-| R10 | 2.519.684 | **2.682.344 (+6,5 %)** | A |
-| **Completa** (19 aviones) | 6.345.128 (DT = 1 h) | **6.451.322 (+1,7 %)**: MILP continuo (6.435.839) + búsqueda continua por avión, 6,9 h en el notebook | A |
+| R4 | 770.625 | **868.027 (+12,6 %)** | B + ventanas desplazables (secciones 12–13) |
+| R10 | 2.519.684 | **2.692.881 (+6,9 %)** | A + ventanas (sección 12) |
+| **Completa** (19 aviones) | 6.345.128 (DT = 1 h) | **6.475.055 (+2,0 %)**: MILP continuo (6.435.839) + búsqueda por avión (6.451.322) + ventanas de 12 h (6.466.083) + ventanas desplazables (6.475.055) | A + ventanas desplazables |
 
 **Búsqueda continua en la instancia completa** (`data/results/Busqueda_continua_desde_MILP_dt1`, 300 s por avión):
 - partió de 6.435.839, el mejor resultado anterior, y llegó a **6.451.322 (+15.483)** con 7 mejoras: AC-07, AC-12, AC-10, AC-11, AC-04, AC-19 y AC-03;
 - tras la primera vuelta, las mejoras se hicieron escasas: una de +5.403 (AC-19) y otra de +161 (AC-03) en ~4,5 h;
 - la mejora de +161 hizo volver a los vecindarios de un avión, así que nunca se probaron pares. Para eso se agregó `--mejora-minima`;
 - validador OK, 25/25 frecuencias, 330 vuelos, 16 aviones.
+
+
+## 12. Vecindarios por ventana de tiempo (1 de noviembre, noche)
+
+### La idea
+
+Los vecindarios por avión, par o trío liberan pocos aviones completos. Un transbordo, en cambio, une vuelos de aviones distintos que coinciden en un aeropuerto en unas pocas horas. Para mover juntos esos vuelos hay que liberar varios aviones a la vez, y ningún vecindario de uno a tres aviones lo hace.
+
+El nivel `ventana` (`busqueda_por_avion.py --modelo continuo --vecindario ventana`) libera, en **todos** los aviones, los vuelos que salen dentro de una ventana de tiempo, por ejemplo de 12 h. El resto de la semana queda fijo, con sus vuelos y horarios. La carga y los transbordos de toda la red se reoptimizan con el MILP continuo de posiciones.
+
+**Detalles de la formulación:**
+- **Número de vuelos por avión.** Las posiciones se ocupan sin huecos (R2), así que cada avión mantiene su número de vuelos dentro de la ventana. La excepción es cuando la ventana llega al último vuelo del avión o al fin de la semana: ahí se liberan además `--ventana-extra` posiciones vacías (2 por defecto), para agregar o quitar vuelos al final de la rotación.
+- **Fijado.** `milp_continuo_transbordos.fijar_posiciones` fija las variables de cada posición fuera de la ventana. La marca de última posición (`l`) y el mantenimiento (`m`) quedan libres si la posición siguiente es libre.
+- **Pares de transbordo.** `milp_continuo_transbordos.enumerar_pares_posiciones` arma los pares por posición. Descarta los que no caben entre la llegada del vuelo fijo anterior y la salida del vuelo fijo siguiente.
+
+**Opciones de línea de comandos:**
+- `--ventana-h`: ancho de la ventana, en horas.
+- `--ventana-paso`: horas entre el inicio de dos ventanas seguidas.
+- `--ventana-rango 102-168`: recorre solo una parte de la semana.
+- `ventanaNN` como nivel (por ejemplo `--vecindario ventana,ventana48,avion`): ventanas de NN h con paso de NN/2 h.
+
+**Tiempo para la ramificación.** Los modelos por ventana son chicos después del presolve, así que conviene dejarle tiempo al branch & bound: `--norel` corto (10–90 s) y el resto de `--tiempo` para ramificar. Con todo el tiempo en NoRel, Gurobi nunca ramifica (0 nodos).
+
+### Resultados
+
+| Instancia | Partida (óptimo local de avión, par y trío) | Con ventanas | Detalle |
+|---|---|---|---|
+| R4 | 845.742 | **849.367 (+3.625)** | ventanas de 24 h, 60 s; 12 min. Después, ventanas de 48 y 84 h, avión y par no mejoran: óptimo local para todos los vecindarios. |
+| R10 | 2.682.344 | **2.692.016 (+9.672)** | ventanas de 24 h: la primera mejora (+2.908) vino de NoRel y la segunda (+6.764) de la ramificación. Luego, avión (+719) y par (+146) llegan a **2.692.881**, óptimo local de los tres niveles (1,4 h). |
+| **Completa** | 6.451.322 | **6.466.083 (+14.761)** | ventanas de 12 h (paso de 6 h, 240 s, NoRel 60 s): 28 ventanas en ~1,5 h. Las mejoras salieron de las ventanas de 126–138 h (+1.904) y 138–150 h (+12.857). |
+
+**En la instancia completa:**
+- La ganancia de las ventanas es casi la misma que la de las 11,5 h de búsqueda por avión que produjeron 6.451.322, y llegó en ~1,5 h.
+- La mayoría de las ventanas de 12 h quedan con **óptimo probado** en ~80 s (gap 0,0006 %), así que la búsqueda es exacta dentro de cada ventana. Algunas en la mitad de la semana no cierran la raíz en 240 s (gap 0,4–0,9 %).
+- Con ventanas de 24 h, la relajación de la raíz consume todo el tiempo (1 nodo, gap 2,5–3 %), así que conviene partir con ventanas de 12 h.
+- **Qué cambió la ventana de +12.857:** reorganizó 9 aviones a la vez alrededor de MIA (AC-01, 02, 07, 09, 10, 11, 12, 13 y 15). Pasó de 330 a 334 vuelos, con 115 t más. Varias salidas nuevas quedan justo a las 144,0 h, el inicio del día 7, para tomar la demanda de ese día. Es un movimiento coordinado de muchos aviones, que ningún vecindario de uno a tres aviones puede encontrar.
+- **Después:** una pasada de ventanas de 18 h (paso de 6 h, 300 s, NoRel 90 s) sobre 102–168 h no encontró más mejoras en 0,9 h. Casi todas terminaron por tiempo, sin óptimo probado.
+- **Dónde rinden:** las mejoras aparecen en la segunda mitad de la semana. Ahí hay menos holgura por el cierre de la rotación, y la ventana libera posiciones vacías al final. En R4 pasó lo mismo: 120–144 h y 144–168 h.
+
+### Recomendación
+
+Agregar las ventanas a la búsqueda continua, antes de los vecindarios por avión:
+
+```
+python busqueda_por_avion.py --modelo continuo --corrida <solución> --vecindario ventana,avion,par     --ventana-h 12 --ventana-paso 6 --tiempo 240 --norel 60 --mejora-minima 2000
+```
+
+En la máquina grande, con más núcleos y memoria, se pueden usar ventanas de 24 h con más tiempo, o correr varias ventanas que no se traslapen en paralelo.
+
+
+## 13. Ventanas con desplazamiento: agregar o quitar vuelos en medio de la semana (2 de noviembre)
+
+### Motivación
+
+En la instancia completa, la mayoría de los aviones **no** va lleno. En la mejor solución (6.466.083), muchos tienen entre 20 y 76 h libres en la semana y huecos de 13 a 44 h. La ventana de la sección 12 no puede usar esos huecos: como las posiciones se ocupan sin huecos (R2), cada avión mantiene su número de vuelos dentro de la ventana. Solo puede ganarlos o perderlos cuando la ventana toca el final de su rotación.
+
+### Formulación (`--desplazar D`)
+
+En los `--desplazar-aviones` aviones con más horas ociosas dentro de la ventana (3 por defecto), los vuelos posteriores a la ventana mantienen tramo y horario, pero **todos se corren δ posiciones**, con −D ≤ δ ≤ D. Así, la ventana de ese avión puede tener hasta D vuelos más o menos.
+
+Las restricciones del MILP no cambian; solo se agregan (`milp_continuo_transbordos.agregar_desplazamientos`):
+- una binaria `z[k, δ]` por avión, con Σ_δ z = 1;
+- `y[k, p+δ, e_p] ≥ z[k, δ]` y `t_dep[k, p+δ] = t_p` si `z[k, δ] = 1` (big-M), para cada vuelo p posterior a la ventana;
+- `u[k, n+δ+1] ≤ 1 − z[k, δ]`: la rotación termina en la posición n+δ;
+- en las posiciones que solo pueden ser de vuelos posteriores, los tramos que no son alternativas quedan con cota 0.
+
+Un avión sin vuelos en la ventana también puede desplazarse, para usar un hueco largo.
+
+**Transbordos (`enumerar_pares_flexibles`).** Cada posición libre lleva sus alternativas (tramo, salida, llegada). Un par entre dos vuelos posteriores a la ventana, o entre uno de ellos y un vuelo fijo, se arma **sin binaria** (tipo `SS`) cuando toda combinación de alternativas que calza en el aeropuerto cumple el TTR. En ese caso basta acotar el flujo por los tramos: `tr ≤ cap · llega_a` y `tr ≤ cap · sale_de`. Con esto, una ventana de 12 h con D = 1 y 3 aviones desplazables tiene ~30 % más binarias que la ventana normal. Sin el tipo `SS` tenía 5 veces más.
+
+### Resultados
+
+- **R4:** partiendo de 849.367, óptimo local de todos los vecindarios anteriores (ventanas de 24, 48 y 84 h, avión y par), sube a **851.847 (+2.481)** con `--desplazar 2 --desplazar-aviones 4`.
+  - El movimiento cambió el número de vuelos en la mitad de la semana: AC-10 pasó de 16 a 18 vuelos y AC-15 de 21 a 23 (VCP–GRU–VCP cerca de las 20–24 h), mientras AC-06 dejó un viaje de ida y vuelta GRU–VCP.
+  - Ningún vecindario anterior puede hacer ese movimiento.
+- **R4, segunda corrida:** con D = 1 y 4 aviones desplazables, sube a 855.700 y después a **861.545**: la ventana de 120–144 h aportó +5.845. Ni avión, ni par, ni las ventanas de 48 h lo mejoran después. Son **+11,8 % sobre la heurística** (770.625).
+- **R10:** 2.692.881 resiste las ventanas desplazables, avión y par (1,4 h sin mejoras). Es lo esperable: en R10 los aviones van llenos y no hay huecos que aprovechar.
+- **Instancia completa:**
+  - con 3 aviones desplazables, la pasada de ventanas de 12 h encontró una mejora en 78–90 h: **6.466.083 → 6.469.241**. La mayoría de las ventanas cierra con óptimo probado en ~90–120 s;
+  - con 10 aviones desplazables (todos los que tienen al menos 3 h ociosas en la ventana), la ventana de 36–48 h subió a **6.471.283**. Cada ventana tiene ~40 % más binarias y muchas terminan por tiempo (240 s).
+
+### Más aviones y más vuelos desplazables
+
+- **`--desplazar-aviones 10`** (todos los aviones con al menos 3 h ociosas): en la instancia completa encontró la mejora de 36–48 h, que con 3 aviones no aparecía (**6.469.241 → 6.471.303**).
+- **`--desplazar 2`:**
+  - en R4, con 120 s por ventana, subió de 861.545 a 867.501, y con la VNS llegó a **868.027**. Es un óptimo local para ventanas de 12, 24, 36 y 48 h, avión y par: **+12,6 % sobre la heurística**.
+  - En la instancia completa, en cambio, el modelo de la ventana de 0–12 h explota: 650 mil columnas tras el presolve y una raíz que no termina. En las ventanas del comienzo de la semana, todo lo posterior es sufijo, con 5 alternativas por posición.
+  - `--desplazar-presupuesto 60` limita el total de vuelos que se corren (se eligen aviones por horas ociosas hasta llenar el presupuesto). Con eso, D = 2 queda del tamaño de D = 1, y la instancia completa subió a **6.475.055** (ventana de 54–66 h). Después, ni las ventanas cercanas al cambio ni ~1 h de búsqueda por avión (12 aviones, 320 s cada uno) mejoraron. **Resultado final: 6.475.055**, con validador OK, 25/25 frecuencias, 338 vuelos (antes 334), 16 aviones y 11.679 t (antes 11.581).
+- **En instancias sin huecos (R10), el desplazamiento solo agranda el modelo.** Desde la solución de la rama B (2.628.734), las ventanas con 10 aviones desplazables no cierran la raíz en 120 s (gap ~10 %), y casi todas terminan sin mejora.
+- **`--umbral-aceptar`:** las mejoras de unos pocos USD (+11, +20) son reprogramaciones casi equivalentes, que obligan a reevaluar la región con `--saltar-sin-cambios`. Conviene exigir al menos 50–100 USD.
+
+### Óptimos locales y punto de partida (R4)
+
+| Cadena desde la heurística (770.625) | Óptimo local |
+|---|---|
+| MILP continuo (806.975) → ventanas desplazables, avión, par, trío y operador | 839.809 |
+| red espacio-tiempo (rama B, 845.742) → ventanas → ventanas desplazables (D = 1 y 2) → avión, par | **868.027** |
+
+Desde 839.809, ni liberar 3 de los 4 aviones ni un operador completo saca a la búsqueda de ese óptimo local. **El punto de partida importa:** conviene correr las dos ramas, o varias semillas, en la máquina grande.
+
+### Ventanas primero o aviones primero (R10)
+
+Desde el MILP continuo (2.657.270):
+
+| Cadena | Tiempo | Margen |
+|---|---|---|
+| avión y par → trío → ventanas → avión y par | ~3,4 h | 2.682.344 (0,8 h) → igual → 2.692.016 → **2.692.881** |
+| ventanas de 24 h primero | 1,5 h | **2.688.968** (la primera ventana sola dio +24.386 en 132 s) |
+| ventanas primero → VNS con ventanas desplazables, avión y par | 1,5 h + 1,9 h | 2.688.968 → **2.692.881**, el mismo óptimo local que la cadena larga |
+
+A igual tiempo, empezar por las ventanas avanza más rápido. En R4 pasó lo contrario: desde el MILP continuo (806.975), las ventanas solas se estancan en ~808.000, y la búsqueda por avión da el salto (AC-10: +28.286). **Los dos tipos de vecindario se complementan**, y conviene alternarlos en la VNS.
+
+### `--saltar-sin-cambios`
+
+Tras una mejora, la VNS vuelve a recorrer todos los vecindarios, aunque la solución solo cambió en una parte de la semana. Con `--saltar-sin-cambios`, un vecindario que no mejoró se salta mientras no cambien los vuelos de su región:
+- en una ventana, los vuelos que salen en la ventana ±`--ventana-h`;
+- en un grupo de aviones, los vuelos de esos aviones y de los aviones que les transbordan carga.
+
+Es una regla heurística (*don't look bits*), porque la carga y los transbordos conectan toda la red, pero en la instancia completa ahorra horas de reevaluación.

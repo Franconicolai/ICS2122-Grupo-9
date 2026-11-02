@@ -1,0 +1,8 @@
+{
+  "version": "ventanas_desplazar",
+  "fecha": "2026-11-02 01:01:40",
+  "descripcion": "Búsqueda por vecindarios (MILP continuo con transbordos (sin grilla)) desde busqueda_ventanas",
+  "solver": "gurobi",
+  "dt": "continuo",
+  "tlim": null
+}

@@ -1,0 +1,146 @@
+{
+  "kpis": {
+    "margen_usd": 861545.041999998,
+    "ingresos_usd": 3298056.0,
+    "costo_vuelos_usd": 2329143.158000002,
+    "costo_handling_usd": 107367.79999999997,
+    "costo_operacional_usd": 2436510.958000002,
+    "toneladas": 2212.0,
+    "pct_demanda": 80.08109477952357,
+    "vuelos": 78,
+    "aviones_usados": 4,
+    "horas_bloque": 291.58,
+    "ctk": 10879752.6,
+    "actk": 15262248.0,
+    "factor_ocupacion_pct": 71.28538731646871,
+    "factor_ocupacion_tramos_pct": 70.61152882205515,
+    "costo_usd_por_tkm": 0.2239491142473223,
+    "costo_usd_por_tonelada": 1101.4968164556972,
+    "vuelos_vacios": 7,
+    "pct_vuelos_vacios": 8.974358974358974,
+    "frecuencias_cumplidas_num": 15,
+    "frecuencias_exigidas_num": 15,
+    "frecuencias_cumplidas": "15/15",
+    "toneladas_directas": 1904.6,
+    "pct_carga_directa": 86.10307414104882,
+    "toneladas_multitramos": 307.4000000000001,
+    "pct_carga_multitramos": 13.896925858951178,
+    "satisfaccion_demanda_diaria": [
+      {
+        "dia": 1,
+        "nombre": "Lunes",
+        "demanda_t": 351.99999999999994,
+        "servida_t": 300.79999999999995,
+        "satisfaccion_pct": 85.45454545454545
+      },
+      {
+        "dia": 2,
+        "nombre": "Martes",
+        "demanda_t": 426.80000000000007,
+        "servida_t": 389.90000000000003,
+        "satisfaccion_pct": 91.3542642924086
+      },
+      {
+        "dia": 3,
+        "nombre": "Miércoles",
+        "demanda_t": 447.8,
+        "servida_t": 319.1,
+        "satisfaccion_pct": 71.25949084412684
+      },
+      {
+        "dia": 4,
+        "nombre": "Jueves",
+        "demanda_t": 320.70000000000005,
+        "servida_t": 252.8,
+        "satisfaccion_pct": 78.82756470221389
+      },
+      {
+        "dia": 5,
+        "nombre": "Viernes",
+        "demanda_t": 491.3,
+        "servida_t": 391.50000000000006,
+        "satisfaccion_pct": 79.68654589863628
+      },
+      {
+        "dia": 6,
+        "nombre": "Sábado",
+        "demanda_t": 421.9,
+        "servida_t": 368.20000000000005,
+        "satisfaccion_pct": 87.271865370941
+      },
+      {
+        "dia": 7,
+        "nombre": "Domingo",
+        "demanda_t": 301.7,
+        "servida_t": 189.7,
+        "satisfaccion_pct": 62.87703016241299
+      }
+    ],
+    "satisfaccion_diaria_media_pct": 79.53304381789788,
+    "variabilidad_diaria_pp": 9.111143314979019,
+    "rango_satisfaccion_diaria_pp": 28.477234129995608,
+    "factor_desvio_global": 1.088587056811799,
+    "factor_desvio_multitramos": 1.4455569845399945,
+    "commodities_sin_distancia_referencia": 0,
+    "flujo_through_t": 435.00000000000006,
+    "flujo_transferido_t": 170.4,
+    "conexiones_transferencia_usadas": 25,
+    "transferencias_entre_operadores": 20,
+    "ttr_h": 2.0
+  },
+  "validador_ok": true,
+  "violaciones": [],
+  "calidad_optimizacion": {
+    "metodo": "Búsqueda por vecindarios (aviones o ventanas de tiempo), MILP continuo con transbordos (sin grilla)",
+    "estado": "Búsqueda local",
+    "objetivo_modelo": null,
+    "cota_modelo": null,
+    "gap_modelo": null,
+    "tiempo_gurobi_s": null,
+    "aviones_libres": "por vecindarios",
+    "gap_global_disponible": false,
+    "gap_global": null,
+    "nota": "La cota y el gap son los del modelo resuelto: sin transbordos dentro del MILP (warm_start_milp.py) o con los aviones no libres fijos (modelos con --libres). No son una cota del problema completo; el margen reportado es el validado después del paso final con transbordos."
+  },
+  "milp": {
+    "modelo": "Búsqueda por vecindarios (aviones o ventanas de tiempo), MILP continuo con transbordos (sin grilla)",
+    "corrida_start": "prueba_saltar",
+    "estado": "Búsqueda local",
+    "aviones_libres": "por vecindarios",
+    "tiempo_limite_s": null,
+    "dt_h": null,
+    "ttr_h": 2.0,
+    "pasos_aceptados": [
+      {
+        "vuelta": 1,
+        "avion": "ventana_120-144h",
+        "margen": 861545.0419999979,
+        "mejora": 5845.1829999998445
+      }
+    ]
+  },
+  "modelo_carga": {
+    "ok": true,
+    "estado": "Optimal",
+    "objetivo_carga": 3190688.1999999997,
+    "cota": 3190688.1999999997,
+    "gap": 0.0,
+    "tiempo_s": 0.6433923244476318,
+    "estadisticas": {
+      "toneladas_entregadas": 2211.9999999999995,
+      "toneladas_directas": 1904.6000000000001,
+      "flujo_through_t": 435.00000000000006,
+      "flujo_transferido_t": 170.4,
+      "conexiones_transferencia_usadas": 25,
+      "transferencias_entre_operadores": 20
+    },
+    "tamano": {
+      "vuelos": 78,
+      "conexiones": 486,
+      "commodities_con_camino": 85,
+      "variables": 13752,
+      "variables_enteras": 115,
+      "restricciones": 5343
+    }
+  }
+}

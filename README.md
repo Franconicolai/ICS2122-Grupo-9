@@ -284,3 +284,31 @@ Nota: quedaron todas las restricciones comentadas.
     - (A) MILP continuo global con NoRel, repetido con distintas semillas, y luego búsqueda continua por vecindarios;
     - (B) búsqueda en la red espacio-tiempo y luego búsqueda continua.
   - En R4 ganó la rama B (845.742, +9,7 %); en R10, la A (+6,5 %). NoRel varía ~2 % entre corridas. Una segunda pasada global del MILP empeora con transbordos.
+
+**Hito 15**
+- **Integrante**: Vicente Olea (con apoyo de Claude Code)
+- **Fecha**: 1 de Noviembre de 2026
+- **Desarrollo**: Vecindarios por ventana de tiempo en la búsqueda continua. Detalles en la sección 12 de `docs/README_instancias_reducidas.md`.
+  - **Qué hacen.** `busqueda_por_avion.py --modelo continuo --vecindario ventana` libera, en todos los aviones, los vuelos que salen dentro de una ventana de tiempo (por ejemplo, 12 h). El resto de la semana queda fijo, y la carga y los transbordos de toda la red se reoptimizan. Así se mueven juntos los vuelos de un mismo transbordo, que van en aviones distintos.
+  - **Opciones:** `--ventana-h`, `--ventana-paso`, `--ventana-rango`, `--ventana-extra` y niveles `ventanaNN`.
+  - **Resultados, partiendo de óptimos locales de los vecindarios por avión, par y trío:**
+    - R4: 845.742 → **849.367**;
+    - R10: 2.682.344 → **2.692.881**;
+    - instancia completa: 6.451.322 → **6.466.083 (+14.761), nuevo mejor margen validado**, en ~1,5 h (`data/results/Busqueda_ventanas_continua`).
+  - **El movimiento ganador** en la instancia completa reorganizó 9 aviones a la vez alrededor de MIA, con 4 vuelos y 115 t más. Ningún vecindario de uno a tres aviones puede hacerlo.
+  - **Con ventanas de 12 h, Gurobi prueba el óptimo de la mayoría de las ventanas en ~80 s**, así que la búsqueda es exacta dentro de cada ventana.
+  - Recomendación: `--vecindario ventana,avion,par --ventana-h 12 --ventana-paso 6 --tiempo 240 --norel 60`.
+
+**Hito 16**
+- **Integrante**: Vicente Olea (con apoyo de Claude Code)
+- **Fecha**: 2 de Noviembre de 2026
+- **Desarrollo**: Ventanas con desplazamiento, que pueden agregar o quitar vuelos en medio de la semana. Detalles en la sección 13 de `docs/README_instancias_reducidas.md`.
+  - **Motivación.** En la instancia completa, los aviones tienen entre 20 y 76 h libres por semana. La ventana normal mantiene el número de vuelos de cada avión, así que no podía usar esos huecos.
+  - **`--desplazar D`.** En los aviones con más horas ociosas, los vuelos posteriores a la ventana mantienen tramo y horario, pero se corren hasta D posiciones. Así la ventana puede ganar o perder hasta D vuelos.
+  - **Transbordos sin binaria (tipo `SS`).** Entre vuelos de horario conocido, el transbordo no necesita binaria de activación, lo que evita multiplicar el modelo por 5.
+  - **Opciones nuevas:** `--desplazar`, `--desplazar-aviones`, `--desplazar-presupuesto`, `--saltar-sin-cambios` (no repite vecindarios cuya región no cambió) y `--umbral-aceptar`.
+  - **Resultados:**
+    - R4: 849.367 → **868.027 (+12,6 % sobre la heurística)**;
+    - instancia completa: 6.466.083 → **6.475.055 (nuevo mejor margen validado)**, en `data/results/Busqueda_ventanas_desplazar_d2`;
+    - R10 no mejora: sus aviones van llenos y no hay huecos que aprovechar.
+  - **El punto de partida importa:** en R4 gana la rama de la red espacio-tiempo (868.027 contra 839.809) y en R10 la del MILP continuo (2.692.881 contra 2.631.087). Por eso conviene correr las dos ramas en la máquina grande.

@@ -1,0 +1,69 @@
+
+Gurobi 13.0.2 (win64) logging started Mon Nov  2 01:44:28 2026
+
+Set parameter LogFile to value "data/results/instancias/R4/ventanas_desplazar_d1\logs\gurobi_AC-06+AC-15.log"
+Set parameter Threads to value 1
+Set parameter SoftMemLimit to value 1
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 1 threads
+
+Non-default parameters:
+TimeLimit  60
+SoftMemLimit  1
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  10
+LogToConsole  0
+Threads  1
+
+Optimize a model with 56287 rows, 120543 columns and 563809 nonzeros (Max)
+Model fingerprint: 0xec3474b7
+Model has 94791 linear objective coefficients
+Variable types: 97051 continuous, 23492 integer (23492 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 7e+04]
+  Bounds range     [5e-01, 2e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 861545
+
+Presolve removed 6514 rows and 16442 columns (presolve time = 5s)...
+Presolve removed 7432 rows and 20524 columns (presolve time = 10s)...
+Presolve removed 7448 rows and 20603 columns
+Presolve time: 11.50s
+Presolved: 48839 rows, 99940 columns, 493067 nonzeros
+Variable types: 79649 continuous, 20291 integer (20291 binary)
+Starting NoRel heuristic
+Elapsed time for NoRel heuristic: 6s (best bound 2.32323e+06)
+NoRel heuristic complete
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+       0    2.6423856e+06   1.041888e+03   0.000000e+00     23s
+    4545    2.2390912e+06   3.933761e+04   0.000000e+00     25s
+   10423    1.5192850e+06   1.056876e+06   0.000000e+00     30s
+   12867    1.4885611e+06   1.350284e+05   0.000000e+00     35s
+   14885    1.4619146e+06   8.264727e+04   0.000000e+00     40s
+   16555    1.4571913e+06   1.924576e+05   0.000000e+00     45s
+   17975    1.4287500e+06   1.614395e+05   0.000000e+00     50s
+   18845    1.4287500e+06   4.149686e+04   0.000000e+00     55s
+
+Root relaxation: time limit, 19807 iterations, 37.42 seconds (15.18 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0          -    0      861545.042 2323225.58   170%     -   60s
+
+Explored 1 nodes (19807 simplex iterations) in 60.04 seconds (20.97 work units)
+Thread count was 1 (of 8 available processors)
+
+Solution count 2: 861545 861545 
+
+Time limit reached
+Best objective 8.615450420000e+05, best bound 2.323225579000e+06, gap 169.6581%

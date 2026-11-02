@@ -1,0 +1,8 @@
+{
+  "version": "cadena_ventanas_desde_milp",
+  "fecha": "2026-11-02 02:23:08",
+  "descripcion": "Búsqueda por vecindarios (MILP continuo con transbordos (sin grilla)) desde milp_continuo_norel",
+  "solver": "gurobi",
+  "dt": "continuo",
+  "tlim": null
+}

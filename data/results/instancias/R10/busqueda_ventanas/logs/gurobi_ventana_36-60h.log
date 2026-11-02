@@ -1,0 +1,124 @@
+
+Gurobi 13.0.2 (win64) logging started Sun Nov  1 21:34:29 2026
+
+Set parameter LogFile to value "data/results/instancias/R10/busqueda_ventanas\logs\gurobi_ventana_36-60h.log"
+Set parameter Threads to value 3
+Set parameter SoftMemLimit to value 1.5
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (win64 - Windows 10.0 (19045.2))
+
+CPU model: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, instruction set [SSE2|AVX|AVX2]
+Thread count: 4 physical cores, 8 logical processors, using up to 3 threads
+
+Non-default parameters:
+TimeLimit  120
+SoftMemLimit  1.5
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  15
+LogToConsole  0
+Threads  3
+
+Optimize a model with 51237 rows, 139917 columns and 621363 nonzeros (Max)
+Model fingerprint: 0x55547d70
+Model has 111701 linear objective coefficients
+Variable types: 117031 continuous, 22886 integer (22886 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 8e+04]
+  Bounds range     [9e-01, 5e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 2.69202e+06
+
+Presolve removed 43577 rows and 112306 columns
+Presolve time: 2.37s
+Presolved: 7660 rows, 27611 columns, 90603 nonzeros
+Variable types: 26450 continuous, 1161 integer (1161 binary)
+Starting NoRel heuristic
+Found phase-1 solution: relaxation 107.56
+Found phase-1 solution: relaxation 19.36
+Found phase-1 solution: relaxation 0
+Transition to phase 2
+Elapsed time for NoRel heuristic: 5s (best bound 2.83216e+06)
+Elapsed time for NoRel heuristic: 11s (best bound 2.83216e+06)
+NoRel heuristic complete
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+       0    4.4490031e+06   2.144156e+03   0.000000e+00     18s
+    5826    2.8321566e+06   0.000000e+00   0.000000e+00     19s
+
+Root relaxation: objective 2.832157e+06, 5826 iterations, 0.76 seconds (0.52 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 2832156.58    0   80 2692016.05 2832156.58  5.21%     -   19s
+     0     0 2832140.34    0   80 2692016.05 2832140.34  5.21%     -   19s
+     0     0 2814082.79    0  110 2692016.05 2814082.79  4.53%     -   20s
+     0     0 2811103.91    0  117 2692016.05 2811103.91  4.42%     -   21s
+     0     0 2810776.91    0  117 2692016.05 2810776.91  4.41%     -   21s
+     0     0 2810775.26    0  118 2692016.05 2810775.26  4.41%     -   21s
+     0     0 2803205.82    0  129 2692016.05 2803205.82  4.13%     -   22s
+     0     0 2799765.95    0  115 2692016.05 2799765.95  4.00%     -   23s
+     0     0 2798793.19    0  135 2692016.05 2798793.19  3.97%     -   24s
+     0     0 2798623.77    0  113 2692016.05 2798623.77  3.96%     -   24s
+     0     0 2798563.57    0  136 2692016.05 2798563.57  3.96%     -   24s
+     0     0 2798546.38    0  135 2692016.05 2798546.38  3.96%     -   24s
+     0     0 2798540.58    0  136 2692016.05 2798540.58  3.96%     -   24s
+     0     0 2798539.65    0  134 2692016.05 2798539.65  3.96%     -   24s
+     0     0 2792481.53    0  124 2692016.05 2792481.53  3.73%     -   26s
+     0     0 2791004.63    0  133 2692016.05 2791004.63  3.68%     -   27s
+     0     0 2789928.03    0  130 2692016.05 2789928.03  3.64%     -   27s
+     0     0 2789388.72    0  127 2692016.05 2789388.72  3.62%     -   27s
+     0     0 2789338.35    0  130 2692016.05 2789338.35  3.62%     -   27s
+     0     0 2789336.27    0  132 2692016.05 2789336.27  3.62%     -   27s
+     0     0 2787143.90    0  158 2692016.05 2787143.90  3.53%     -   29s
+     0     0 2785285.87    0  131 2692016.05 2785285.87  3.46%     -   30s
+     0     0 2784323.26    0  142 2692016.05 2784323.26  3.43%     -   30s
+     0     0 2783695.03    0  159 2692016.05 2783695.03  3.41%     -   30s
+     0     0 2783613.79    0  159 2692016.05 2783613.79  3.40%     -   30s
+     0     0 2783595.14    0  156 2692016.05 2783595.14  3.40%     -   30s
+     0     0 2783582.90    0  150 2692016.05 2783582.90  3.40%     -   30s
+     0     0 2783576.52    0  153 2692016.05 2783576.52  3.40%     -   31s
+     0     0 2783576.44    0  155 2692016.05 2783576.44  3.40%     -   31s
+     0     0 2783216.85    0  144 2692016.05 2783216.85  3.39%     -   31s
+     0     0 2783216.85    0  144 2692016.05 2783216.85  3.39%     -   31s
+     0     0 2783216.85    0  132 2692016.05 2783216.85  3.39%     -   31s
+     0     2 2783216.85    0  129 2692016.05 2783216.85  3.39%     -   47s
+     3     7 2746463.53    2  108 2692016.05 2782332.57  3.35%  1420   51s
+    17    16 2725820.18    5   92 2692016.05 2777634.30  3.18%   734   55s
+    41    23 2697815.50    9   66 2692016.05 2777634.30  3.18%   638   61s
+    54    22 2699134.82    6   98 2692016.05 2772770.14  3.00%   631   65s
+    70    24     cutoff    9      2692016.05 2772770.14  3.00%   700   72s
+    86    26 2708012.30   12   74 2692016.05 2769109.71  2.86%   661   76s
+   110    25     cutoff   18      2692016.05 2769109.71  2.86%   588   81s
+   134    25 2703731.77    8   71 2692016.05 2769109.71  2.86%   593   86s
+   171    33 2694251.42   13   48 2692016.05 2759533.18  2.51%   539   91s
+   197    34 2695132.24   17   61 2692016.05 2756166.51  2.38%   522   95s
+   232    29 2735981.67    9   55 2692016.05 2752231.14  2.24%   514  101s
+   269    31     cutoff   16      2692016.05 2737189.39  1.68%   491  105s
+   328    28     cutoff   13      2692016.05 2721239.00  1.09%   458  111s
+   393     8 2701702.64   11   60 2692016.05 2711492.59  0.72%   430  115s
+
+Cutting planes:
+  Gomory: 2
+  Lift-and-project: 4
+  Cover: 6
+  Implied bound: 83
+  Clique: 3
+  MIR: 103
+  Flow cover: 145
+  RLT: 13
+  Relax-and-lift: 14
+  BQP: 1
+
+Explored 409 nodes (188389 simplex iterations) in 118.00 seconds (75.67 work units)
+Thread count was 3 (of 8 available processors)
+
+Solution count 1: 2.69202e+06 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 2.692016053000e+06, best bound 2.692016053000e+06, gap 0.0000%

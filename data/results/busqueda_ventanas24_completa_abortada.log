@@ -1,0 +1,15 @@
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+[inicio] Busqueda_continua_desde_MILP_dt1 | tiempo continuo | TTR_H = 2 h | margen validado 6,451,322 USD | 19 aviones x 4 vuelta(s) x 300 s | salida data/results/Busqueda_ventanas_continua
+[vuelta 1] nivel ventana: 14 vecindarios
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_0-24h: sin mejora | modelo 6,451,322 -> 6,451,322 | mejor validado 6,451,322 USD (+0) | 335 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
+  [vuelta 1] ventana_12-36h: sin mejora | modelo 6,451,322 -> 6,451,322 | mejor validado 6,451,322 USD (+0) | 326 s
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Set parameter LogToConsole to value 0
