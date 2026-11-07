@@ -351,7 +351,7 @@ El nivel `ventana` (`busqueda_por_avion.py --modelo continuo --vecindario ventan
 | **Completa** | 6.451.322 | **6.466.083 (+14.761)** | ventanas de 12 h (paso de 6 h, 240 s, NoRel 60 s): 28 ventanas en ~1,5 h. Las mejoras salieron de las ventanas de 126–138 h (+1.904) y 138–150 h (+12.857). |
 
 **En la instancia completa:**
-- La ganancia de las ventanas es casi la misma que la de las 11,5 h de búsqueda por avión que produjeron 6.451.322, y llegó en ~1,5 h.
+- La ganancia de las ventanas es casi la misma que la de las ~7 h de búsqueda por avión que produjeron 6.451.322, y llegó en ~1,5 h.
 - La mayoría de las ventanas de 12 h quedan con **óptimo probado** en ~80 s (gap 0,0006 %), así que la búsqueda es exacta dentro de cada ventana. Algunas en la mitad de la semana no cierran la raíz en 240 s (gap 0,4–0,9 %).
 - Con ventanas de 24 h, la relajación de la raíz consume todo el tiempo (1 nodo, gap 2,5–3 %), así que conviene partir con ventanas de 12 h.
 - **Qué cambió la ventana de +12.857:** reorganizó 9 aviones a la vez alrededor de MIA (AC-01, 02, 07, 09, 10, 11, 12, 13 y 15). Pasó de 330 a 334 vuelos, con 115 t más. Varias salidas nuevas quedan justo a las 144,0 h, el inicio del día 7, para tomar la demanda de ese día. Es un movimiento coordinado de muchos aviones, que ningún vecindario de uno a tres aviones puede encontrar.
