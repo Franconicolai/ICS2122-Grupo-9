@@ -1,30 +1,25 @@
-# Comandos de docs/proximos_pasos.pdf, listos para copiar.
+# Comandos de docs/proximos_pasos.pdf (actualizado el 10-11-2026 con interchanges), listos para copiar.
 # Cada comando va en UNA sola linea. Ejecutar desde la carpeta ICS2122-Grupo-9.
+# Mejor resultado actual: 7.406.840 USD en data/results/Interchange_continua_flexible.
 
-# Paso 0: preparar el computador (una vez)
-git clone -b milp-completo-warm-start https://github.com/Franconicolai/ICS2122-Grupo-9.git
-cd ICS2122-Grupo-9
-pip install gurobipy pandas numpy scipy pyyaml python-dotenv highspy
-python -c "import gurobipy as gp; gp.Model(); print('Gurobi OK')"
+# Paso 0: detener con Ctrl+C cualquier corrida sin --interchange y actualizar el codigo
+git pull
 
-# Paso 1: red espacio-tiempo con grilla de 1 h (noche 1, ~12 h)
-python -u busqueda_por_avion.py --corrida data/results/Heuristica_dt1_iter3_AND --dt 1 --vecindario avion,par --orden uso --max-pares 15 --tiempo 1200 --memoria 24 --mejora-minima 2000 --vueltas 20 --horas 12 --salida data/results/RamaB_red_dt1 2>&1 | tee data/results/RamaB_red_dt1.log
+# Paso 1: ya hecho (data/results/RamaB_red_dt1, 6.407.941 USD)
 
-# Paso 2: tiempo continuo sobre el resultado del Paso 1 (noche 2, ~12 h)
-python -u busqueda_por_avion.py --modelo continuo --corrida data/results/RamaB_red_dt1 --vecindario ventana,avion,par --ventana-h 12 --ventana-paso 6 --desplazar 2 --desplazar-aviones 10 --desplazar-presupuesto 60 --tiempo 300 --norel 60 --saltar-sin-cambios --umbral-aceptar 100 --mejora-minima 2000 --orden uso --memoria 24 --vueltas 20 --horas 12 --salida data/results/RamaB_continua 2>&1 | tee data/results/RamaB_continua.log
+# Paso 2: tiempo continuo con interchanges desde el mejor actual (noche, ~12 h)
+python -u busqueda_por_avion.py --modelo continuo --interchange --corrida data/results/Interchange_continua_flexible --vecindario ventana,avion,par --ventana-h 12 --ventana-paso 6 --desplazar 2 --desplazar-aviones 10 --desplazar-presupuesto 60 --tiempo 300 --norel 60 --saltar-sin-cambios --umbral-aceptar 100 --mejora-minima 2000 --orden uso --memoria 24 --vueltas 20 --horas 12 --salida data/results/Interchange_ventanas 2>&1 | tee data/results/Interchange_ventanas.log
 
-# Paso 3: vecindarios grandes desde el mejor actual (noche 3, ~12 h)
-python -u busqueda_por_avion.py --modelo continuo --corrida data/results/Busqueda_ventanas_desplazar_d2 --vecindario ventana,trio,operador --ventana-h 24 --ventana-paso 12 --desplazar 2 --desplazar-aviones 10 --desplazar-presupuesto 60 --tiempo 900 --norel 120 --saltar-sin-cambios --umbral-aceptar 100 --mejora-minima 2000 --orden uso --memoria 24 --vueltas 20 --horas 12 --salida data/results/Grandes_desde_mejor 2>&1 | tee data/results/Grandes_desde_mejor.log
+# Paso 3: rama B con interchanges (10 min + noche, ~12 h)
+python -u reasignar_operadores.py --corrida data/results/RamaB_red_dt1 --salida data/results/RamaB_interchange 2>&1 | tee data/results/RamaB_interchange.log
+python -u busqueda_por_avion.py --modelo continuo --interchange --corrida data/results/RamaB_interchange --vecindario ventana,avion,par --ventana-h 12 --ventana-paso 6 --desplazar 2 --desplazar-aviones 10 --desplazar-presupuesto 60 --tiempo 300 --norel 60 --saltar-sin-cambios --umbral-aceptar 100 --mejora-minima 2000 --orden uso --memoria 24 --vueltas 20 --horas 12 --salida data/results/RamaB_interchange_continua 2>&1 | tee data/results/RamaB_interchange_continua.log
 
-# Paso 4a: MILP integrado en tiempo continuo, dos veces (~1 h cada una)
-python -u warm_start_milp.py --corrida data/results/Heuristica_dt1_iter2 --tiempo 3600 --norel 3000 --hilos 8 --salida data/results/MILP_integrado_h8 2>&1 | tee data/results/MILP_integrado_h8.log
-python -u warm_start_milp.py --corrida data/results/Heuristica_dt1_iter2 --tiempo 3600 --norel 3000 --hilos 6 --salida data/results/MILP_integrado_h6 2>&1 | tee data/results/MILP_integrado_h6.log
-
-# Paso 4b: solo si alguno supera 6.435.839; cambiar MILP_integrado_h8 por la carpeta del mejor (noche 4, ~12 h)
-python -u busqueda_por_avion.py --modelo continuo --corrida data/results/MILP_integrado_h8 --vecindario ventana,avion,par --ventana-h 12 --ventana-paso 6 --desplazar 2 --desplazar-aviones 10 --desplazar-presupuesto 60 --tiempo 300 --norel 60 --saltar-sin-cambios --umbral-aceptar 100 --mejora-minima 2000 --orden uso --memoria 24 --vueltas 20 --horas 12 --salida data/results/MILP_integrado_continua 2>&1 | tee data/results/MILP_integrado_continua.log
+# Paso 4: vecindarios grandes con interchanges (noche, ~12 h)
+# Si el Paso 3 termino con mas margen que el Paso 2, cambiar Interchange_ventanas por RamaB_interchange_continua en --corrida.
+python -u busqueda_por_avion.py --modelo continuo --interchange --corrida data/results/Interchange_ventanas --vecindario ventana,trio,operador --ventana-h 24 --ventana-paso 12 --desplazar 2 --desplazar-aviones 10 --desplazar-presupuesto 60 --tiempo 900 --norel 120 --saltar-sin-cambios --umbral-aceptar 100 --mejora-minima 2000 --orden uso --memoria 24 --vueltas 20 --horas 12 --salida data/results/Interchange_grandes 2>&1 | tee data/results/Interchange_grandes.log
 
 # Paso 5: subir los resultados a la rama (nunca a main)
-git add data/results/RamaB_* data/results/Grandes_desde_mejor* data/results/MILP_integrado*
-git commit -m "resultados maquina 32 GB"
+git add data/results/RamaB_* data/results/Interchange_ventanas* data/results/Interchange_grandes*
+git commit -m "resultados maquina 32 GB con interchanges"
 git pull
 git push

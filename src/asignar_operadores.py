@@ -4,8 +4,9 @@ Interchange: elige la filial que opera cada vuelo, con los vuelos y la carga fij
 Un interchange es el punto donde un avión pasa a ser operado por otra filial a mitad de rotación; es posible
 entre dos operadores solo si ambos están habilitados en el aeropuerto (interchange_airports.csv). Cada vuelo usa
 los derechos de tráfico, el costo ex-fuel por hora y el handling de la filial que lo opera. Como la operación es
-cíclica, la rotación parte y termina con el operador base del avión (borde_base=True); con borde_base=False basta
-volver al operador base en el aeropuerto del borde de la semana, si allí están habilitadas ambas filiales.
+cíclica, el avión vuelve a su operador base en el borde de la semana. Por defecto (borde_base=False) basta volver
+en tierra, en el aeropuerto del borde, si allí están habilitadas ambas filiales; con borde_base=True el primer y
+el último vuelo los opera el operador base.
 
 Para cada avión es un camino más corto en un grafo de capas (un nodo por vuelo y filial, 4 filiales), así que la
 programación dinámica entrega el óptimo exacto para esos vuelos y esa carga. Supuestos: el interchange no tiene
@@ -37,7 +38,7 @@ def cargar_datos_operadores(ruta_raw=RAW):
     }
 
 
-def asignar_operadores(solucion, datos=None, borde_base=True):
+def asignar_operadores(solucion, datos=None, borde_base=False):
     """Devuelve (itinerario con 'op' en cada vuelo, resumen). solucion: itinerario, cargas y transferencias."""
     D = datos or cargar_datos_operadores()
     ops, base, sop = D['ops'], D['base'], D['soporte']

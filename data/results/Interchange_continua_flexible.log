@@ -1,0 +1,6 @@
+Set parameter Username
+Academic license - for non-commercial use only - expires 2027-05-28
+Corrida data/results/Interchange_continua: margen validado 7,308,301 USD | validador OK | borde flexible | TTR_H 2 h
+  iteración 1: filiales -98,524 USD de costo | 62 interchanges, 297 vuelos de otra filial | carga reasignada -> margen 7,406,840 USD | validador OK
+  iteración 2: filiales -0 USD de costo | 62 interchanges, 297 vuelos de otra filial | carga reasignada -> margen 7,406,840 USD | validador OK
+Margen validado: 7,308,301 -> 7,406,840 USD (+98,539) | 62 interchanges | exportado en data/results/Interchange_continua_flexible

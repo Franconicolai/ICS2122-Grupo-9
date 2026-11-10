@@ -10,7 +10,7 @@ la columna 'operador' de itinerario_vuelos.csv pasa a ser la filial que opera ca
 
 Uso, desde la raíz del repositorio:
     python reasignar_operadores.py --corrida data/results/Busqueda_ventanas_desplazar_d2 --salida data/results/Interchange_desde_mejor
-    python reasignar_operadores.py --corrida ... --borde flexible     # basta volver al operador base en el borde
+    python reasignar_operadores.py --corrida ... --borde base     # el primer y el último vuelo, del operador base
 """
 import argparse
 import json
@@ -29,7 +29,7 @@ def main():
     ap = argparse.ArgumentParser(description='Interchanges sobre una corrida exportada (vuelos fijos).')
     ap.add_argument('--corrida', required=True, help='carpeta con itinerario_vuelos.csv')
     ap.add_argument('--salida', default=None, help='carpeta de salida (por defecto <corrida>_interchange)')
-    ap.add_argument('--borde', choices=('base', 'flexible'), default='base',
+    ap.add_argument('--borde', choices=('base', 'flexible'), default='flexible',
                     help="base: el primer y el último vuelo los opera el operador base; flexible: basta volver al "
                          "operador base en el aeropuerto del borde de la semana")
     ap.add_argument('--ttr', type=float, default=None, help='TTR_H (h); por defecto el de la corrida')

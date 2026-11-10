@@ -48,7 +48,10 @@ SIN_TRANSBORDOS = 1e6    # TTR_H enorme: el submodelo de carga no puede armar tr
 TOL_HORAS = 1e-4         # los itinerarios exportados redondean las horas a 5 decimales: 1e-4 h = 0,36 s
 GAP_CARGA = 1e-6         # el 0,1 % por defecto del submodelo deja hasta ~6.000 USD sin asignar y ensucia la comparación
 CFG_VALIDADOR = {'ciclico': True, 'tat_variable': True, 'min_ton_escala': True, 'mantenimiento': True,
-                 'frecuencias': True, 'demanda_diaria': True, 'dist_frecuencias': False, 'transferencias': True}
+                 'frecuencias': True, 'demanda_diaria': True, 'dist_frecuencias': False, 'transferencias': True,
+                 # interchanges: por defecto basta volver al operador base en tierra en el borde de la semana
+                 # (docs/README_interchanges.md); BORDE=base exige que el primer y el último vuelo sean de esa filial
+                 'borde_operador_base': os.environ.get('BORDE', 'flexible') == 'base'}
 ESTADOS = {GRB.OPTIMAL: 'Optimo', GRB.TIME_LIMIT: 'Limite de tiempo', GRB.INTERRUPTED: 'Interrumpido (Ctrl+C)',
            GRB.MEM_LIMIT: 'Limite de memoria', GRB.INFEASIBLE: 'Infactible', GRB.SUBOPTIMAL: 'Suboptimo'}
 
@@ -94,10 +97,11 @@ def resolver_carga_interchange(itinerario, ttr_h, pasos=3):
     for paso in range(pasos):
         if paso:
             try:
-                it_op, _ = asignar_operadores(solucion, D)
+                it_op, _ = asignar_operadores(solucion, D, borde_base=CFG_VALIDADOR['borde_operador_base'])
             except ValueError:
                 try:
-                    it_op, _ = asignar_operadores(dict(solucion, cargas=[], transferencias=[]), D)
+                    it_op, _ = asignar_operadores(dict(solucion, cargas=[], transferencias=[]), D,
+                                                  borde_base=CFG_VALIDADOR['borde_operador_base'])
                 except ValueError:
                     break
         multi = asignar_carga_multitramos(it_op, ruta_raw=gm.RAW, ttr_h=ttr_h, tlim=600, gap=GAP_CARGA)

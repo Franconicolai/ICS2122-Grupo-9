@@ -426,6 +426,9 @@ def main():
     ap.add_argument('--interchange', action='store_true',
                     help='permite que otra filial opere cada vuelo (docs/README_interchanges.md): los modelos usan el '
                          'costo de la filial más barata con derechos y cada candidato se evalúa eligiendo las filiales')
+    ap.add_argument('--borde', choices=('base', 'flexible'), default=None,
+                    help='borde de la semana con interchanges: flexible (por defecto) basta volver al operador base '
+                         'en tierra; base exige que el primer y el último vuelo sean del operador base')
     ap.add_argument('--hilos', type=int, default=0, help='Threads de Gurobi (0 = todos)')
     ap.add_argument('--memoria', type=float, default=6, help='GB máximos para Gurobi por avión. Por defecto 6')
     ap.add_argument('--salida', default=None, help='carpeta de salida (por defecto data/results/Busqueda_por_avion_dt<DT>)')
@@ -443,6 +446,8 @@ def main():
     kpi = json.load(open(os.path.join(corrida, 'indicadores_kpi.json'), encoding='utf-8'))['kpis']
     ttr = args.ttr if args.ttr is not None else float(kpi.get('ttr_h', 2.0))
     gm.INTERCHANGE = gm.INTERCHANGE or args.interchange
+    if args.borde:
+        ws.CFG_VALIDADOR['borde_operador_base'] = args.borde == 'base'
     datos = gm.cargar_datos(s_max=args.smax) if continuo else gm.cargar_datos()
     aviones = list(datos['K']) if args.aviones == 'todos' else [a.strip() for a in args.aviones.split(',')]
     faltan = [a for a in aviones if a not in datos['K']]
@@ -468,7 +473,8 @@ def main():
     if not val['ok']:
         sys.exit(f'la solución de partida no pasa el validador: {val["violaciones"][:5]}')
     margen0 = mejor = val['margen']
-    print(f'[inicio] {os.path.basename(corrida)} | {"tiempo continuo" if continuo else f"DT = {dt:g} h"} | TTR_H = {ttr:g} h | margen validado {mejor:,.0f} USD | '
+    inter = f' | interchanges, borde {"base" if ws.CFG_VALIDADOR["borde_operador_base"] else "flexible"}' if gm.INTERCHANGE else ''
+    print(f'[inicio] {os.path.basename(corrida)} | {"tiempo continuo" if continuo else f"DT = {dt:g} h"} | TTR_H = {ttr:g} h{inter} | margen validado {mejor:,.0f} USD | '
           f'{len(aviones)} aviones x {args.vueltas} vuelta(s) x {args.tiempo:,.0f} s | salida {args.salida}', flush=True)
 
     ruta_prog = os.path.join(args.salida, 'progreso.csv')

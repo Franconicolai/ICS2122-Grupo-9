@@ -326,4 +326,7 @@ Nota: quedaron todas las restricciones comentadas.
   - **Fase 2: los modelos eligen los vuelos sabiendo que la filial puede cambiar** (`INTERCHANGE=1`, o `busqueda_por_avion.py --interchange`).
     - Cada tramo tiene el costo de la filial más barata con derechos, y los transbordos de los vuelos libres se relajan.
     - Cada candidato se evalúa eligiendo las filiales reales (alternando carga y filiales) y se valida.
-    - Detalles en la sección "Fase 2" de `docs/README_interchanges.md`. La búsqueda por ventanas desde 7.273.495 está en curso (`data/results/Interchange_continua`).
+    - Detalles en la sección "Fase 2" de `docs/README_interchanges.md`. La búsqueda por ventanas desde 7.273.495 subió a 7.308.301 en 2,4 h (`data/results/Interchange_continua`).
+  - **Borde flexible (10 de noviembre).** El grupo decidió que basta que el avión vuelva a su filial base en tierra, en el aeropuerto donde parte y termina la semana. Es el valor por defecto en el validador, `reasignar_operadores.py` y la búsqueda (`--borde base` para el estricto).
+    - Aplicado a los vuelos de la búsqueda: **7.406.840, nuevo mejor margen validado**, en `data/results/Interchange_continua_flexible`.
+    - Las corridas largas pasan a la máquina de 32 GB; el plan está actualizado en `docs/proximos_pasos.pdf` y `docs/comandos_32gb.txt`.

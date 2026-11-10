@@ -35,6 +35,7 @@
 \setlist{itemsep=2pt, topsep=4pt}
 \setlength{\parskip}{4pt}
 \setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{3em}   % deja cortar las líneas con nombres de carpeta largos
 \renewcommand{\arraystretch}{1.2}
 
 % Bloques fijos de cada paso
@@ -43,7 +44,7 @@
 \title{\textbf{Próximos pasos}\\[4pt]
   \large Corridas para la máquina de 32 GB}
 \author{Capstone ICS2122 --- Grupo 9}
-\date{7 de noviembre de 2026}
+\date{10 de noviembre de 2026 (actualizado con interchanges)}
 
 \begin{document}
 \maketitle
@@ -53,10 +54,11 @@
 Optimizamos el itinerario semanal de una flota de carga de 19 aviones: qué vuelos hace cada avión, a qué hora, cuánta carga lleva y dónde la transborda. El objetivo es maximizar el margen (ingresos menos costos).
 
 \begin{itemize}
-  \item \textbf{Mejor resultado actual: 6.475.055 USD}, validado. Está en la carpeta \url{data/results/Busqueda_ventanas_desplazar_d2}. Es un 2,6\,\% más que la heurística inicial (6.310.378).
-  \item Ese resultado se obtuvo en un notebook con 8 GB de RAM y 4 núcleos. Varios métodos que prometen más \textbf{no caben} en esa memoria.
-  \item \textbf{Tu tarea:} correr 4 búsquedas en tu computador, una por noche, y subir los resultados. Cada paso trae el comando exacto, qué hace, por qué lo corremos y cómo saber si salió bien.
-  \item Todos los comandos están también en \texttt{docs/comandos\_32gb.txt}. Cópialos desde ahí y no desde el PDF, porque el PDF corta las líneas largas.
+  \item \textbf{Cambio importante (9 y 10 de noviembre):} el profesor confirmó que se permiten los \emph{interchanges}: un avión puede pasar a ser operado por otra filial a mitad de semana. Las filiales cobran muy distinto por hora de vuelo (PAC 3.300 USD/h, AND 4.450 USD/h), así que esto cambia mucho el margen.
+  \item \textbf{Mejor resultado actual: 7.406.840 USD}, validado, con interchanges y borde flexible. Está en \url{data/results/Interchange_continua_flexible}.
+  \item \textbf{Detén las corridas que tengas sin \texttt{-{}-interchange}} (Ctrl+C; la mejor solución ya quedó guardada). Eligen vuelos con los costos antiguos, así que su resultado queda muy por debajo.
+  \item El Paso 1 que ya corriste (\texttt{RamaB\_red\_dt1}, 6.407.941) \textbf{sí sirve}: el Paso 3 le agrega los interchanges.
+  \item \textbf{Tu tarea:} 3 corridas, una por noche. Todos los comandos están en \texttt{docs/comandos\_32gb.txt}. Cópialos desde ahí y no desde el PDF, porque el PDF corta las líneas largas.
 \end{itemize}
 
 \begin{table}[h]
@@ -71,7 +73,10 @@ Heurística con grilla de 1 h y punto de partida & 6.336.259 & +25.881 \\
 MILP integrado en tiempo continuo, con NoRel & 6.435.839 & +99.580 \\
 Búsqueda por vecindarios: un avión a la vez & 6.451.322 & +15.483 \\
 Búsqueda por vecindarios: ventanas de 12 h & 6.466.083 & +14.761 \\
-Ventanas con desplazamiento (agregar o quitar vuelos) & \textbf{6.475.055} & +8.972 \\
+Ventanas con desplazamiento (agregar o quitar vuelos) & 6.475.055 & +8.972 \\
+Interchanges sobre los mismos vuelos (borde base) & 7.273.495 & +798.440 \\
+Búsqueda con interchanges, 2,4 h (borde base) & 7.308.301 & +34.806 \\
+Borde flexible sobre esos vuelos & \textbf{7.406.840} & +98.539 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -80,14 +85,14 @@ Ventanas con desplazamiento (agregar o quitar vuelos) & \textbf{6.475.055} & +8.
 
 \begin{description}[style=nextline, leftmargin=1.2em, itemsep=3pt]
   \item[Margen validado] El único número que comparamos. Toma los vuelos de una solución, recalcula la carga con un modelo exacto (gap $10^{-6}$) y revisa todas las reglas con el validador. Las búsquedas solo aceptan soluciones que pasan el validador.
-  \item[Heurística] La solución inicial. Carpetas \texttt{Heuristica\_dt1\_iter2} y \texttt{Heuristica\_dt1\_iter3\_AND}.
+  \item[Interchange] Un avión pasa a ser operado por otra filial en un aeropuerto donde ambas están habilitadas (\texttt{interchange\_airports.csv}). Cada vuelo usa los derechos de tráfico, el costo por hora y el handling de la filial que lo opera. Detalle en \texttt{docs/README\_interchanges.md}.
+  \item[Borde flexible] Como la semana se repite, el avión debe volver a su filial base. Usamos la lectura flexible: basta con que vuelva en tierra, en el aeropuerto donde parte y termina la semana, si allí están habilitadas ambas filiales. Es el valor por defecto; \texttt{-{}-borde base} exige en cambio que el primer y el último vuelo sean de la filial base.
   \item[Red espacio-tiempo] La semana se divide en bloques de DT horas (aquí, 1 h). Cada vuelo es un arco entre dos pares (aeropuerto, bloque). Su relajación es ajustada, pero redondea hacia arriba la duración de cada vuelo, así que pierde minutos.
   \item[MILP en tiempo continuo] Cada avión tiene posiciones $1, \dots, 32$ y cada posición lleva un vuelo con su horario exacto. No pierde minutos, pero su relajación es débil (gap de $\sim$30\,\%).
   \item[Vecindario] Una parte de las decisiones que se deja libre mientras el resto queda fijo. Puede ser un avión, un par o un trío de aviones, un operador completo o una ventana de tiempo. Se resuelve el MILP exacto con la carga y los transbordos de \emph{toda} la red, y el cambio se acepta solo si sube el margen validado.
-  \item[Ventana de tiempo] Libera todos los vuelos que salen entre $t_0$ y $t_1$, en todos los aviones a la vez. Permite reorganizar varios aviones juntos; así salió la mejora en la que 9 aviones se reordenaron en MIA.
+  \item[Ventana de tiempo] Libera todos los vuelos que salen entre $t_0$ y $t_1$, en todos los aviones a la vez. Permite reorganizar varios aviones juntos.
   \item[Desplazamiento] Permite que una ventana gane o pierda hasta $D$ vuelos: los vuelos posteriores mantienen tramo y horario, pero se corren de posición. Aprovecha los aviones que tienen 20--76 h libres en la semana.
   \item[NoRel] Heurística de Gurobi que busca soluciones sin resolver la relajación. Sirve cuando la raíz es muy cara, como en nuestro modelo completo.
-  \item[VNS] Alternar vecindarios: si uno no mejora, se pasa al siguiente; tras una mejora, se vuelve al primero.
 \end{description}
 
 \section{Por qué hace falta tu computador}
@@ -110,14 +115,7 @@ Todos los aviones & 1 h & --- & no cabe \\
 \end{tabular}
 \end{table}
 
-En el notebook:
-\begin{itemize}
-  \item la red espacio-tiempo de un avión con DT = 1 h pidió más de 5,5 GB en la raíz, así que no se pudo recorrer la flota con pares;
-  \item las ventanas de 24 h no terminaron la raíz en el tiempo dado;
-  \item el MILP integrado corrió con solo 2 hilos y 25 min de NoRel, para no quedarse sin memoria.
-\end{itemize}
-
-Con 32 GB y más núcleos, las tres cosas caben.
+En el notebook, las ventanas de 24 h no terminaron la raíz en el tiempo dado, y una corrida de 12 h bloquea el computador. Con 32 GB y más núcleos, las corridas largas caben y no frenan el resto del trabajo.
 
 \section{El plan}
 
@@ -128,117 +126,86 @@ Con 32 GB y más núcleos, las tres cosas caben.
 \toprule
 Paso & Duración & Qué hace & Parte de \\
 \midrule
-0 & 30 min & Instalar y verificar & --- \\
-1 & noche (12 h) & Red espacio-tiempo, aviones de a uno y de a dos & heurística \\
-2 & noche (12 h) & Tiempo continuo con ventanas & resultado del Paso 1 \\
-3 & noche (12 h) & Vecindarios grandes: ventanas de 24 h, tríos, operadores & mejor actual \\
-4 & 2 h + noche & MILP integrado (2 veces) y luego el Paso 2 sobre el mejor & heurística \\
+0 & 5 min & Detener lo que corre y actualizar el código & --- \\
+1 & \textit{hecho} & Red espacio-tiempo, aviones de a uno y de a dos (6.407.941) & heurística \\
+2 & noche (12 h) & Tiempo continuo con interchanges, ventanas de 12 h & mejor actual \\
+3 & 10 min + noche & Rama B: interchanges sobre el Paso 1 y luego tiempo continuo & resultado del Paso 1 \\
+4 & noche (12 h) & Vecindarios grandes con interchanges: ventanas de 24 h, tríos, operadores & mejor resultado \\
 5 & 10 min & Revisar y subir los resultados & --- \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-Los pasos 1 y 2 van juntos (el 2 parte del 1). Los pasos 3 y 4 son independientes y pueden hacerse en cualquier orden.
+Los pasos 2 y 3 son independientes. El Paso 4 parte del mejor resultado que haya en ese momento.
 
-Así se ven las dos cadenas que estamos comparando:
-\begin{itemize}
-  \item \textbf{Rama A} (la que tiene hoy el mejor resultado): heurística $\to$ MILP integrado $\to$ búsqueda continua. El Paso 4 la repite con más recursos.
-  \item \textbf{Rama B} (la que ganó en la instancia reducida R4, con +12,6\,\%): heurística $\to$ red espacio-tiempo $\to$ búsqueda continua. Los pasos 1 y 2 la corren por primera vez en la instancia completa.
-\end{itemize}
+\textbf{El punto de partida decide a qué óptimo local se llega.} En la instancia reducida R4, la rama B (heurística $\to$ red espacio-tiempo $\to$ tiempo continuo) llegó a 868.027, y la rama A (la del mejor actual) a 839.809. Por eso el Paso 3 corre la rama B con interchanges.
 
-En R4, la rama B llegó a 868.027 y la A se quedó en 839.809: \textbf{el punto de partida decide a qué óptimo local se llega}. Por eso vale la pena correr las dos.
-
-\section{Paso 0 --- Preparar el computador (una vez)}
+\section{Paso 0 --- Detener y actualizar}
 
 \begin{enumerate}
-  \item Crea una cuenta en Gurobi con tu correo UC y pide una licencia académica: \url{https://www.gurobi.com/academia/academic-program-and-licenses/}. Actívala con \texttt{grbgetkey <tu-clave>}, conectado a la red UC o por VPN.
-  \item Clona la rama, instala las dependencias y verifica Gurobi:
+  \item Si tienes una corrida en curso sin \texttt{-{}-interchange}, detenla con Ctrl+C. Su mejor solución ya está en la carpeta de \texttt{-{}-salida}.
+  \item Actualiza la rama (tus carpetas de resultados no se tocan):
 \begin{lstlisting}
-git clone -b milp-completo-warm-start https://github.com/Franconicolai/ICS2122-Grupo-9.git
-cd ICS2122-Grupo-9
-pip install gurobipy pandas numpy scipy pyyaml python-dotenv highspy
-python -c "import gurobipy as gp; gp.Model(); print('Gurobi OK')"
+git pull
 \end{lstlisting}
-  \item Deja el computador enchufado. En Windows, el script evita la suspensión por sí solo. En Mac, antepone \texttt{caffeinate -i} a cada comando; en Linux, \texttt{systemd-inhibit}.
-  \item Ejecuta todo desde la carpeta \texttt{ICS2122-Grupo-9}. En Mac o Linux, cambia \texttt{python} por \texttt{python3}.
+  \item Deja el computador enchufado. En Windows, el script evita la suspensión por sí solo. En Mac, antepone \texttt{caffeinate -i} a cada comando; en Linux, \texttt{systemd-inhibit}. En Mac o Linux, cambia \texttt{python} por \texttt{python3}.
 \end{enumerate}
 
-\campo{Cómo saber si salió bien:} el último comando imprime \texttt{Gurobi OK}. Si dice \textit{size-limited license}, falta la licencia académica.
+\campo{Cómo saber si salió bien:} existe la carpeta \texttt{data/results/Interchange\_continua\_flexible}.
 
-\section{Paso 1 --- Red espacio-tiempo con grilla de 1 h}
+\section{Paso 2 --- Tiempo continuo con interchanges desde el mejor actual}
 
-\campo{Qué hace:} recorre los 19 aviones y los 15 pares de aviones más afines. En cada uno libera esos aviones, fija los demás y resuelve la red espacio-tiempo exacta con la carga de toda la red. Si el margen validado sube, acepta el cambio y sigue desde ahí.
+\campo{Qué hace:} la misma búsqueda que dio los mejores resultados (ventanas de 12 h con desplazamiento, aviones y pares), ahora con \texttt{-{}-interchange}. Los modelos eligen los vuelos con el costo de la filial más barata con derechos. Cada candidato se evalúa asignando las filiales reales y la carga, y se acepta solo si sube el margen validado.
 
-\campo{Por qué:} es la rama B. En R4 esta búsqueda dio +8,6\,\% sobre la heurística, más que el modelo completo con NoRel (+5,3\,\%). En la instancia completa nunca se pudo correr: no cabía en 8 GB.
-
-\begin{lstlisting}
-python -u busqueda_por_avion.py --corrida data/results/Heuristica_dt1_iter3_AND --dt 1 --vecindario avion,par --orden uso --max-pares 15 --tiempo 1200 --memoria 24 --mejora-minima 2000 --vueltas 20 --horas 12 --salida data/results/RamaB_red_dt1 2>&1 | tee data/results/RamaB_red_dt1.log
-\end{lstlisting}
-
-\campo{Qué esperar:} hasta 20 min y 24 GB por vecindario; una vuelta completa toma unas 11 h. Al llegar a las 12 h se detiene solo.
-
-\campo{Cómo saber si salió bien:} el margen final supera 6.345.128, el de la heurística de partida.
-
-\section{Paso 2 --- Tiempo continuo sobre el resultado del Paso 1}
-
-\campo{Qué hace:} toma los vuelos del Paso 1 y los pule en tiempo continuo, sin el redondeo de la grilla. Alterna ventanas de 12 h, con hasta 2 vuelos más o menos por avión, con vecindarios de un avión y de dos.
-
-\campo{Por qué:} es la segunda mitad de la rama B. En R4 esta misma cadena llegó a 868.027, el mejor resultado en esa instancia (+12,6\,\% sobre la heurística).
+\campo{Por qué:} en el notebook esta búsqueda subió +34.806 en 2,4 h (con borde base) y seguía encontrando mejoras cuando se detuvo.
 
 \begin{lstlisting}
-python -u busqueda_por_avion.py --modelo continuo --corrida data/results/RamaB_red_dt1 --vecindario ventana,avion,par --ventana-h 12 --ventana-paso 6 --desplazar 2 --desplazar-aviones 10 --desplazar-presupuesto 60 --tiempo 300 --norel 60 --saltar-sin-cambios --umbral-aceptar 100 --mejora-minima 2000 --orden uso --memoria 24 --vueltas 20 --horas 12 --salida data/results/RamaB_continua 2>&1 | tee data/results/RamaB_continua.log
+python -u busqueda_por_avion.py --modelo continuo --interchange --corrida data/results/Interchange_continua_flexible --vecindario ventana,avion,par --ventana-h 12 --ventana-paso 6 --desplazar 2 --desplazar-aviones 10 --desplazar-presupuesto 60 --tiempo 300 --norel 60 --saltar-sin-cambios --umbral-aceptar 100 --mejora-minima 2000 --orden uso --memoria 24 --vueltas 20 --horas 12 --salida data/results/Interchange_ventanas 2>&1 | tee data/results/Interchange_ventanas.log
 \end{lstlisting}
 
-\campo{Qué esperar:} la mayoría de las ventanas de 12 h se resuelve con óptimo probado en 1,5--4 min. Una pasada por las 27 ventanas de la semana toma $\sim$1,5 h.
+\campo{Qué esperar:} la primera línea incluye \texttt{interchanges, borde flexible} y \texttt{margen validado 7,406,840 USD}. Cada ventana toma de 30 s a 8 min, porque evaluar un candidato resuelve la carga hasta 3 veces. Una pasada por las 28 ventanas toma $\sim$1,5--2 h.
 
-\campo{Cómo saber si salió bien:} el margen supera el del Paso 1. Si además supera \textbf{6.475.055}, es el nuevo mejor resultado.
+\campo{Cómo saber si salió bien:} el margen final supera 7.406.840.
 
-\section{Paso 3 --- Vecindarios grandes desde el mejor actual}
+\section{Paso 3 --- Rama B con interchanges}
 
-\campo{Qué hace:} parte de la mejor solución (6.475.055) y prueba vecindarios más grandes que los que cabían en el notebook: ventanas de 24 h, tríos de aviones y operadores completos.
+\campo{Qué hace:} primero asigna las filiales a los vuelos de tu Paso 1 (programación dinámica exacta, unos minutos). Después pule esos vuelos en tiempo continuo con interchanges.
 
-\campo{Por qué:} 6.475.055 es un óptimo local para todos los vecindarios que probamos. Para salir de él hacen falta vecindarios más grandes, y esos necesitan memoria.
+\campo{Por qué:} el Paso 1 se hizo con los costos antiguos, pero sus vuelos son otro punto de partida. En R4, la rama B ganó.
 
 \begin{lstlisting}
-python -u busqueda_por_avion.py --modelo continuo --corrida data/results/Busqueda_ventanas_desplazar_d2 --vecindario ventana,trio,operador --ventana-h 24 --ventana-paso 12 --desplazar 2 --desplazar-aviones 10 --desplazar-presupuesto 60 --tiempo 900 --norel 120 --saltar-sin-cambios --umbral-aceptar 100 --mejora-minima 2000 --orden uso --memoria 24 --vueltas 20 --horas 12 --salida data/results/Grandes_desde_mejor 2>&1 | tee data/results/Grandes_desde_mejor.log
+python -u reasignar_operadores.py --corrida data/results/RamaB_red_dt1 --salida data/results/RamaB_interchange 2>&1 | tee data/results/RamaB_interchange.log
+python -u busqueda_por_avion.py --modelo continuo --interchange --corrida data/results/RamaB_interchange --vecindario ventana,avion,par --ventana-h 12 --ventana-paso 6 --desplazar 2 --desplazar-aviones 10 --desplazar-presupuesto 60 --tiempo 300 --norel 60 --saltar-sin-cambios --umbral-aceptar 100 --mejora-minima 2000 --orden uso --memoria 24 --vueltas 20 --horas 12 --salida data/results/RamaB_interchange_continua 2>&1 | tee data/results/RamaB_interchange_continua.log
 \end{lstlisting}
 
-\campo{Qué esperar:} hasta 15 min por vecindario. Es posible que no mejore: en R4, liberar 3 de los 4 aviones no sacó a la búsqueda de su óptimo local.
+\campo{Qué esperar:} el primer comando termina con \texttt{Margen validado: 6,407,941 -> X USD}. El segundo se comporta como el Paso 2.
 
-\campo{Cómo saber si salió bien:} cualquier margen sobre 6.475.055 es una mejora. Si no hay ninguna, el resultado igual sirve: muestra que el óptimo local resiste vecindarios grandes.
+\campo{Cómo saber si salió bien:} si el margen final supera el del Paso 2, la rama B también gana con interchanges.
 
-\section{Paso 4 --- MILP integrado en tiempo continuo}
+\section{Paso 4 --- Vecindarios grandes con interchanges}
 
-\campo{Qué hace:} resuelve el modelo completo con todos los aviones libres, partiendo de la heurística, usando NoRel para buscar soluciones. Después, al mejor resultado se le aplica la búsqueda del Paso 2.
+\campo{Qué hace:} parte del mejor resultado de los pasos 2 y 3 y prueba vecindarios más grandes que los que caben en el notebook: ventanas de 24 h, tríos de aviones y operadores completos.
 
-\campo{Por qué:} es la rama A, la que dio el mayor salto (+99.580). En el notebook corrió con solo 2 hilos y 25 min de NoRel. NoRel tiene azar: desde otra heurística dio 6.422.235 en vez de 6.435.839. Por eso conviene correrlo más tiempo y más de una vez.
+\campo{Por qué:} cuando las ventanas de 12 h dejan de mejorar, la solución es un óptimo local para ellas. Para salir de ahí hacen falta vecindarios más grandes, y esos necesitan memoria.
 
 \begin{lstlisting}
-python -u warm_start_milp.py --corrida data/results/Heuristica_dt1_iter2 --tiempo 3600 --norel 3000 --hilos 8 --salida data/results/MILP_integrado_h8 2>&1 | tee data/results/MILP_integrado_h8.log
-python -u warm_start_milp.py --corrida data/results/Heuristica_dt1_iter2 --tiempo 3600 --norel 3000 --hilos 6 --salida data/results/MILP_integrado_h6 2>&1 | tee data/results/MILP_integrado_h6.log
+python -u busqueda_por_avion.py --modelo continuo --interchange --corrida data/results/Interchange_ventanas --vecindario ventana,trio,operador --ventana-h 24 --ventana-paso 12 --desplazar 2 --desplazar-aviones 10 --desplazar-presupuesto 60 --tiempo 900 --norel 120 --saltar-sin-cambios --umbral-aceptar 100 --mejora-minima 2000 --orden uso --memoria 24 --vueltas 20 --horas 12 --salida data/results/Interchange_grandes 2>&1 | tee data/results/Interchange_grandes.log
 \end{lstlisting}
 
-\campo{Qué esperar:} $\sim$1 h cada una. El número de hilos cambia el camino de NoRel, por eso se corre con 8 y con 6.
+\campo{Antes de correrlo:} si el Paso 3 terminó con más margen que el Paso 2, cambia \texttt{Interchange\_ventanas} por \texttt{RamaB\_interchange\_continua} en \texttt{-{}-corrida}.
 
-\campo{Después:} si alguno supera \textbf{6.435.839}, corre la búsqueda continua sobre él durante una noche. Si el mejor fue el de 6 hilos, cambia \texttt{h8} por \texttt{h6} en \texttt{-{}-corrida}:
-\begin{lstlisting}
-python -u busqueda_por_avion.py --modelo continuo --corrida data/results/MILP_integrado_h8 --vecindario ventana,avion,par --ventana-h 12 --ventana-paso 6 --desplazar 2 --desplazar-aviones 10 --desplazar-presupuesto 60 --tiempo 300 --norel 60 --saltar-sin-cambios --umbral-aceptar 100 --mejora-minima 2000 --orden uso --memoria 24 --vueltas 20 --horas 12 --salida data/results/MILP_integrado_continua 2>&1 | tee data/results/MILP_integrado_continua.log
-\end{lstlisting}
+\campo{Qué esperar:} hasta 15 min por vecindario. Es posible que no mejore; el resultado igual sirve, porque muestra que el óptimo local resiste vecindarios grandes.
 
 \section{Paso 5 --- Revisar y subir}
 
 \begin{enumerate}
-  \item Revisa la última parte de cada \texttt{.log}:
-  \begin{itemize}
-    \item Pasos 1, 2, 3 y 4b (\texttt{busqueda\_por\_avion.py}) terminan con \texttt{Margen validado: A -> B USD}, donde A es el margen de partida y B el final. No imprimen «Validador: OK», porque cada solución aceptada ya pasó el validador.
-    \item Paso 4a (\texttt{warm\_start\_milp.py}) termina con \texttt{Margen validado con transbordos: \ldots} y \texttt{Validador: OK}.
-  \end{itemize}
-  \item Para confirmarlo en cualquier paso, abre \texttt{indicadores\_kpi.json} en la carpeta de salida: debe decir \texttt{"validador\_ok": true}.
+  \item Revisa la última parte de cada \texttt{.log}: termina con \texttt{Margen validado: A -> B USD}, donde A es el margen de partida y B el final. No imprime «Validador: OK», porque cada solución aceptada ya pasó el validador.
+  \item Para confirmarlo, abre \texttt{indicadores\_kpi.json} en la carpeta de salida: debe decir \texttt{"validador\_ok": true}.
   \item En la carpeta de salida, \texttt{progreso.csv} tiene una fila por vecindario. La columna \texttt{aceptado} marca las mejoras, y \texttt{mejor\_margen} muestra cómo fue subiendo el margen.
   \item Sube los resultados a la misma rama, nunca a \texttt{main}:
 \begin{lstlisting}
-git add data/results/RamaB_* data/results/Grandes_desde_mejor* data/results/MILP_integrado*
-git commit -m "resultados maquina 32 GB"
+git add data/results/RamaB_* data/results/Interchange_ventanas* data/results/Interchange_grandes*
+git commit -m "resultados maquina 32 GB con interchanges"
 git pull
 git push
 \end{lstlisting}
@@ -271,6 +238,8 @@ Opción & Qué controla \\
 \texttt{-{}-desplazar-aviones} & Cuántos aviones pueden desplazarse (los con más horas libres). \\
 \texttt{-{}-desplazar-presupuesto} & Tope total de vuelos que se corren; sin él, el modelo explota. \\
 \texttt{-{}-orden uso}, \texttt{-{}-max-pares} & Recorre primero los aviones más usados; limita cuántos pares se prueban. \\
+\texttt{-{}-interchange} & Permite que otra filial opere cada vuelo; sin esta opción, cada avión vuela siempre con su filial base. \\
+\texttt{-{}-borde} & Borde de la semana con interchanges: \texttt{flexible} (por defecto) o \texttt{base}. \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -285,8 +254,9 @@ Opción & Qué controla \\
 Síntoma & Qué hacer \\
 \midrule
 \textit{Model too large for size-limited license} & Falta la licencia académica: repite el Paso 0.1. \\
-\textit{Out of memory} o el PC se congela & Cambia \texttt{-{}-memoria 24} por \texttt{-{}-memoria 16}. Si sigue, en el Paso 1 quita \texttt{,par}. \\
+\textit{Out of memory} o el PC se congela & Cambia \texttt{-{}-memoria 24} por \texttt{-{}-memoria 16}. Si sigue, en el Paso 4 quita \texttt{,trio}. \\
 Se cortó (luz, reinicio, Ctrl+C) & La mejor solución ya está guardada en \texttt{-{}-salida}. Repite el comando con \texttt{-{}-corrida} igual a esa carpeta. \\
+La primera línea no dice \textit{interchanges, borde flexible} & Falta \texttt{-{}-interchange} en el comando, o falta el \texttt{git pull}. \\
 Una noche sin mejoras & Es un resultado válido: súbelo igual y pasa al paso siguiente. \\
 \bottomrule
 \end{tabularx}
@@ -299,6 +269,8 @@ Una noche sin mejoras & Es un resultado válido: súbelo igual y pasa al paso si
   \item \textbf{Benders:} es correcto, pero no converge en la práctica.
   \item \textbf{Una segunda pasada del MILP integrado después de la búsqueda continua:} empeora el margen con transbordos.
   \item \textbf{Grillas de 30 min:} aportaron $\sim$0,1\,\%.
+  \item \textbf{Cualquier corrida sin \texttt{-{}-interchange}:} elige vuelos con los costos antiguos.
+  \item \textbf{El MILP integrado (\texttt{warm\_start\_milp.py}), por ahora:} todavía no está adaptado ni probado con interchanges.
 \end{itemize}
 
 \section{Respaldo en la literatura}
@@ -306,7 +278,7 @@ Una noche sin mejoras & Es un resultado válido: súbelo igual y pasa al paso si
 Cada método que usamos tiene una base estándar en la literatura:
 
 \begin{itemize}
-  \item \textbf{Modelo integrado} (Paso 4). En aerolíneas de carga, la selección de vuelos, las rotaciones y el ruteo de la carga dependen entre sí, y planificarlos por etapas pierde margen. Derigs et al.\ proponen modelos que los deciden juntos \cite{derigs2009, derigs2013}.
+  \item \textbf{Modelo integrado} (rama A, de donde sale el mejor resultado). En aerolíneas de carga, la selección de vuelos, las rotaciones y el ruteo de la carga dependen entre sí, y planificarlos por etapas pierde margen. Derigs et al.\ proponen modelos que los deciden juntos \cite{derigs2009, derigs2013}.
   \item \textbf{Red espacio-tiempo} (Paso 1). Es el modelo clásico de asignación de flota, como flujo multiproducto en una red expandida en el tiempo \cite{hane1995}.
   \item \textbf{Tiempo continuo después de la grilla} (pasos 2--4). Discretizar el tiempo puede excluir las mejores soluciones; Boland et al.\ muestran que el óptimo en tiempo continuo se alcanza refinando la discretización solo donde hace falta \cite{boland2017}. Eso explica por qué pulir en tiempo continuo la solución de la grilla sube el margen.
   \item \textbf{Búsqueda por vecindarios exactos} (todos los pasos). Liberar una parte de la solución, fijar el resto y reoptimizarla es una búsqueda en vecindarios grandes, LNS \cite{shaw1998, pisinger2010}. Cuando cada vecindario se resuelve con un MILP sobre un subconjunto de binarias, es un esquema de tipo \emph{fix-and-optimize} \cite{helber2010}, emparentado con los vecindarios definidos con un MILP, como RINS \cite{danna2005}.

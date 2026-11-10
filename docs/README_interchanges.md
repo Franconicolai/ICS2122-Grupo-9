@@ -31,9 +31,11 @@ Pasar un vuelo de AND a PAC ahorra 1.150 USD por hora de bloque. La flota tiene 
 
 1. El interchange no tiene costo ni tiempo en tierra adicional (el TAT no cambia).
 2. Entre dos vuelos seguidos, el avión solo cambia de filial en un aeropuerto donde ambas están habilitadas.
-3. Borde de la semana (`--borde base`, por defecto): el primer y el último vuelo de la rotación los opera el
-   operador base. Con `--borde flexible` basta volver al operador base en el aeropuerto del borde, si allí están
-   habilitadas ambas filiales.
+3. Borde de la semana (`--borde flexible`, por defecto desde el 10-11-2026): basta que el avión vuelva a su
+   operador base en tierra, en el aeropuerto donde parte y termina la semana, si allí están habilitadas ambas
+   filiales. Con `--borde base` (o `BORDE=base`), el primer y el último vuelo de la rotación los opera el operador
+   base. El grupo decidió usar el borde flexible; los aeropuertos de borde son MIA, BOG, MDE (las 4 filiales), LAX
+   (sin BRA) y GRU (sin PAC).
 4. Cada vuelo usa los derechos de tráfico, el ex-fuel y el handling de la filial que lo opera.
 5. Un transbordo exige que las filiales que operan el vuelo que entrega y el que recibe estén habilitadas en el
    aeropuerto, y el handling lo paga la filial del vuelo que recibe.
@@ -59,7 +61,7 @@ Los supuestos 1 y 3 son los que más conviene confirmar con el profesor.
   exporta el resultado.
 
 ```
-python reasignar_operadores.py --corrida data/results/Busqueda_ventanas_desplazar_d2 --salida data/results/Interchange_desde_mejor
+python reasignar_operadores.py --corrida data/results/Busqueda_ventanas_desplazar_d2 --salida data/results/Interchange_desde_mejor --borde base
 ```
 
 ## Resultados con los vuelos de la mejor solución
@@ -79,6 +81,8 @@ python reasignar_operadores.py --corrida data/results/Busqueda_ventanas_desplaza
 - Los interchanges se hacen sobre todo en MIA (19), MAO (8), VCP (5) y BOG (5).
 - La carga casi no cambia (+2 t). Hay 56 transbordos en vez de 54.
 - El borde flexible vale 93 mil USD más, porque casi no deja vuelos con el operador base. Depende del supuesto 3.
+  En el borde flexible, 14 aviones vuelan con PAC el primer y el último tramo; AC-12 parte en GRU, donde PAC no está
+  habilitada, y usa BRA.
 
 ## Fase 2: elegir los vuelos sabiendo que la filial puede cambiar
 
@@ -102,19 +106,27 @@ evalúa de forma exacta.
    carga (~36 s cada una) o hasta que el margen deja de subir.
 3. El validador revisa la mejor solución con las reglas de los interchanges. Solo esa se acepta.
 
-La relajación sobreestima el margen en unos 145 mil USD (7.418.665 contra 7.273.495 validado en la solución de
-partida), sobre todo porque el primer y el último vuelo de cada rotación pagan el operador base. Por eso la búsqueda
-solo usa el modelo para proponer vuelos y siempre compara márgenes validados.
+La relajación sobreestima el margen. Con borde base, la diferencia es de unos 145 mil USD (7.418.665 contra
+7.273.495 validado), sobre todo porque el primer y el último vuelo de cada rotación pagan el operador base. Con borde
+flexible baja a unos 45 mil (7.451.678 contra 7.406.840). Por eso la búsqueda solo usa el modelo para proponer vuelos
+y siempre compara márgenes validados.
 
 ```
 python -u busqueda_por_avion.py --modelo continuo --interchange --corrida data/results/Interchange_desde_mejor --vecindario ventana,avion,par --ventana-h 12 --ventana-paso 6 --desplazar 2 --desplazar-aviones 10 --desplazar-presupuesto 60 --tiempo 300 --norel 60 --saltar-sin-cambios --umbral-aceptar 100 --mejora-minima 2000 --orden uso --vueltas 20 --horas 10 --salida data/results/Interchange_continua
 ```
 
 - **Prueba** (3 aviones, 120 s cada uno): partió de 7.273.495 y AC-17 mejoró a 7.274.367.
-- **Corrida de 10 h** en la instancia completa: en curso, en `data/results/Interchange_continua`.
+- **Búsqueda por ventanas con borde base** (`data/results/Interchange_continua`): en 2,4 h subió a 7.308.301
+  (+34.806, 5 mejoras, en las ventanas 54–66 h, 126–138 h, 144–156 h, 162–168 h y 30–42 h). Se detuvo al pasar al
+  borde flexible.
+- **Borde flexible sobre esos vuelos** (`reasignar_operadores.py`, `data/results/Interchange_continua_flexible`):
+  **7.406.840, el mejor margen validado** (62 interchanges, 297 vuelos operados por otra filial).
+- Las corridas largas pasan a la máquina de 32 GB (`docs/proximos_pasos.pdf`, `docs/comandos_32gb.txt`).
 
 **Pendiente:**
 
 - La heurística (`correr_heuristica.py`, `src/reoptimizacion_por_avion.py`) no usa esta relajación. Para la rama B
   habría que agregársela, o partir de una solución ya reasignada.
-- `--borde flexible` solo existe en `reasignar_operadores.py`. La búsqueda valida con borde base.
+- La búsqueda usa el borde flexible por defecto (`--borde base` para el estricto). La relajación de los modelos
+  no impone ningún borde.
+- El MILP integrado (`warm_start_milp.py`) no está probado con interchanges.

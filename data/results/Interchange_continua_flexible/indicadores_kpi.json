@@ -1,0 +1,239 @@
+{
+  "kpis": {
+    "margen_usd": 7406839.917000005,
+    "ingresos_usd": 18987574.099999994,
+    "costo_vuelos_usd": 11046281.96799999,
+    "costo_handling_usd": 534452.2149999996,
+    "costo_operacional_usd": 11580734.182999989,
+    "toneladas": 12234.444999999998,
+    "pct_demanda": 91.45812620074604,
+    "vuelos": 362,
+    "interchanges": 62,
+    "vuelos_otra_filial": 297,
+    "aviones_usados": 16,
+    "horas_bloque": 1399.68,
+    "ctk": 54355250.14,
+    "actk": 73039120.0,
+    "factor_ocupacion_pct": 74.41936614241793,
+    "factor_ocupacion_tramos_pct": 70.97728233305155,
+    "costo_usd_por_tkm": 0.21305640491345532,
+    "costo_usd_por_tonelada": 946.5680039429652,
+    "vuelos_vacios": 64,
+    "pct_vuelos_vacios": 17.679558011049725,
+    "frecuencias_cumplidas_num": 25,
+    "frecuencias_exigidas_num": 25,
+    "frecuencias_cumplidas": "25/25",
+    "toneladas_directas": 11475.63,
+    "pct_carga_directa": 93.79771620208356,
+    "toneladas_multitramos": 758.8149999999987,
+    "pct_carga_multitramos": 6.202283797916447,
+    "satisfaccion_demanda_diaria": [
+      {
+        "dia": 1,
+        "nombre": "Lunes",
+        "demanda_t": 1835.8000000000002,
+        "servida_t": 1669.4999999999984,
+        "satisfaccion_pct": 90.94127900642762
+      },
+      {
+        "dia": 2,
+        "nombre": "Martes",
+        "demanda_t": 2000.5000000000005,
+        "servida_t": 1930.1000000000006,
+        "satisfaccion_pct": 96.48087978005499
+      },
+      {
+        "dia": 3,
+        "nombre": "Miércoles",
+        "demanda_t": 2224.9000000000005,
+        "servida_t": 2014.9900000000002,
+        "satisfaccion_pct": 90.56541867050204
+      },
+      {
+        "dia": 4,
+        "nombre": "Jueves",
+        "demanda_t": 1545.9,
+        "servida_t": 1360.055,
+        "satisfaccion_pct": 87.97820040106086
+      },
+      {
+        "dia": 5,
+        "nombre": "Viernes",
+        "demanda_t": 2346.6,
+        "servida_t": 2153.7000000000003,
+        "satisfaccion_pct": 91.77959601125033
+      },
+      {
+        "dia": 6,
+        "nombre": "Sábado",
+        "demanda_t": 2005.1999999999998,
+        "servida_t": 1725.1,
+        "satisfaccion_pct": 86.03131857171356
+      },
+      {
+        "dia": 7,
+        "nombre": "Domingo",
+        "demanda_t": 1418.2,
+        "servida_t": 1381.0000000000002,
+        "satisfaccion_pct": 97.37695670568328
+      }
+    ],
+    "satisfaccion_diaria_media_pct": 91.59337844952753,
+    "variabilidad_diaria_pp": 3.8333141401360327,
+    "rango_satisfaccion_diaria_pp": 11.345638133969729,
+    "factor_desvio_global": 1.022046736066495,
+    "factor_desvio_multitramos": 1.2366909686570122,
+    "commodities_sin_distancia_referencia": 0,
+    "flujo_through_t": 886.0200000000001,
+    "flujo_transferido_t": 314.11499999999984,
+    "conexiones_transferencia_usadas": 64,
+    "transferencias_entre_operadores": 17,
+    "ttr_h": 2.0
+  },
+  "validador_ok": true,
+  "violaciones": [],
+  "calidad_optimizacion": {
+    "metodo": "Interchanges con vuelos fijos (programación dinámica por avión, borde flexible)",
+    "estado": "Óptimo para los vuelos fijos",
+    "objetivo_modelo": null,
+    "cota_modelo": null,
+    "gap_modelo": null,
+    "tiempo_gurobi_s": null,
+    "aviones_libres": "ninguno",
+    "gap_global_disponible": false,
+    "gap_global": null,
+    "nota": "La cota y el gap son los del modelo resuelto: sin transbordos dentro del MILP (warm_start_milp.py) o con los aviones no libres fijos (modelos con --libres). No son una cota del problema completo; el margen reportado es el validado después del paso final con transbordos."
+  },
+  "milp": {
+    "modelo": "Interchanges con vuelos fijos (programación dinámica por avión, borde flexible)",
+    "corrida_start": "data/results/Interchange_continua",
+    "estado": "Óptimo para los vuelos fijos",
+    "aviones_libres": "ninguno",
+    "tiempo_limite_s": null,
+    "ttr_h": 2.0,
+    "margen_corrida_usd": 7308300.882000008,
+    "borde": "flexible",
+    "interchanges": {
+      "AC-01": {
+        "base": "SUR",
+        "ahorro_usd": 6655.5,
+        "interchanges": 4,
+        "filiales": "PPPPPBBPPPPPPPPPPPPPPPPP"
+      },
+      "AC-02": {
+        "base": "SUR",
+        "ahorro_usd": 6505.5,
+        "interchanges": 2,
+        "filiales": "PPPPPPPPPPPPPPPPPPPPPPPPPPP"
+      },
+      "AC-03": {
+        "base": "AND",
+        "ahorro_usd": 8533.5,
+        "interchanges": 2,
+        "filiales": "PPPPPPPPPP"
+      },
+      "AC-04": {
+        "base": "SUR",
+        "ahorro_usd": 7124.0,
+        "interchanges": 2,
+        "filiales": "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPP"
+      },
+      "AC-06": {
+        "base": "BRA",
+        "ahorro_usd": 4085.0,
+        "interchanges": 6,
+        "filiales": "PPPPPPPBBBBSBPPPPPPPPP"
+      },
+      "AC-07": {
+        "base": "PAC",
+        "ahorro_usd": 0.0,
+        "interchanges": 0,
+        "filiales": "PPPPPPPPPPPPPPPPPPPPPPP"
+      },
+      "AC-08": {
+        "base": "AND",
+        "ahorro_usd": 7802.4,
+        "interchanges": 4,
+        "filiales": "PPPPPPPSSPPPPPPPPPPPPP"
+      },
+      "AC-09": {
+        "base": "SUR",
+        "ahorro_usd": 8871.26,
+        "interchanges": 5,
+        "filiales": "PPPPPPPPPPPPPPPPPPPPPPPBSP"
+      },
+      "AC-10": {
+        "base": "BRA",
+        "ahorro_usd": 4105.0,
+        "interchanges": 4,
+        "filiales": "PPPPPPPPPPBBBBBBBPPPPPPPPP"
+      },
+      "AC-11": {
+        "base": "SUR",
+        "ahorro_usd": 5953.36,
+        "interchanges": 7,
+        "filiales": "PSSPPPPPPPPPPPPPPPPPPPPSAPP"
+      },
+      "AC-12": {
+        "base": "AND",
+        "ahorro_usd": 4095.0,
+        "interchanges": 7,
+        "filiales": "BPPBSPPPPPPPPPPPPPPBBB"
+      },
+      "AC-13": {
+        "base": "SUR",
+        "ahorro_usd": 7763.0,
+        "interchanges": 4,
+        "filiales": "PPPPPPPPPPPPPPPPPPPPPPBBPP"
+      },
+      "AC-15": {
+        "base": "PAC",
+        "ahorro_usd": 0.0,
+        "interchanges": 0,
+        "filiales": "PPPPPPPPPPPPPPPPPPPPPPP"
+      },
+      "AC-16": {
+        "base": "AND",
+        "ahorro_usd": 8544.0,
+        "interchanges": 2,
+        "filiales": "PPPPPPPPPPPPPPPPPPPPPPPPPPPP"
+      },
+      "AC-17": {
+        "base": "SUR",
+        "ahorro_usd": 3811.5,
+        "interchanges": 4,
+        "filiales": "PPPBBPPPSS"
+      },
+      "AC-19": {
+        "base": "AND",
+        "ahorro_usd": 14675.0,
+        "interchanges": 9,
+        "filiales": "PPSBPPBSSAPPPPPP"
+      }
+    }
+  },
+  "modelo_carga": {
+    "ok": true,
+    "estado": "Optimal",
+    "objetivo_carga": 18453121.884999998,
+    "cota": 18453129.264999993,
+    "gap": 3.999323280485463e-07,
+    "tiempo_s": 51.94550108909607,
+    "estadisticas": {
+      "toneladas_entregadas": 12234.44499999999,
+      "toneladas_directas": 11475.629999999996,
+      "flujo_through_t": 886.0200000000001,
+      "flujo_transferido_t": 314.11499999999984,
+      "conexiones_transferencia_usadas": 64,
+      "transferencias_entre_operadores": 17
+    },
+    "tamano": {
+      "vuelos": 362,
+      "conexiones": 11831,
+      "commodities_con_camino": 206,
+      "variables": 576216,
+      "variables_enteras": 531,
+      "restricciones": 56792
+    }
+  }
+}

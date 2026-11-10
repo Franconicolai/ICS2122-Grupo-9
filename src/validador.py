@@ -97,7 +97,7 @@ def validar(solucion: Dict[str, Any], config: Optional[Dict[str, Any]] = None,
     """
     cfg = {'ciclico': True, 'tat_variable': True, 'min_ton_escala': True, 'mantenimiento': True, 'frecuencias': True,
            'demanda_diaria': False, 'dist_frecuencias': False, 'transferencias': True,
-           'interchanges': True, 'borde_operador_base': True}
+           'interchanges': True, 'borde_operador_base': False}
     cfg.update(config or {})
     ruta_raw = ruta_raw or os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data', 'raw data')
     R = _cargar_raw(ruta_raw)
