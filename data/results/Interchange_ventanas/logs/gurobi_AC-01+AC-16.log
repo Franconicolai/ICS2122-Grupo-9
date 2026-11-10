@@ -1,0 +1,44 @@
+
+Gurobi 13.0.3 (win64) logging started Tue Nov 10 17:29:42 2026
+
+Set parameter LogFile to value "data/results/Interchange_ventanas\logs\gurobi_AC-01+AC-16.log"
+Set parameter SoftMemLimit to value 24
+Gurobi Optimizer version 13.0.3 build v13.0.3rc0 (win64 - Windows 11+.0 (26200.2))
+
+CPU model: Intel(R) Core(TM) Ultra 9 285H, instruction set [SSE2|AVX|AVX2]
+Thread count: 16 physical cores, 16 logical processors, using up to 16 threads
+
+Non-default parameters:
+TimeLimit  300
+SoftMemLimit  24
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  60
+LogToConsole  0
+
+Optimize a model with 396333 rows, 1177248 columns and 5473908 nonzeros (Max)
+Model fingerprint: 0x53b6433f
+Model has 994627 linear objective coefficients
+Variable types: 958413 continuous, 218835 integer (218835 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 7e+04]
+  Bounds range     [1e+00, 8e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 7.45168e+06
+
+Presolve removed 32062 rows and 87057 columns
+Presolve time: 0.46s
+Presolve removed 32062 rows and 87057 columns
+Presolve time: 0.38s
+
+Explored 0 nodes (0 simplex iterations) in 1.22 seconds (0.73 work units)
+Thread count was 1 (of 16 available processors)
+
+Solution count 2: 7.45168e+06 7.45168e+06 
+
+Optimal solution found (tolerance 1.00e-04)
+Warning: max constraint violation (1.6667e-05) exceeds tolerance
+Best objective 7.451678222000e+06, best bound 7.451678222000e+06, gap 0.0000%
