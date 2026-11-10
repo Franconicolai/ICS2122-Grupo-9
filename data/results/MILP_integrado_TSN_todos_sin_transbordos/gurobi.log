@@ -1,0 +1,67 @@
+
+Gurobi 13.0.3 (win64) logging started Tue Nov 10 16:52:20 2026
+
+Set parameter LogFile to value "data\results\MILP_integrado_TSN_todos_sin_transbordos\gurobi.log"
+Set parameter NoRelHeurTime to value 3600
+Set parameter Threads to value 12
+Set parameter SoftMemLimit to value 28
+Set parameter Presolve to value -1
+Gurobi Optimizer version 13.0.3 build v13.0.3rc0 (win64 - Windows 11+.0 (26200.2))
+
+CPU model: Intel(R) Core(TM) Ultra 9 285H, instruction set [SSE2|AVX|AVX2]
+Thread count: 16 physical cores, 16 logical processors, using up to 12 threads
+
+Non-default parameters:
+TimeLimit  12600
+SoftMemLimit  28
+MIPGap  0.01
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  3600
+Threads  12
+
+Optimize a model with 2568961 rows, 6545291 columns and 19997987 nonzeros (Max)
+Model fingerprint: 0x9e52fb0b
+Model has 811908 linear objective coefficients
+Variable types: 5854204 continuous, 460731 integer (460731 binary)
+Semi-Variable types: 230356 continuous, 0 integer
+Coefficient statistics:
+  Matrix range     [1e+00, 5e+01]
+  Objective range  [1e+03, 7e+04]
+  Bounds range     [1e+00, 5e+01]
+  RHS range        [1e+00, 8e+02]
+
+Loaded user MIP start with objective 7.1098e+06
+
+Presolve removed 179200 rows and 573245 columns (presolve time = 5s)...
+Presolve removed 338333 rows and 711075 columns (presolve time = 10s)...
+Presolve removed 351576 rows and 754205 columns (presolve time = 15s)...
+Presolve removed 360241 rows and 782706 columns (presolve time = 20s)...
+Presolve removed 361647 rows and 790344 columns (presolve time = 25s)...
+Presolve removed 365580 rows and 807881 columns (presolve time = 30s)...
+Presolve removed 367442 rows and 814037 columns (presolve time = 35s)...
+Presolve removed 367442 rows and 814037 columns (presolve time = 40s)...
+Presolve removed 367442 rows and 814037 columns (presolve time = 46s)...
+Presolve removed 367477 rows and 820592 columns (presolve time = 50s)...
+Presolve removed 367477 rows and 821056 columns (presolve time = 55s)...
+Presolve removed 367662 rows and 821056 columns (presolve time = 60s)...
+Presolve removed 367676 rows and 821070 columns (presolve time = 65s)...
+Presolve removed 367676 rows and 821089 columns (presolve time = 70s)...
+Presolve removed 379019 rows and 821101 columns (presolve time = 76s)...
+Presolve removed 379019 rows and 821101 columns
+Presolve time: 76.27s
+Presolved: 2637026 rows, 5947732 columns, 19549358 nonzeros
+Variable types: 5334266 continuous, 613466 integer (613466 binary)
+Starting NoRel heuristic
+Elapsed time for NoRel heuristic: 6s (best bound 1.68627e+07)
+Elapsed time for NoRel heuristic: 46s (best bound 1.68627e+07)
+Elapsed time for NoRel heuristic: 71s (best bound 1.68522e+07)
+NoRel heuristic complete
+
+Explored 0 nodes (0 simplex iterations) in 158.75 seconds (131.10 work units)
+Thread count was 12 (of 16 available processors)
+
+Solution count 2: 7.1098e+06 7.1098e+06 
+
+Memory limit reached
+Best objective 7.109800574000e+06, best bound 1.685215168200e+07, gap 137.0271%
