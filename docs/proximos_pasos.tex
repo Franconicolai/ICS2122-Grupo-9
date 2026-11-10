@@ -259,7 +259,7 @@ Síntoma & Qué hacer \\
 \textit{Model too large for size-limited license} & Falta la licencia académica: repite el Paso 0.1. \\
 \textit{Out of memory} o el PC se congela & Cambia \texttt{-{}-memoria 24} por \texttt{-{}-memoria 16}. Si sigue, en el Paso 4 quita \texttt{,trio}. \\
 Se cortó (luz, reinicio, Ctrl+C) & La mejor solución ya está guardada en \texttt{-{}-salida}. Repite el comando con \texttt{-{}-corrida} igual a esa carpeta. \\
-La primera línea no dice \textit{interchanges, borde flexible} & Falta \texttt{-{}-interchange} en el comando, o falta el \texttt{git pull}. \\
+La primera línea no dice \textit{interchanges} ni \textit{borde flexible} & Falta \texttt{-{}-interchange} en el comando, o falta el \texttt{git pull}. En el Paso 4 debe decir además \textit{(filiales exactas)}. \\
 Una noche sin mejoras & Es un resultado válido: súbelo igual y pasa al paso siguiente. \\
 \bottomrule
 \end{tabularx}
@@ -273,7 +273,8 @@ Una noche sin mejoras & Es un resultado válido: súbelo igual y pasa al paso si
   \item \textbf{Una segunda pasada del MILP integrado después de la búsqueda continua:} empeora el margen con transbordos.
   \item \textbf{Grillas de 30 min:} aportaron $\sim$0,1\,\%.
   \item \textbf{Cualquier corrida sin \texttt{-{}-interchange}:} elige vuelos con los costos antiguos.
-  \item \textbf{El MILP integrado (\texttt{warm\_start\_milp.py}), por ahora:} todavía no está adaptado ni probado con interchanges.
+  \item \textbf{El MILP integrado de \texttt{warm\_start\_milp.py}:} no tiene transbordos dentro del modelo ni está adaptado a los interchanges.
+  \item \textbf{El modelo completo exacto} (\texttt{milp\_continuo\_transbordos.py -{}-exacto} con todos los aviones libres): tendría 15 a 108 millones de binarias de transbordo y no cabe en 32 GB. El modelo exacto se usa dentro de la búsqueda por vecindarios (Paso 4). Detalle en \texttt{docs/README\_milp\_exacto.md}.
 \end{itemize}
 
 \section{Respaldo en la literatura}
