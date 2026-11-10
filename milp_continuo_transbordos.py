@@ -53,6 +53,8 @@ def preparar(datos, itinerario, libres, ttr):
         con_soporte = {a for a, _ in sop}
         op_vuelo = {(k, l['pos']): l.get('op') or op[k] for k, legs in itinerario.items() for l in legs}
         lado = lambda a, k, s: (a, op_vuelo[k, s]) in sop if s is not None else a in con_soporte
+        if datos.get('filiales_exactas'):   # modelo exacto: la filial de cada vuelo es variable, el soporte se exige
+            lado = lambda a, k, s: a in con_soporte      # en agregar_transbordos con f[k,s,o]
         ok = lambda a, k1, k2, s1=None, s2=None: a not in tec and lado(a, k1, s1) and lado(a, k2, s2)
     else:
         ok = lambda a, k1, k2, s1=None, s2=None: a not in tec and (a, op[k1]) in sop and (a, op[k2]) in sop
@@ -264,13 +266,17 @@ def agregar_transbordos(modelo, datos, pares, ttr):
     def sale_de(k, s, a):
         return gp.quicksum(y[k, s, e] for e in Ek[k] if e[0] == a)
 
-    # flujo transbordado por destino; handling al operador que recibe
+    # flujo transbordado por destino; handling al operador que recibe (con filiales exactas, el handling lo cobra
+    # gurobi_model con la filial del vuelo que recibe: Bo incluye tin)
+    exacto = getattr(modelo, '_filiales_exactas', False)
     claves_tr = [(p, d) for p in range(len(pares)) for d in dests]
     tr = modelo.addVars(claves_tr, lb=0,
                         ub=[min(P[pares[p]['i'][0]], P[pares[p]['j'][0]]) for p, d in claves_tr],
-                        obj=[-h_k[pares[p]['j'][0]] for p, d in claves_tr], name='tr')
+                        obj=[0 if exacto else -h_k[pares[p]['j'][0]] for p, d in claves_tr], name='tr')
     claves_c = [(p, a) for p, par in enumerate(pares) if par['tipo'] not in ('FF', 'SS') for a in par['aps']]
     c = modelo.addVars(claves_c, vtype=GRB.BINARY, name='c')
+    if exacto:
+        f, sop, ops = v['f'], datos['sop'], sorted(datos['exf'])
     for p, par in enumerate(pares):
         (k, s), (k2, s2) = par['i'], par['j']
         cap = min(P[k], P[k2])
@@ -295,6 +301,18 @@ def agregar_transbordos(modelo, datos, pares, ttr):
             modelo.addConstr(t_dep[k2, s2] >= par['t_i'] + ttr - M * (1 - activo), name=f'T_ttr[{p}]')
         elif par['tipo'] == 'LL':
             modelo.addConstr(t_dep[k2, s2] >= t_arr[k, s] + ttr - M * (1 - activo), name=f'T_ttr[{p}]')
+        if exacto:   # las filiales que operan ambos vuelos están habilitadas en el aeropuerto del transbordo
+            for a in par['aps']:
+                for kk, ss, lado in ((k, s, 'i'), (k2, s2, 'j')):
+                    sin = [o for o in ops if (a, o) not in sop]
+                    if not sin:
+                        continue
+                    if par['tipo'] in ('FF', 'SS'):
+                        modelo.addConstr(gp.quicksum(tr[p, d] for d in dests) <= cap * (1 - gp.quicksum(
+                            f[kk, ss, o] for o in sin)), name=f'T_soporte_{lado}[{p},{a}]')
+                    else:
+                        modelo.addConstr(c[p, a] <= 1 - gp.quicksum(f[kk, ss, o] for o in sin),
+                                         name=f'T_soporte_{lado}[{p},{a}]')
     # lo entregado y recibido por cada vuelo es la suma de sus transbordos
     sale_p, entra_p = defaultdict(list), defaultdict(list)
     for p, par in enumerate(pares):
@@ -331,6 +349,73 @@ def armar_start(modelo, datos, itinerario, solucion, pares):
     return st
 
 
+def extraer_solucion(modelo, pares, ttr, redondeo=1e-6):
+    """Solución del MILP tal cual, en el formato de src/validador.py (vuelos con su filial, carga por commodity y
+    transbordos), sin volver a resolver la carga. El MILP agrega la carga por destino; para cada destino, los vuelos se
+    recorren en orden de salida (el through va al vuelo siguiente y un transbordo a un vuelo que sale después, así que
+    es un grafo acíclico) y lo que entrega cada vuelo se toma de su inventario por commodity, primero el commodity con
+    más toneladas. Los flujos se redondean a `redondeo` t para no arrastrar ruido numérico de Gurobi."""
+    v, datos = modelo._v, modelo._datos
+    val = lambda td: {kk: round(x / redondeo) * redondeo for kk, x in modelo.getAttr('X', td).items()
+                      if x > redondeo / 2}
+    itinerario = ws.extraer_itinerario(modelo)
+    if 'f' in v:
+        fv = modelo.getAttr('X', v['f'])
+        for k, legs in itinerario.items():
+            for leg in legs:
+                o = max(sorted(datos['exf']), key=lambda o: fv[k, leg['pos'], o])
+                if o != datos['op'][k]:
+                    leg['op'] = o
+    bv, av, wv = val(v['b']), val(v['a']), val(v['w'])
+    trv = val(v['tr']) if 'tr' in v else {}
+    t_dep = {(k, l['pos']): l['t_dep'] for k, legs in itinerario.items() for l in legs}
+    destino_aerop = {(k, l['pos']): l['tramo'][1] for k, legs in itinerario.items() for l in legs}
+    entra_b, sale_tr = defaultdict(dict), defaultdict(list)
+    for (q, k, s), t in bv.items():
+        entra_b[k, s][q] = t
+    for (p, d), t in trv.items():
+        sale_tr[pares[p]['i'], d].append((pares[p]['j'], t))
+    cargas, transferencias = {}, []
+    recibe = defaultdict(lambda: defaultdict(float))    # (vuelo, destino) -> {q: toneladas} por through o transbordo
+    for k, s in sorted(t_dep, key=lambda ks: (t_dep[ks], ks)):
+        for d in {q[1] for q in entra_b[k, s]} | {dd for (ks, dd) in list(recibe) if ks == (k, s)} \
+                | {dd for (i, dd) in sale_tr if i == (k, s)} | {dd for (dd, kk, ss) in av if (kk, ss) == (k, s)}:
+            inv = defaultdict(float)
+            for q, t in entra_b[k, s].items():
+                if q[1] == d:
+                    inv[q] += t
+            for q, t in recibe[(k, s), d].items():
+                inv[q] += t
+            for q, t in inv.items():
+                r = cargas.setdefault((k, s, q), {'q': list(q), 'k': k, 's': s, 'b': 0.0, 'x': 0.0, 'a': 0.0, 'w': 0.0})
+                r['b'] = entra_b[k, s].get(q, 0.0) if q[1] == d else 0.0
+                r['x'] = t
+
+            def tomar(cantidad):   # saca `cantidad` del inventario, primero el commodity con más toneladas
+                partes = []
+                for q in sorted(inv, key=lambda q: -inv[q]):
+                    if cantidad <= 1e-12:
+                        break
+                    t = min(inv[q], cantidad)
+                    if t > 1e-12:
+                        partes.append((q, t))
+                        inv[q] -= t
+                        cantidad -= t
+                return partes
+
+            for q, t in tomar(av.get((d, k, s), 0.0)):
+                cargas[k, s, q]['a'] += t
+            for q, t in tomar(wv.get((d, k, s), 0.0)):
+                cargas[k, s, q]['w'] += t
+                recibe[(k, s + 1), d][q] += t
+            for j, ton in sale_tr.get(((k, s), d), []):
+                for q, t in tomar(ton):
+                    transferencias.append({'from_k': k, 'from_s': s, 'to_k': j[0], 'to_s': j[1],
+                                           'airport': destino_aerop[k, s], 'q': list(q), 'tons': t})
+                    recibe[j, d][q] += t
+    return {'itinerario': itinerario, 'cargas': list(cargas.values()), 'transferencias': transferencias, 'ttr_h': ttr}
+
+
 def fijar_aviones(modelo, st, libres):
     """Los aviones que no son libres quedan con los vuelos y horarios del start (su carga sigue libre)."""
     v = modelo._v
@@ -348,7 +433,16 @@ def main():
                     help='aviones que decide el modelo: todos, ninguno, aviones (AC-06,AC-10) u operadores (BRA)')
     ap.add_argument('--corrida', default=ws.CORRIDA_2H, help='corrida de la heurística: start y vuelos de los aviones fijos')
     ap.add_argument('--ttr', type=float, default=None, help='TTR_H (h) de los transbordos; por defecto el de la corrida')
-    ap.add_argument('--smax', type=int, default=gm.S_MAX, help=f'posiciones por avión. Por defecto {gm.S_MAX}')
+    ap.add_argument('--smax', default=str(gm.S_MAX),
+                    help=f'posiciones por avión, o "cota" para el máximo demostrado de vuelos por semana de cada avión '
+                         f'(gurobi_model.cota_posiciones; necesario para que el modelo sea exacto). Por defecto {gm.S_MAX}')
+    ap.add_argument('--interchange', action='store_true',
+                    help='permite que otra filial opere cada vuelo (docs/README_interchanges.md)')
+    ap.add_argument('--exacto', action='store_true',
+                    help='filiales exactas: la filial de cada vuelo es una variable con todas las reglas del validador '
+                         '(docs/README_milp_exacto.md); la solución del MILP se valida tal cual, sin volver a resolver la carga')
+    ap.add_argument('--borde', choices=('base', 'flexible'), default=None,
+                    help='borde de la semana con interchanges: flexible (por defecto) o base')
     ap.add_argument('--tiempo', type=float, default=3600, help='segundos de Gurobi. Por defecto 3600')
     ap.add_argument('--norel', type=float, default=None,
                     help='segundos de la heurística NoRel de Gurobi antes de la raíz; por defecto, el valor '
@@ -370,13 +464,21 @@ def main():
     nombre = os.path.basename(corrida)
     kpi = json.load(open(os.path.join(corrida, 'indicadores_kpi.json'), encoding='utf-8'))['kpis']
     ttr = args.ttr if args.ttr is not None else float(kpi.get('ttr_h', 2.0))
-    datos = gm.cargar_datos(s_max=args.smax)
+    gm.INTERCHANGE = gm.INTERCHANGE or args.interchange or args.exacto
+    if args.borde:
+        ws.CFG_VALIDADOR['borde_operador_base'] = args.borde == 'base'
+    datos = gm.cargar_datos(s_max=args.smax if args.smax == 'cota' else int(args.smax))
+    datos['borde_base'] = ws.CFG_VALIDADOR['borde_operador_base']
+    datos['filiales_exactas'] = args.exacto
     libres = interpretar_libres(args.libres, datos)
     etiqueta = ('todos' if len(libres) == len(datos['K']) else 'ninguno' if not libres
                 else '_'.join(sorted(libres)))
     itinerario = ws.leer_itinerario(corrida)
 
-    print(f'[1/5] MILP continuo con transbordos | corrida {nombre} | TTR_H = {ttr:g} h | S_max = {args.smax} | '
+    smax_txt = (f'{min(datos["S_max_k"].values())}-{max(datos["S_max_k"].values())} (cota)' if args.smax == 'cota'
+                else args.smax)
+    filial_txt = (' | filiales exactas' if args.exacto else ' | interchanges (relajados)' if gm.INTERCHANGE else '')
+    print(f'[1/5] MILP continuo con transbordos{filial_txt} | corrida {nombre} | TTR_H = {ttr:g} h | S_max = {smax_txt} | '
           f'aviones libres: {etiqueta} ({len(libres)} de {len(datos["K"])})')
     _, cuenta = enumerar_pares(datos, itinerario, libres, ttr, solo_contar=True)
     n_pares = sum(n for t, n in cuenta.items() if t != 'binarias')
@@ -394,19 +496,22 @@ def main():
     print('[2/5] Start: vuelos de la corrida con su carga y transbordos (paso final de la heurística, gap 1e-6)...',
           flush=True)
     multi_ref, val_ref = ws.resolver_carga(itinerario, ttr)
+    if gm.INTERCHANGE and val_ref['ok']:   # con la filial que eligió la asignación de filiales para cada vuelo
+        itinerario = multi_ref['solucion']['itinerario']
     print(f'      margen validado de la corrida: {val_ref["margen"]:,.0f} USD | validador '
           f'{"OK" if val_ref["ok"] else val_ref["violaciones"][:5]}')
 
     print('[3/5] Armando el modelo...', flush=True)
     t1 = time.time()
-    modelo = gm.construir_modelo_completo(datos, transbordos=True)
+    modelo = gm.construir_modelo_completo(datos, transbordos=True, exacto=args.exacto)
     pares, _ = enumerar_pares(datos, itinerario, libres, ttr)
     agregar_transbordos(modelo, datos, pares, ttr)
     print(f'      {modelo.NumVars:,} variables ({modelo.NumIntVars:,} enteras), {modelo.NumConstrs:,} restricciones, '
           f'{modelo.NumNZs:,} no ceros, armado en {time.time() - t1:.0f} s', flush=True)
     st = armar_start(modelo, datos, itinerario, multi_ref['solucion'], pares)
     fijar_aviones(modelo, st, libres)
-    xs, violaciones, obj_start = ws.verificar_start(modelo, st)
+    # los horarios exportados vienen redondeados a 5 decimales (hasta 1e-5 h de diferencia en un TAT)
+    xs, violaciones, obj_start = ws.verificar_start(modelo, st, tol=1e-5)
     if violaciones:
         print('      [!] El start NO cumple el modelo:')
         for familia, lista in violaciones.items():
@@ -425,6 +530,7 @@ def main():
     prm.MIPGap = args.gap
     prm.MIPFocus = args.mipfocus
     prm.NodefileStart = 0.5
+    prm.FeasibilityTol = 1e-5          # los horarios del start vienen redondeados a 5 decimales
     prm.LogFile = os.path.join(salida, 'gurobi.log')
     if args.norel is not None:   # sin --norel se deja el valor predeterminado de Gurobi
         prm.NoRelHeurTime = args.norel
@@ -444,11 +550,20 @@ def main():
             'tiempo_limite_s': args.tiempo, 'norel_s': modelo.Params.NoRelHeurTime, 'objetivo_start': obj_start,
             'margen_corrida_mismo_paso_final_usd': val_ref['margen'], 'margen_reportado_corrida_usd': kpi['margen_usd'],
             'pares_transbordo': n_pares, 'variables': modelo.NumVars, 'restricciones': modelo.NumConstrs,
-            's_max': args.smax, 'ttr_h': ttr}
+            's_max': args.smax, 'ttr_h': ttr, 'filiales_exactas': args.exacto}
     if not modelo.SolCount:
         print('No hay solución para exportar.')
         return
+    if args.exacto:   # la solución del MILP tal cual: su margen validado debe coincidir con el objetivo del modelo
+        sol_directa = extraer_solucion(modelo, pares, ttr)
+        val_directa = ws.validar(sol_directa, dict(ws.CFG_VALIDADOR, ttr_h=ttr), ruta_raw=gm.RAW)
+        info.update(margen_validado_directo=val_directa['margen'], validador_directo_ok=val_directa['ok'])
+        print(f'      solución del MILP validada tal cual: validador '
+              f'{"OK" if val_directa["ok"] else val_directa["violaciones"][:5]} | margen {val_directa["margen"]:,.2f} '
+              f'| objetivo del modelo {modelo.ObjVal:,.2f} (diferencia {val_directa["margen"] - modelo.ObjVal:+,.2f})')
     it_modelo = ws.extraer_itinerario(modelo)
+    if args.exacto:
+        it_modelo = sol_directa['itinerario']
     modelo.dispose()
 
     print('[5/5] Validación (paso final de la heurística sobre los vuelos del modelo) y exportación...', flush=True)

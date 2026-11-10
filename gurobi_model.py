@@ -16,9 +16,13 @@ Reglas incluidas, iguales a las de la heurística:
   - carga multitramo en el mismo avión (through);
   - costo real de vuelo (combustible + costo por hora del operador + tasa de aterrizaje) y handling.
 
-Transbordos entre aviones: no están dentro del MILP. Con tiempo continuo requieren una binaria por cada par de
-posiciones de aviones distintos (~350 mil) más su flujo por destino. Igual que en la heurística, se agregan
-después con src/asignacion_carga_multitramos.py sobre los vuelos del MILP (ver warm_start_milp.py).
+Transbordos entre aviones: con transbordos=False no están dentro del MILP y se agregan después con
+src/asignacion_carga_multitramos.py (warm_start_milp.py). Con transbordos=True, milp_continuo_transbordos.py los agrega
+de forma exacta: una binaria por cada par de posiciones de aviones distintos y aeropuerto, más su flujo por destino.
+
+Modelo exacto (exacto=True, con interchanges): la filial de cada vuelo es una variable, con todas las reglas de
+src/validador.py. Junto con los transbordos y S_max = cota_posiciones, el modelo representa exactamente el problema que
+revisa el validador; ver la tabla de fidelidad en docs/README_milp_exacto.md.
 
 La formulación y su correspondencia con la heurística están en docs/README_milp_completo.md.
 """
@@ -45,8 +49,9 @@ UMBRAL_LLENO = 0.95   # mismo supuesto que src/validador.py: un vuelo va "lleno"
 INTERCHANGE = os.environ.get('INTERCHANGE', '0') == '1'
 
 
-def cargar_datos(ruta_raw: str = RAW, s_max: int = S_MAX) -> Dict[str, Any]:
-    """Conjuntos y parámetros del MILP, leídos de los mismos archivos que usa la heurística."""
+def cargar_datos(ruta_raw: str = RAW, s_max=S_MAX) -> Dict[str, Any]:
+    """Conjuntos y parámetros del MILP, leídos de los mismos archivos que usa la heurística. s_max='cota' da a cada
+    avión el máximo de vuelos que puede hacer en la semana (cota_posiciones)."""
     rd = lambda f: pd.read_csv(os.path.join(ruta_raw, f))
     ap, fl, lg = rd('airports.csv'), rd('fleet.csv'), rd('legs_catalog.csv')
     dw, dd, tr = rd('demand_weekly.csv'), rd('demand_daily.csv'), rd('traffic_rights.csv')
@@ -79,6 +84,12 @@ def cargar_datos(ruta_raw: str = RAW, s_max: int = S_MAX) -> Dict[str, Any]:
     c_ke = {(k, e): (fuel_h + min(exf[o] for o in filiales(k, e))) * tau_e[e] + fee[e[1]]
             for k in K for e in Ek[k]}
     h_k = {k: c[('handling_usd_per_ton', op[k])] for k in K}
+    # Modelo exacto con interchanges (construir_modelo_completo(..., exacto=True)): filiales con derechos en cada tramo,
+    # handling por filial y aeropuertos donde cada filial está habilitada (interchange_airports.csv)
+    inter = rd('interchange_airports.csv')
+    sop = {(r.airport, o) for r in inter.itertuples() for o in exf if getattr(r, o) == 1}
+    fil_e = {e: [o for o in sorted(exf) if (o, pais[e[0]]) in permitido and (o, pais[e[1]]) in permitido] for e in E}
+    h_op = {o: c[('handling_usd_per_ton', o)] for o in exf}
 
     # Commodities: (origen, destino, día) con demanda diaria positiva y tarifa por kg
     tarifa = {(o, d): float(r) for o, d, r in zip(dw.origin, dw.dest, dw.tariff_usd_per_kg)}
@@ -100,23 +111,52 @@ def cargar_datos(ruta_raw: str = RAW, s_max: int = S_MAX) -> Dict[str, Any]:
             raise ValueError(f'{r.aircraft_id}: la ventana de mantenimiento debe quedar dentro de la semana')
         mant[r.aircraft_id] = (r.airport, h0, h1)
 
+    TAT_e = {e: tat['technical_stop'] if e[1] in tec else tat['default'] for e in E}
+    if s_max == 'cota':
+        s_max_k = cota_posiciones(K, Ek, tau_e, TAT_e, mant)
+    else:
+        s_max_k = {k: int(s_max) for k in K}
     return {
         'K': K, 'E': E, 'Q': Q, 'Ek': Ek, 'A': sorted(pais), 'op': op, 'P_k': P_k,
-        'S_max_k': {k: s_max for k in K}, 'H': H, 'tau_e': tau_e, 'c_ke': c_ke, 'h_k': h_k,
+        'S_max_k': s_max_k, 'H': H, 'tau_e': tau_e, 'c_ke': c_ke, 'h_k': h_k,
         'D_q': D_q, 'r_q': r_q, 'f_od': f_od, 'mant': mant, 'tec': tec, 'interchange': INTERCHANGE,
+        'fuel_h': fuel_h, 'fee': fee, 'exf': exf, 'h_op': h_op, 'fil_e': fil_e, 'sop': sop,
+        # interchanges: el avión vuelve a su filial base en tierra en el borde de la semana (BORDE=base: el primer y el
+        # último vuelo los opera la filial base); mismo criterio que warm_start_milp.CFG_VALIDADOR
+        'borde_base': os.environ.get('BORDE', 'flexible') == 'base',
+        # distribución equilibrada de frecuencias (opción del validador, apagada por defecto)
+        'dist_frecuencias': os.environ.get('DIST_FRECUENCIAS', '0') == '1',
         'min_ton': float(reglas['min_tons_per_extra_stop']),
         # TAT por tramo según dónde llega el vuelo, y minutos extra si el avión llega y sale lleno
-        'TAT_e': {e: tat['technical_stop'] if e[1] in tec else tat['default'] for e in E},
+        'TAT_e': TAT_e,
         'delta_lleno': max(0.0, tat['full_in_full_out'] - tat['default']),
         # carga máxima de un vuelo que no cuenta como lleno (mismo margen que asignacion_carga_multitramos.py)
         'seguro_k': {k: max(0.0, UMBRAL_LLENO * P_k[k] - 0.01) for k in K},
     }
 
 
-def construir_modelo_completo(datos: Dict[str, Any], env: gp.Env = None, transbordos: bool = False) -> gp.Model:
+def cota_posiciones(K, Ek, tau_e, TAT_e, mant):
+    """Máximo de vuelos que un avión puede hacer en la semana, demostrado: con n vuelos, la rotación dura al menos
+    n * min(duración + TAT mínimo) y, como la ventana de mantenimiento cae dentro de una estadía en tierra, esa estadía
+    dura al menos fin - ini en vez de su TAT (que es <= TAT_max). Con S_max_k = esta cota, limitar las posiciones no
+    excluye ninguna rotación factible."""
+    tat_max = max(TAT_e.values())
+    cota = {}
+    for k in K:
+        m = min(tau_e[e] + TAT_e[e] for e in Ek[k])
+        _, ini, fin = mant[k]
+        cota[k] = int((H - max(0.0, fin - ini - tat_max)) // m + 1e-9)
+    return cota
+
+
+def construir_modelo_completo(datos: Dict[str, Any], env: gp.Env = None, transbordos: bool = False,
+                              exacto: bool = False) -> gp.Model:
     """Arma el MILP. Las variables quedan en modelo._v (diccionario de tupledicts) y los datos en modelo._datos.
     Con transbordos=True cada vuelo puede recibir (tin) y entregar (tout) carga a otros aviones; los pares de
-    vuelos y sus reglas se agregan en milp_continuo_transbordos.py."""
+    vuelos y sus reglas se agregan en milp_continuo_transbordos.py.
+    Con exacto=True e interchanges, la filial de cada vuelo es una variable (f[k,s,o]) con todas las reglas del
+    validador: derechos, costo por hora y handling de la filial, cambios solo en aeropuertos donde ambas filiales están
+    habilitadas y vuelta a la filial base en el borde de la semana (docs/README_milp_exacto.md)."""
     if env is None:
         env = gp.Env(empty=True)
         env.setParam("OutputFlag", 1)
@@ -269,6 +309,69 @@ def construir_modelo_completo(datos: Dict[str, Any], env: gp.Env = None, transbo
         modelo.addConstr(gp.quicksum(y[k, s, od] for k in K if od in sale[k, od[0]]
                                      for s in range(1, S_max_k[k] + 1)) >= f, name=f"R15_frecuencia[{od[0]},{od[1]}]")
 
+    # R16 (opcional, DIST_FRECUENCIAS=1): distribución equilibrada, igual que la opción dist_frecuencias del validador:
+    # a lo más ceil(f/7) salidas por día UTC de cada par comprometido. v = 1 si el vuelo (k, s) es del par y sale ese día
+    if datos.get('dist_frecuencias'):
+        for od, f in datos['f_od'].items():
+            ks_od = [(k, s) for k in K if od in sale[k, od[0]] for s in range(1, S_max_k[k] + 1)]
+            for d in DIAS:
+                v_od = modelo.addVars(ks_od, lb=0, ub=1, name=f"v_dist[{od[0]},{od[1]},{d}]")
+                modelo.addConstrs((v_od[k, s] >= y[k, s, od] + dia[k, s, d] - 1 for k, s in ks_od),
+                                  name=f"R16_dia[{od[0]},{od[1]},{d}]")
+                modelo.addConstr(v_od.sum() <= -(-f // 7), name=f"R16_dist[{od[0]},{od[1]},{d}]")
+
+    # R17 (exacto con interchanges): la filial de cada vuelo es una variable, con las reglas de src/validador.py
+    exacto = exacto or datos.get('filiales_exactas', False)
+    filiales = exacto and datos['interchange']
+    if filiales:
+        ops, base, sop, fil_e = sorted(datos['exf']), datos['op'], datos['sop'], datos['fil_e']
+        exf, h_op = datos['exf'], datos['h_op']
+        KSO = [(k, s, o) for k, s in KS for o in ops]
+        tau_max = {k: max(tau_e[e] for e in Ek[k]) for k in K}
+        f = modelo.addVars(KSO, vtype=GRB.BINARY, name="f")                 # la filial o opera el vuelo (k, s)
+        hb = modelo.addVars(KSO, lb=0, ub=[tau_max[k] for k, s, o in KSO], name="hb")   # horas de bloque de o en (k, s)
+        Bo = modelo.addVars(KSO, lb=0, ub=[P_k[k] for k, s, o in KSO], name="Bo")      # toneladas que manipula o en (k, s)
+        ambas = lambda a, o1, o2: (a, o1) in sop and (a, o2) in sop
+        # una filial por vuelo usado
+        modelo.addConstrs((f.sum(k, s, '*') == u[k, s] for k, s in KS), name="R17_una")
+        # derechos de tráfico: la filial que opera el vuelo los tiene en los dos países del tramo
+        for k, s in KS:
+            for o in ops:
+                sin_derechos = [e for e in Ek[k] if o not in fil_e[e]]
+                if sin_derechos:
+                    modelo.addConstr(gp.quicksum(y[k, s, e] for e in sin_derechos) <= 1 - f[k, s, o],
+                                     name=f"R17_derechos[{k},{s},{o}]")
+        # horas de bloque por filial, para el costo por hora de la filial (hb = duración si f = 1, 0 si no)
+        modelo.addConstrs((hb.sum(k, s, '*') == gp.quicksum(tau_e[e] * y[k, s, e] for e in Ek[k]) for k, s in KS),
+                          name="R17_horas")
+        modelo.addConstrs((hb[k, s, o] <= tau_max[k] * f[k, s, o] for k, s, o in KSO), name="R17_horas_filial")
+        # cambio de filial entre s y s+1: solo en un aeropuerto donde ambas están habilitadas
+        for k, s in KS_menos:
+            for o1 in ops:
+                for o2 in ops:
+                    if o1 != o2:
+                        modelo.addConstr(f[k, s, o1] + f[k, s+1, o2] <= 1 + gp.quicksum(
+                            y[k, s, e] for e in Ek[k] if ambas(e[1], o1, o2)), name=f"R17_cambio[{k},{s},{o1},{o2}]")
+        # borde de la semana: la rotación vuelve a la filial base
+        for k in K:
+            for o in ops:
+                if o == base[k]:
+                    continue
+                if datos.get('borde_base'):     # el primer y el último vuelo los opera la filial base
+                    f[k, 1, o].UB = 0
+                    modelo.addConstrs((f[k, s, o] + l[k, s] <= 1 for s in range(1, S_max_k[k] + 1)),
+                                      name=f"R17_borde_fin[{k},{o}]")
+                else:                           # basta volver en tierra en el aeropuerto del borde
+                    modelo.addConstr(f[k, 1, o] <= gp.quicksum(y[k, 1, e] for e in Ek[k] if ambas(e[0], base[k], o)),
+                                     name=f"R17_borde_ini[{k},{o}]")
+                    modelo.addConstrs((f[k, s, o] + l[k, s] <= 1 + gp.quicksum(
+                        y[k, s, e] for e in Ek[k] if ambas(e[1], base[k], o)) for s in range(1, S_max_k[k] + 1)),
+                        name=f"R17_borde_fin[{k},{o}]")
+        # handling: lo paga la filial del vuelo que embarca (carga inicial y transbordos recibidos)
+        modelo.addConstrs((Bo.sum(k, s, '*') == gp.quicksum(b[q, k, s] for q in Q_k[k])
+                           + (tin.sum('*', k, s) if transbordos else 0) for k, s in KS), name="R17_handling")
+        modelo.addConstrs((Bo[k, s, o] <= P_k[k] * f[k, s, o] for k, s, o in KSO), name="R17_handling_filial")
+
     # RESTRICCIONES DE CARGA
     # R7: mínimo de 10 t por vuelo cargado (un vuelo ferry, sin carga, queda exento)
     modelo.addConstrs((x.sum('*', k, s) >= min_ton * lc[k, s] for k, s in KS), name="R7_min_ton")
@@ -310,8 +413,14 @@ def construir_modelo_completo(datos: Dict[str, Any], env: gp.Env = None, transbo
 
     # FUNCIÓN OBJETIVO: margen neto semanal
     ingresos = gp.quicksum(1000 * r_q[q] * s_q[q] for q in Q)
-    costo_vuelos = gp.quicksum(c_ke[k, e] * y[k, s, e] for k, s, e in KSE)
-    handling = gp.quicksum(h_k[k] * b[q, k, s] for q, k, s in QKS)
+    if filiales:   # combustible y tasa de aterrizaje por tramo; costo por hora y handling de la filial que opera
+        fuel_h, fee = datos['fuel_h'], datos['fee']
+        costo_vuelos = (gp.quicksum((fuel_h * tau_e[e] + fee[e[1]]) * y[k, s, e] for k, s, e in KSE)
+                        + gp.quicksum(exf[o] * hb[k, s, o] for k, s, o in KSO))
+        handling = gp.quicksum(h_op[o] * Bo[k, s, o] for k, s, o in KSO)
+    else:
+        costo_vuelos = gp.quicksum(c_ke[k, e] * y[k, s, e] for k, s, e in KSE)
+        handling = gp.quicksum(h_k[k] * b[q, k, s] for q, k, s in QKS)
 
     modelo.setObjective(ingresos - costo_vuelos - handling, GRB.MAXIMIZE)
     modelo.update()
@@ -320,5 +429,8 @@ def construir_modelo_completo(datos: Dict[str, Any], env: gp.Env = None, transbo
                  'g': g, 'gc': gc, 'm0': m0, 'm': m, 'b': b, 'x': x, 'a': a, 'w': w, 's_q': s_q}
     if transbordos:
         modelo._v.update(tin=tin, tout=tout)
+    if filiales:
+        modelo._v.update(f=f, hb=hb, Bo=Bo)
+    modelo._filiales_exactas = filiales
     modelo._datos = datos
     return modelo

@@ -105,6 +105,13 @@ def resolver_continuo(datos, ttr, itinerario, multi, grupo, args):
             'objetivo_start': obj_start, 'objetivo_modelo': modelo.ObjVal if modelo.SolCount else None,
             'tiempo_gurobi_s': modelo.Runtime, 'variables': modelo.NumVars}
     nuevo = ws.extraer_itinerario(modelo) if modelo.SolCount else None
+    if nuevo is not None and 'f' in modelo._v:   # filiales exactas: cada vuelo trae la filial que eligió el modelo
+        fv = modelo.getAttr('X', modelo._v['f'])
+        for k, legs in nuevo.items():
+            for leg in legs:
+                o = max(sorted(datos['exf']), key=lambda o: fv[k, leg['pos'], o])
+                if o != datos['op'][k]:
+                    leg['op'] = o
     modelo.dispose()
     return nuevo, info
 
@@ -426,6 +433,10 @@ def main():
     ap.add_argument('--interchange', action='store_true',
                     help='permite que otra filial opere cada vuelo (docs/README_interchanges.md): los modelos usan el '
                          'costo de la filial más barata con derechos y cada candidato se evalúa eligiendo las filiales')
+    ap.add_argument('--exacto', action='store_true',
+                    help='con --modelo continuo: filiales exactas en el MILP de cada vecindario (la filial de cada vuelo '
+                         'es una variable con todas las reglas del validador; docs/README_milp_exacto.md). Implica '
+                         '--interchange')
     ap.add_argument('--borde', choices=('base', 'flexible'), default=None,
                     help='borde de la semana con interchanges: flexible (por defecto) basta volver al operador base '
                          'en tierra; base exige que el primer y el último vuelo sean del operador base')
@@ -445,10 +456,12 @@ def main():
     corrida = os.path.normpath(args.corrida)
     kpi = json.load(open(os.path.join(corrida, 'indicadores_kpi.json'), encoding='utf-8'))['kpis']
     ttr = args.ttr if args.ttr is not None else float(kpi.get('ttr_h', 2.0))
-    gm.INTERCHANGE = gm.INTERCHANGE or args.interchange
+    gm.INTERCHANGE = gm.INTERCHANGE or args.interchange or args.exacto
     if args.borde:
         ws.CFG_VALIDADOR['borde_operador_base'] = args.borde == 'base'
     datos = gm.cargar_datos(s_max=args.smax) if continuo else gm.cargar_datos()
+    datos['borde_base'] = ws.CFG_VALIDADOR['borde_operador_base']
+    datos['filiales_exactas'] = args.exacto and continuo
     aviones = list(datos['K']) if args.aviones == 'todos' else [a.strip() for a in args.aviones.split(',')]
     faltan = [a for a in aviones if a not in datos['K']]
     if faltan:
@@ -473,7 +486,8 @@ def main():
     if not val['ok']:
         sys.exit(f'la solución de partida no pasa el validador: {val["violaciones"][:5]}')
     margen0 = mejor = val['margen']
-    inter = f' | interchanges, borde {"base" if ws.CFG_VALIDADOR["borde_operador_base"] else "flexible"}' if gm.INTERCHANGE else ''
+    inter = (f' | interchanges{" (filiales exactas)" if datos["filiales_exactas"] else ""}, borde '
+             f'{"base" if ws.CFG_VALIDADOR["borde_operador_base"] else "flexible"}' if gm.INTERCHANGE else '')
     print(f'[inicio] {os.path.basename(corrida)} | {"tiempo continuo" if continuo else f"DT = {dt:g} h"} | TTR_H = {ttr:g} h{inter} | margen validado {mejor:,.0f} USD | '
           f'{len(aviones)} aviones x {args.vueltas} vuelta(s) x {args.tiempo:,.0f} s | salida {args.salida}', flush=True)
 

@@ -330,3 +330,18 @@ Nota: quedaron todas las restricciones comentadas.
   - **Borde flexible (10 de noviembre).** El grupo decidió que basta que el avión vuelva a su filial base en tierra, en el aeropuerto donde parte y termina la semana. Es el valor por defecto en el validador, `reasignar_operadores.py` y la búsqueda (`--borde base` para el estricto).
     - Aplicado a los vuelos de la búsqueda: **7.406.840, nuevo mejor margen validado**, en `data/results/Interchange_continua_flexible`.
     - Las corridas largas pasan a la máquina de 32 GB; el plan está actualizado en `docs/proximos_pasos.pdf` y `docs/comandos_32gb.txt`.
+
+**Hito 18**
+- **Integrante**: Vicente Olea (con apoyo de Claude Code)
+- **Fecha**: 10 de Noviembre de 2026
+- **Desarrollo**: MILP exacto en tiempo continuo: el modelo representa exactamente el problema que revisa el validador, incluidos interchanges y transbordos. Detalles en `docs/README_milp_exacto.md`.
+  - **Auditoría del MILP integrado contra el validador y el enunciado.**
+    - Sin transbordos dentro del modelo, su cota no era real.
+    - Las 32 posiciones por avión no estaban demostradas suficientes: la mejor solución usa 30, y la cota demostrada es de 85 a 88.
+    - Con interchanges, el costo de la filial más barata era una relajación.
+    - Se dejaron documentadas dos tolerancias numéricas (3,6 s en el día de salida y 0,005 t en el umbral de vuelo lleno).
+  - **Cambios.** `--exacto` agrega la filial de cada vuelo como variable, con todas las reglas del validador: derechos, costo por hora, handling, aeropuertos de cambio, borde de la semana y soporte de transbordos. `--smax cota` usa el máximo demostrado de vuelos por avión. La distribución equilibrada de frecuencias queda como opción (`DIST_FRECUENCIAS=1`, apagada). La solución del MILP se valida tal cual, sin volver a resolver la carga. Funciona en `milp_continuo_transbordos.py` y en `busqueda_por_avion.py --modelo continuo`.
+  - **Pruebas.** En R4 y en la instancia completa, el objetivo del MILP coincidió con el margen validado en todos los casos (diferencia 0,00 USD), también en soluciones nuevas que encontró el modelo. En la instancia completa, el vecindario de AC-03 se resolvió hasta el óptimo en 26 s.
+  - **Límite.** El modelo completo exacto tendría 108 millones de binarias de transbordo y no cabe ni en 32 GB. Una cota global real necesita una relajación demostrada, que queda pendiente.
+  - **Supuestos que siguen abiertos:** tramos de más de 9 h con carga reducida (excluidos), distribución equilibrada de frecuencias (apagada), TTR de 2 h y costo nulo del interchange.
+

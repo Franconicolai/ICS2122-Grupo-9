@@ -119,7 +119,8 @@ def resolver_carga_interchange(itinerario, ttr_h, pasos=3):
 
 
 def armar_start(modelo, itinerario, cargas):
-    """Valor de cada variable del MILP para un itinerario y una carga sin transbordos (las demás valen 0)."""
+    """Valor de cada variable del MILP para un itinerario y una carga sin transbordos (las demás valen 0). Con filiales
+    exactas usa la filial de cada vuelo ('op'; sin ella, el operador base) y las toneladas recibidas por transbordo."""
     v, datos = modelo._v, modelo._datos
     seguro, tec = datos['seguro_k'], datos['tec']
     st = defaultdict(float)
@@ -179,6 +180,16 @@ def armar_start(modelo, itinerario, cargas):
         st[v['a'][q[1], k, s]] += c['a']
         if c['w'] > 1e-9:
             st[v['w'][q[1], k, s]] += c['w']
+    if 'f' in v:   # filiales exactas: filial de cada vuelo, sus horas de bloque y las toneladas que manipula
+        manipula = defaultdict(float)
+        for c in cargas:
+            manipula[c['k'], int(c['s'])] += c['b'] + (c.get('transfer_in', 0.0) if 'tin' in v else 0.0)
+        for k, legs in itinerario.items():
+            for leg in legs:
+                s, o = leg['pos'], leg.get('op') or datos['op'][k]
+                st[v['f'][k, s, o]] = 1
+                st[v['hb'][k, s, o]] = datos['tau_e'][tuple(leg['tramo'])]
+                st[v['Bo'][k, s, o]] = manipula[k, s]
     return st
 
 
