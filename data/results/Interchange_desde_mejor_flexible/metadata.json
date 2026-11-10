@@ -1,0 +1,8 @@
+{
+  "version": "Interchange_desde_mejor_flexible",
+  "fecha": "2026-11-09 20:50:13",
+  "descripcion": "Interchanges (borde flexible) sobre los vuelos de data/results/Busqueda_ventanas_desplazar_d2",
+  "solver": "gurobi",
+  "dt": "continuo",
+  "tlim": null
+}

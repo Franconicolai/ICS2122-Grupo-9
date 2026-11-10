@@ -39,6 +39,10 @@ H = 168.0             # horas de la semana (lunes 00:00 a domingo 24:00, UTC)
 DIAS = range(1, 8)    # día de salida del vuelo: 1 = lunes ... 7 = domingo
 EPS_DIA = 1e-3        # una salida a las 24:00 exactas ya es del día siguiente, igual que int(t // 24) + 1
 UMBRAL_LLENO = 0.95   # mismo supuesto que src/validador.py: un vuelo va "lleno" si lleva >= 95 % del payload
+# INTERCHANGE=1: cada tramo lo puede operar cualquier filial con derechos (docs/README_interchanges.md). Los modelos
+# usan una relajación: el costo por hora de la filial más barata con derechos en el tramo y transbordos en cualquier
+# aeropuerto no técnico. Las filiales reales las elige después src/asignar_operadores.py (warm_start_milp.resolver_carga).
+INTERCHANGE = os.environ.get('INTERCHANGE', '0') == '1'
 
 
 def cargar_datos(ruta_raw: str = RAW, s_max: int = S_MAX) -> Dict[str, Any]:
@@ -64,11 +68,15 @@ def cargar_datos(ruta_raw: str = RAW, s_max: int = S_MAX) -> Dict[str, Any]:
     P_k = dict(zip(fl.aircraft_id, fl.payload_tons.astype(float)))
     tau_e = {(o, d): float(b) for o, d, b in zip(lg.origin, lg.dest, lg.block_hours)}
     E = list(tau_e)
-    Ek = {k: [e for e in E if tau_e[e] <= float(reglas['max_continuous_block_hours'])
-              and (op[k], pais[e[0]]) in permitido and (op[k], pais[e[1]]) in permitido] for k in K}
+    exf = {o: v for (p, o), v in c.items() if p == 'ex_fuel_usd_per_block_hour'}
+    filiales = lambda k, e: ([o for o in exf if (o, pais[e[0]]) in permitido and (o, pais[e[1]]) in permitido]
+                             if INTERCHANGE else
+                             [op[k]] if (op[k], pais[e[0]]) in permitido and (op[k], pais[e[1]]) in permitido else [])
+    Ek = {k: [e for e in E if tau_e[e] <= float(reglas['max_continuous_block_hours']) and filiales(k, e)] for k in K}
 
-    # Costos: vuelo = (combustible + costo por hora del operador) * horas de bloque + tasa de aterrizaje
-    c_ke = {(k, e): (fuel_h + c[('ex_fuel_usd_per_block_hour', op[k])]) * tau_e[e] + fee[e[1]]
+    # Costos: vuelo = (combustible + costo por hora del operador) * horas de bloque + tasa de aterrizaje; con
+    # INTERCHANGE, el costo por hora de la filial más barata con derechos en el tramo
+    c_ke = {(k, e): (fuel_h + min(exf[o] for o in filiales(k, e))) * tau_e[e] + fee[e[1]]
             for k in K for e in Ek[k]}
     h_k = {k: c[('handling_usd_per_ton', op[k])] for k in K}
 
@@ -95,7 +103,7 @@ def cargar_datos(ruta_raw: str = RAW, s_max: int = S_MAX) -> Dict[str, Any]:
     return {
         'K': K, 'E': E, 'Q': Q, 'Ek': Ek, 'A': sorted(pais), 'op': op, 'P_k': P_k,
         'S_max_k': {k: s_max for k in K}, 'H': H, 'tau_e': tau_e, 'c_ke': c_ke, 'h_k': h_k,
-        'D_q': D_q, 'r_q': r_q, 'f_od': f_od, 'mant': mant, 'tec': tec,
+        'D_q': D_q, 'r_q': r_q, 'f_od': f_od, 'mant': mant, 'tec': tec, 'interchange': INTERCHANGE,
         'min_ton': float(reglas['min_tons_per_extra_stop']),
         # TAT por tramo según dónde llega el vuelo, y minutos extra si el avión llega y sale lleno
         'TAT_e': {e: tat['technical_stop'] if e[1] in tec else tat['default'] for e in E},

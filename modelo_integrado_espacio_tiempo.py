@@ -126,6 +126,8 @@ def construir(datos, dt, ttr, itinerario, libres, estimar=False, transbordos=Tru
     ops = sorted(set(datos['op'].values()))
     sop = {(r.airport, o) for r in inter.itertuples() for o in ops if getattr(r, o) == 1}
     soporte = np.array([[(a, o) in sop for o in ops] for a in A])     # (aeropuerto, operador)
+    if datos.get('interchange'):   # relajación: el avión puede llegar operado por cualquier filial habilitada
+        soporte[:] = soporte.any(axis=1, keepdims=True)
     es_tec = np.array([a in datos['tec'] for a in A])
     P = np.array([datos['P_k'][k] for k in K])
     SEG = np.array([datos['seguro_k'][k] for k in K])

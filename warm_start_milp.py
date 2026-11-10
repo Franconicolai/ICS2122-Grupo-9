@@ -41,6 +41,7 @@ from gurobipy import GRB                                          # noqa: E402
 import gurobi_model as gm                                         # noqa: E402
 from asignacion_carga_multitramos import asignar_carga_multitramos  # noqa: E402
 from validador import validar                                     # noqa: E402
+from asignar_operadores import asignar_operadores, cargar_datos_operadores  # noqa: E402
 
 CORRIDA_2H = os.path.join('data', 'results', 'Ejecucion_con_intervalos_de_2_horas')
 SIN_TRANSBORDOS = 1e6    # TTR_H enorme: el submodelo de carga no puede armar transbordos
@@ -56,18 +57,61 @@ def leer_itinerario(carpeta):
     """Itinerario por avión desde itinerario_vuelos.csv (mismo formato que exporta la heurística)."""
     df = pd.read_csv(os.path.join(carpeta, 'itinerario_vuelos.csv'))
     itinerario = {}
+    base = dict(pd.read_csv(os.path.join(gm.RAW, 'fleet.csv'))[['aircraft_id', 'operator']].values)
     for r in df.sort_values(['avion', 'pos']).itertuples():
-        itinerario.setdefault(r.avion, []).append({'pos': int(r.pos), 'tramo': (r.origen, r.destino),
-                                                   't_dep': float(r.t_dep_h), 't_arr': float(r.t_arr_h)})
+        leg = {'pos': int(r.pos), 'tramo': (r.origen, r.destino), 't_dep': float(r.t_dep_h), 't_arr': float(r.t_arr_h)}
+        if r.operador != base[r.avion]:   # vuelo operado por otra filial (interchange)
+            leg['op'] = r.operador
+        itinerario.setdefault(r.avion, []).append(leg)
     return itinerario
 
 
 def resolver_carga(itinerario, ttr_h):
-    """Submodelo de carga de la heurística con los vuelos fijos, y su validación independiente."""
+    """Submodelo de carga de la heurística con los vuelos fijos, y su validación independiente. Con
+    gm.INTERCHANGE, antes elige la filial de cada vuelo (resolver_carga_interchange)."""
+    if gm.INTERCHANGE:
+        return resolver_carga_interchange(itinerario, ttr_h)
     multi = asignar_carga_multitramos(itinerario, ruta_raw=gm.RAW, ttr_h=ttr_h, tlim=600, gap=GAP_CARGA)
     if not multi['ok']:
         raise RuntimeError(f"El submodelo de carga no encontró solución: {multi['estado']}")
     return multi, validar(multi['solucion'], dict(CFG_VALIDADOR, ttr_h=ttr_h), ruta_raw=gm.RAW)
+
+
+_DATOS_OPERADORES = {}
+
+
+def resolver_carga_interchange(itinerario, ttr_h, pasos=3):
+    """Filiales y carga para vuelos fijos (docs/README_interchanges.md), con la alternancia de
+    reasignar_operadores.py: carga con las filiales que trae el itinerario ('op'; sin él, el operador base) ->
+    filiales con esa carga (src/asignar_operadores.py) -> carga -> ... hasta `pasos` resoluciones de carga o hasta
+    que el margen deja de subir. Si la carga de un paso impide toda asignación de filiales (un transbordo en un
+    aeropuerto sin las filiales que necesita el tramo), asigna sin carga. Devuelve la mejor solución validada; si
+    no hay ninguna, una validación fallida."""
+    if gm.RAW not in _DATOS_OPERADORES:
+        _DATOS_OPERADORES[gm.RAW] = cargar_datos_operadores(gm.RAW)
+    D = _DATOS_OPERADORES[gm.RAW]
+    mejor, it_op, solucion = None, itinerario, None
+    for paso in range(pasos):
+        if paso:
+            try:
+                it_op, _ = asignar_operadores(solucion, D)
+            except ValueError:
+                try:
+                    it_op, _ = asignar_operadores(dict(solucion, cargas=[], transferencias=[]), D)
+                except ValueError:
+                    break
+        multi = asignar_carga_multitramos(it_op, ruta_raw=gm.RAW, ttr_h=ttr_h, tlim=600, gap=GAP_CARGA)
+        if not multi['ok']:
+            raise RuntimeError(f"El submodelo de carga no encontró solución: {multi['estado']}")
+        val = validar(multi['solucion'], dict(CFG_VALIDADOR, ttr_h=ttr_h), ruta_raw=gm.RAW)
+        if val['ok']:
+            if mejor is not None and val['margen'] <= mejor[1]['margen'] + 1:
+                break
+            mejor = (multi, val)
+        solucion = multi['solucion']
+    if mejor is None:
+        return None, {'ok': False, 'margen': float('-inf'), 'violaciones': ['sin asignación de filiales factible']}
+    return mejor
 
 
 def armar_start(modelo, itinerario, cargas):
@@ -197,13 +241,22 @@ def exportar(carpeta, itinerario, multi, val, datos, info, ttr_h):
     """Mismos archivos y columnas que exporta la heurística (main.py), para el visualizador."""
     os.makedirs(carpeta, exist_ok=True)
     s = multi['solucion']
-    op_de, h_k = datos['op'], datos['h_k']
+    itinerario = s['itinerario']   # el del submodelo de carga: con INTERCHANGE trae la filial de cada vuelo
+    op_de = datos['op']
     leg = {(k, l['pos']): l for k, legs in itinerario.items() for l in legs}
-    costo_v = {(k, p): datos['c_ke'][k, tuple(l['tramo'])] for (k, p), l in leg.items()}
+    # costo y handling con la filial que opera cada vuelo (interchange); sin 'op', la del operador base
+    op_v = {kp: l.get('op') or op_de[kp[0]] for kp, l in leg.items()}
+    cp = pd.read_csv(os.path.join(gm.RAW, 'cost_params.csv'))
+    c = {(r.param, r.operator): float(r.value) for r in cp.itertuples()}
+    fee = dict(pd.read_csv(os.path.join(gm.RAW, 'landing_fees.csv'))[['airport', 'fee_usd']].values)
+    fuel_h = c['fuel_burn_gal_per_hour', 'ALL'] * c['fuel_price_usd_per_gal', 'ALL']
+    h_op = {o: v for (p, o), v in c.items() if p == 'handling_usd_per_ton'}
+    costo_v = {(k, p): (fuel_h + c['ex_fuel_usd_per_block_hour', op_v[k, p]]) * datos['tau_e'][tuple(l['tramo'])]
+               + fee[l['tramo'][1]] for (k, p), l in leg.items()}
     carga_v, hand_v, ing_v, por_q = defaultdict(float), defaultdict(float), defaultdict(float), defaultdict(list)
     for reg in s['cargas']:
         carga_v[reg['k'], reg['s']] += reg['x']
-        hand_v[reg['k'], reg['s']] += (reg['b'] + reg.get('transfer_in', 0.0)) * h_k[reg['k']]
+        hand_v[reg['k'], reg['s']] += (reg['b'] + reg.get('transfer_in', 0.0)) * h_op[op_v[reg['k'], reg['s']]]
         por_q[tuple(reg['q'])].append(reg)
     # ingreso de cada commodity repartido entre sus vuelos según toneladas-hora (igual que la heurística)
     for q, regs in por_q.items():
@@ -213,7 +266,7 @@ def exportar(carpeta, itinerario, multi, val, datos, info, ttr_h):
             for reg, peso in zip(regs, pesos):
                 ing_v[reg['k'], reg['s']] += total * peso / sum(pesos)
 
-    filas = [{'avion': k, 'operador': op_de[k], 'pos': l['pos'], 'origen': l['tramo'][0], 'destino': l['tramo'][1],
+    filas = [{'avion': k, 'operador': op_v[k, l['pos']], 'pos': l['pos'], 'origen': l['tramo'][0], 'destino': l['tramo'][1],
               't_dep_h': l['t_dep'], 't_arr_h': l['t_arr'], 'dia': int(l['t_dep'] // 24) + 1,
               'carga_t': round(carga_v[k, l['pos']], 3), 'costo_usd': round(costo_v[k, l['pos']], 2),
               'handling_usd': round(hand_v[k, l['pos']], 2), 'ingreso_usd': round(ing_v[k, l['pos']], 2)}

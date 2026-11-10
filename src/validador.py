@@ -96,7 +96,8 @@ def validar(solucion: Dict[str, Any], config: Optional[Dict[str, Any]] = None,
     freq_exigibles : {(o,d): f} frecuencias exigidas en la instancia (por defecto todas las de la base).
     """
     cfg = {'ciclico': True, 'tat_variable': True, 'min_ton_escala': True, 'mantenimiento': True, 'frecuencias': True,
-           'demanda_diaria': False, 'dist_frecuencias': False, 'transferencias': True}
+           'demanda_diaria': False, 'dist_frecuencias': False, 'transferencias': True,
+           'interchanges': True, 'borde_operador_base': True}
     cfg.update(config or {})
     ruta_raw = ruta_raw or os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data', 'raw data')
     R = _cargar_raw(ruta_raw)
@@ -111,6 +112,9 @@ def validar(solucion: Dict[str, Any], config: Optional[Dict[str, Any]] = None,
     viol: List[str] = []
     it = solucion['itinerario']
     aviones = aviones if aviones is not None else list(R['op'])
+    # Interchange: cada vuelo puede indicar en 'op' la filial que lo opera; sin 'op', lo opera el operador base.
+    filiales = set(R['op'].values())
+    op_vuelo = lambda k, l: l['op'] if l.get('op') in filiales else R['op'][k]
 
     # carga por (k, s) y por commodity
     carga = {}
@@ -151,7 +155,7 @@ def validar(solucion: Dict[str, Any], config: Optional[Dict[str, Any]] = None,
             viol.append(f"transferencia {origen}->{receptor} de {q}: aeropuertos no coinciden")
         if aeropuerto in tecnicos:
             viol.append(f"transferencia {origen}->{receptor} de {q}: aeropuerto técnico {aeropuerto}")
-        op_origen, op_receptor = R['op'][origen[0]], R['op'][receptor[0]]
+        op_origen, op_receptor = op_vuelo(origen[0], llega), op_vuelo(receptor[0], sale)
         if not R['soporte'].get((aeropuerto, op_origen), False):
             viol.append(f"transferencia {origen}->{receptor} de {q}: {op_origen} sin soporte en {aeropuerto}")
         if not R['soporte'].get((aeropuerto, op_receptor), False):
@@ -165,15 +169,38 @@ def validar(solucion: Dict[str, Any], config: Optional[Dict[str, Any]] = None,
 
     costo_vuelos = 0.0
     freq_real = {}
+    n_interchanges = 0
     for k in aviones:
         legs = it.get(k, [])
         if not legs:
             # avión ocioso: solo se exige mantenimiento si la config lo pide (ocioso cumple trivialmente)
             continue
-        op = R['op'][k]
         if [l['pos'] for l in legs] != list(range(1, len(legs) + 1)):
             viol.append(f"{k}: posiciones no consecutivas {[l['pos'] for l in legs]}")
+        # interchanges: el cambio de filial entre dos vuelos seguidos exige que ambas estén habilitadas en el
+        # aeropuerto; la rotación parte y termina con el operador base (borde_operador_base) o cambia en el borde
+        base = R['op'][k]
+        ops_k = [op_vuelo(k, l) for l in legs]
         for l in legs:
+            if l.get('op') and l['op'] not in filiales:
+                viol.append(f"{k}: operador desconocido {l['op']} en pos {l['pos']}")
+        if any(op != base for op in ops_k) and not cfg['interchanges']:
+            viol.append(f"{k}: vuelos operados por otra filial con interchanges desactivados")
+        cambios = [(legs[i]['tramo'][1], ops_k[i], ops_k[i + 1]) for i in range(len(legs) - 1)
+                   if ops_k[i] != ops_k[i + 1]]
+        if cfg['ciclico']:
+            if cfg['borde_operador_base']:
+                for op, cual in ((ops_k[0], 'primer'), (ops_k[-1], 'último')):
+                    if op != base:
+                        viol.append(f"{k}: el {cual} vuelo lo opera {op}, no el operador base {base}")
+            else:
+                cambios += [(legs[0]['tramo'][0], base, op) for op in (ops_k[0], ops_k[-1]) if op != base]
+        for aeropuerto, de, a in cambios:
+            for op in (de, a):
+                if not R['soporte'].get((aeropuerto, op), False):
+                    viol.append(f"{k}: interchange {de}->{a} en {aeropuerto} sin habilitación de {op}")
+        n_interchanges += len(cambios)
+        for l, op in zip(legs, ops_k):
             o, d = l['tramo']
             if (o, d) not in R['block']:
                 viol.append(f"{k}: tramo {o}-{d} no está en el catálogo")
@@ -279,10 +306,11 @@ def validar(solucion: Dict[str, Any], config: Optional[Dict[str, Any]] = None,
                 elif de != legs[s + 1][0]:
                     viol.append(f"{k}: carga through {q} no continúa en el mismo aeropuerto desde pos {s}")
             entregado[q] = entregado.get(q, 0.0) + c['a']
-            handling += R['cp'][('handling_usd_per_ton', R['op'][k])] * c['b']
-    # Cada transbordo paga handling al operador que recibe la carga.
+            handling += R['cp'][('handling_usd_per_ton', op_vuelo(k, vuelo_pos[(k, s)]))] * c['b']
+    # Cada transbordo paga handling al operador que recibe la carga (el que opera el vuelo receptor).
     for tr in transferencias:
-        handling += (R['cp'][('handling_usd_per_ton', R['op'][tr['to_k']])]
+        receptor = vuelo_pos.get((tr['to_k'], int(tr['to_s'])), {})
+        handling += (R['cp'][('handling_usd_per_ton', op_vuelo(tr['to_k'], receptor))]
                      * float(tr['tons']))
     for q, ton in entregado.items():
         if ton > R['demanda_diaria'][q] + 1e-5:
@@ -406,6 +434,8 @@ def validar(solucion: Dict[str, Any], config: Optional[Dict[str, Any]] = None,
         'toneladas': toneladas,
         'pct_demanda': 100.0 * toneladas / demanda_total if demanda_total else 0.0,
         'vuelos': vuelos,
+        'interchanges': n_interchanges,
+        'vuelos_otra_filial': sum(op_vuelo(k, l) != R['op'][k] for k in aviones for l in it.get(k, [])),
         'aviones_usados': aviones_usados,
         'horas_bloque': horas_bloque,
         'ctk': ctk,

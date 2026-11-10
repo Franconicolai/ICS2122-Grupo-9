@@ -1,0 +1,5 @@
+Corrida data/results/Busqueda_ventanas_desplazar_d2: margen validado 6,475,055 USD | validador OK | borde flexible | TTR_H 2 h
+  iteración 1: filiales -883,536 USD de costo | 64 interchanges, 270 vuelos de otra filial | carga reasignada -> margen 7,360,303 USD | validador OK
+  iteración 2: filiales -6,379 USD de costo | 61 interchanges, 271 vuelos de otra filial | carga reasignada -> margen 7,366,681 USD | validador OK
+  iteración 3: filiales -0 USD de costo | 61 interchanges, 271 vuelos de otra filial | carga reasignada -> margen 7,366,681 USD | validador OK
+Margen validado: 6,475,055 -> 7,366,681 USD (+891,626) | 61 interchanges | exportado en data/results/Interchange_desde_mejor_flexible

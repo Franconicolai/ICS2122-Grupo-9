@@ -312,3 +312,18 @@ Nota: quedaron todas las restricciones comentadas.
     - instancia completa: 6.466.083 → **6.475.055 (nuevo mejor margen validado)**, en `data/results/Busqueda_ventanas_desplazar_d2`;
     - R10 no mejora: sus aviones van llenos y no hay huecos que aprovechar.
   - **El punto de partida importa:** en R4 gana la rama de la red espacio-tiempo (868.027 contra 839.809) y en R10 la del MILP continuo (2.692.881 contra 2.631.087). Por eso conviene correr las dos ramas en la máquina grande.
+
+**Hito 17**
+- **Integrante**: Vicente Olea (con apoyo de Claude Code)
+- **Fecha**: 9 de Noviembre de 2026
+- **Desarrollo**: Interchanges, es decir, aviones operados momentáneamente por otra filial. Detalles en `docs/README_interchanges.md`.
+  - **La regla.** El profesor confirmó que un avión puede pasar a ser operado por otra filial en un aeropuerto donde ambas están habilitadas (`interchange_airports.csv`), siempre que la rotación cíclica termine con su operador base. Hasta ahora ese archivo solo se usaba para los transbordos de carga.
+  - **Por qué importa.** Cada vuelo paga el ex-fuel y el handling de la filial que lo opera. El ex-fuel va de 3.300 USD/h (PAC) a 4.450 USD/h (AND).
+  - **Cambios:** el validador, el submodelo de carga y la exportación usan la filial de cada vuelo (campo `op`; sin él, el operador base, así que los resultados anteriores no cambian). Se agregaron `src/asignar_operadores.py` (programación dinámica exacta por avión con los vuelos fijos) y `reasignar_operadores.py` (alterna filiales y carga, valida y exporta).
+  - **Resultados con los vuelos de la mejor solución (6.475.055):**
+    - primer y último vuelo con el operador base: **7.273.495 (+798.440), nuevo mejor margen validado**, en `data/results/Interchange_desde_mejor`;
+    - basta volver al operador base en el borde de la semana: 7.366.681 (+891.626), en `data/results/Interchange_desde_mejor_flexible`.
+  - **Fase 2: los modelos eligen los vuelos sabiendo que la filial puede cambiar** (`INTERCHANGE=1`, o `busqueda_por_avion.py --interchange`).
+    - Cada tramo tiene el costo de la filial más barata con derechos, y los transbordos de los vuelos libres se relajan.
+    - Cada candidato se evalúa eligiendo las filiales reales (alternando carga y filiales) y se valida.
+    - Detalles en la sección "Fase 2" de `docs/README_interchanges.md`. La búsqueda por ventanas desde 7.273.495 está en curso (`data/results/Interchange_continua`).

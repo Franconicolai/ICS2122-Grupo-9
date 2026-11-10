@@ -423,6 +423,9 @@ def main():
     ap.add_argument('--deposito-agregado', action='store_true',
                     help='inventario de transbordos agregado por aeropuerto (~30 %% menos variables y memoria; cada '
                          'candidato se revalida con el paso de carga exacto)')
+    ap.add_argument('--interchange', action='store_true',
+                    help='permite que otra filial opere cada vuelo (docs/README_interchanges.md): los modelos usan el '
+                         'costo de la filial más barata con derechos y cada candidato se evalúa eligiendo las filiales')
     ap.add_argument('--hilos', type=int, default=0, help='Threads de Gurobi (0 = todos)')
     ap.add_argument('--memoria', type=float, default=6, help='GB máximos para Gurobi por avión. Por defecto 6')
     ap.add_argument('--salida', default=None, help='carpeta de salida (por defecto data/results/Busqueda_por_avion_dt<DT>)')
@@ -439,6 +442,7 @@ def main():
     corrida = os.path.normpath(args.corrida)
     kpi = json.load(open(os.path.join(corrida, 'indicadores_kpi.json'), encoding='utf-8'))['kpis']
     ttr = args.ttr if args.ttr is not None else float(kpi.get('ttr_h', 2.0))
+    gm.INTERCHANGE = gm.INTERCHANGE or args.interchange
     datos = gm.cargar_datos(s_max=args.smax) if continuo else gm.cargar_datos()
     aviones = list(datos['K']) if args.aviones == 'todos' else [a.strip() for a in args.aviones.split(',')]
     faltan = [a for a in aviones if a not in datos['K']]
@@ -459,6 +463,8 @@ def main():
     if not continuo:
         mi.construir(datos, dt, ttr, itinerario, set(), estimar=True)   # falla temprano si no calza con la grilla
     multi, val = ws.resolver_carga(itinerario, ttr)
+    if gm.INTERCHANGE and val['ok']:
+        itinerario = multi['solucion']['itinerario']
     if not val['ok']:
         sys.exit(f'la solución de partida no pasa el validador: {val["violaciones"][:5]}')
     margen0 = mejor = val['margen']
@@ -500,11 +506,18 @@ def main():
                 # revalida si cambiaron los vuelos
                 if (nuevo is not None and info['objetivo_modelo'] > info['objetivo_start'] + 1.0
                         and vuelos(nuevo) != vuelos(itinerario)):
+                    if gm.INTERCHANGE:   # los vuelos que no cambian parten con la filial que ya tienen
+                        filial = {(k, tuple(l['tramo']), round(l['t_dep'], 4)): l['op']
+                                  for k, legs in itinerario.items() for l in legs if l.get('op')}
+                        nuevo = {k: [dict(l, op=filial[k, tuple(l['tramo']), round(l['t_dep'], 4)])
+                                     if (k, tuple(l['tramo']), round(l['t_dep'], 4)) in filial else l for l in legs]
+                                 for k, legs in nuevo.items()}
                     multi_n, val_n = ws.resolver_carga(nuevo, ttr)
                     margen_nuevo = val_n['margen']
                     if val_n['ok'] and margen_nuevo > mejor + args.umbral_aceptar:
                         acepta = True
-                        itinerario, multi, val = nuevo, multi_n, val_n
+                        # con INTERCHANGE, el itinerario del submodelo de carga trae la filial elegida de cada vuelo
+                        itinerario, multi, val = multi_n['solucion']['itinerario'], multi_n, val_n
                         evaluados.pop(grupo, None)
                         historial.append({'vuelta': vuelta, 'avion': avion, 'margen': margen_nuevo,
                                           'mejora': margen_nuevo - mejor})

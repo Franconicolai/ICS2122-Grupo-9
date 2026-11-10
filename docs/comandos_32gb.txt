@@ -1,0 +1,30 @@
+# Comandos de docs/proximos_pasos.pdf, listos para copiar.
+# Cada comando va en UNA sola linea. Ejecutar desde la carpeta ICS2122-Grupo-9.
+
+# Paso 0: preparar el computador (una vez)
+git clone -b milp-completo-warm-start https://github.com/Franconicolai/ICS2122-Grupo-9.git
+cd ICS2122-Grupo-9
+pip install gurobipy pandas numpy scipy pyyaml python-dotenv highspy
+python -c "import gurobipy as gp; gp.Model(); print('Gurobi OK')"
+
+# Paso 1: red espacio-tiempo con grilla de 1 h (noche 1, ~12 h)
+python -u busqueda_por_avion.py --corrida data/results/Heuristica_dt1_iter3_AND --dt 1 --vecindario avion,par --orden uso --max-pares 15 --tiempo 1200 --memoria 24 --mejora-minima 2000 --vueltas 20 --horas 12 --salida data/results/RamaB_red_dt1 2>&1 | tee data/results/RamaB_red_dt1.log
+
+# Paso 2: tiempo continuo sobre el resultado del Paso 1 (noche 2, ~12 h)
+python -u busqueda_por_avion.py --modelo continuo --corrida data/results/RamaB_red_dt1 --vecindario ventana,avion,par --ventana-h 12 --ventana-paso 6 --desplazar 2 --desplazar-aviones 10 --desplazar-presupuesto 60 --tiempo 300 --norel 60 --saltar-sin-cambios --umbral-aceptar 100 --mejora-minima 2000 --orden uso --memoria 24 --vueltas 20 --horas 12 --salida data/results/RamaB_continua 2>&1 | tee data/results/RamaB_continua.log
+
+# Paso 3: vecindarios grandes desde el mejor actual (noche 3, ~12 h)
+python -u busqueda_por_avion.py --modelo continuo --corrida data/results/Busqueda_ventanas_desplazar_d2 --vecindario ventana,trio,operador --ventana-h 24 --ventana-paso 12 --desplazar 2 --desplazar-aviones 10 --desplazar-presupuesto 60 --tiempo 900 --norel 120 --saltar-sin-cambios --umbral-aceptar 100 --mejora-minima 2000 --orden uso --memoria 24 --vueltas 20 --horas 12 --salida data/results/Grandes_desde_mejor 2>&1 | tee data/results/Grandes_desde_mejor.log
+
+# Paso 4a: MILP integrado en tiempo continuo, dos veces (~1 h cada una)
+python -u warm_start_milp.py --corrida data/results/Heuristica_dt1_iter2 --tiempo 3600 --norel 3000 --hilos 8 --salida data/results/MILP_integrado_h8 2>&1 | tee data/results/MILP_integrado_h8.log
+python -u warm_start_milp.py --corrida data/results/Heuristica_dt1_iter2 --tiempo 3600 --norel 3000 --hilos 6 --salida data/results/MILP_integrado_h6 2>&1 | tee data/results/MILP_integrado_h6.log
+
+# Paso 4b: solo si alguno supera 6.435.839; cambiar MILP_integrado_h8 por la carpeta del mejor (noche 4, ~12 h)
+python -u busqueda_por_avion.py --modelo continuo --corrida data/results/MILP_integrado_h8 --vecindario ventana,avion,par --ventana-h 12 --ventana-paso 6 --desplazar 2 --desplazar-aviones 10 --desplazar-presupuesto 60 --tiempo 300 --norel 60 --saltar-sin-cambios --umbral-aceptar 100 --mejora-minima 2000 --orden uso --memoria 24 --vueltas 20 --horas 12 --salida data/results/MILP_integrado_continua 2>&1 | tee data/results/MILP_integrado_continua.log
+
+# Paso 5: subir los resultados a la rama (nunca a main)
+git add data/results/RamaB_* data/results/Grandes_desde_mejor* data/results/MILP_integrado*
+git commit -m "resultados maquina 32 GB"
+git pull
+git push

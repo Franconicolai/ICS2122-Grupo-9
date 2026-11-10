@@ -47,7 +47,15 @@ def preparar(datos, itinerario, libres, ttr):
     ops = sorted(set(datos['op'].values()))
     sop = {(r.airport, o) for r in inter.itertuples() for o in ops if getattr(r, o) == 1}
     op, tec = datos['op'], datos['tec']
-    ok = lambda a, k1, k2: a not in tec and (a, op[k1]) in sop and (a, op[k2]) in sop
+    if datos.get('interchange'):
+        # un vuelo fijo (s1/s2 = su posición) mantiene la filial que lo opera en la solución de partida; un vuelo
+        # libre puede quedar operado por cualquier filial habilitada en el aeropuerto (relajación)
+        con_soporte = {a for a, _ in sop}
+        op_vuelo = {(k, l['pos']): l.get('op') or op[k] for k, legs in itinerario.items() for l in legs}
+        lado = lambda a, k, s: (a, op_vuelo[k, s]) in sop if s is not None else a in con_soporte
+        ok = lambda a, k1, k2, s1=None, s2=None: a not in tec and lado(a, k1, s1) and lado(a, k2, s2)
+    else:
+        ok = lambda a, k1, k2, s1=None, s2=None: a not in tec and (a, op[k1]) in sop and (a, op[k2]) in sop
     llegan = {k: {e[1] for e in datos['Ek'][k]} for k in datos['K']}
     salen = {k: {e[0] for e in datos['Ek'][k]} for k in datos['K']}
     fijos = [(k, l['pos'], l['tramo'][0], l['tramo'][1], l['t_dep'], l['t_arr'])
@@ -73,15 +81,15 @@ def enumerar_pares(datos, itinerario, libres, ttr, solo_contar=False):
 
     for k, s, o, d, td, ta in fijos:                                     # fijo -> fijo
         for k2, s2, o2, d2, td2, ta2 in salidas_fijas.get(d, []):
-            if k2 != k and ok(d, k, k2) and td2 >= ta + ttr - 1e-9:
+            if k2 != k and ok(d, k, k2, s, s2) and td2 >= ta + ttr - 1e-9:
                 nuevo('FF', (k, s), (k2, s2), [d])
     for k in sorted(libres):
         for k2, s2, o2, d2, td2, ta2 in fijos:                            # libre -> fijo (el fijo sale de o2)
-            if o2 in llegan[k] and ok(o2, k, k2) and td2 - ttr > 0:
+            if o2 in llegan[k] and ok(o2, k, k2, None, s2) and td2 - ttr > 0:
                 for s in range(1, S[k] + 1):
                     nuevo('LF', (k, s), (k2, s2), [o2], t_j=td2)
         for k1, s1, o1, d1, td1, ta1 in fijos:                            # fijo -> libre (el fijo llega a d1)
-            if d1 in salen[k] and ok(d1, k1, k) and ta1 + ttr < H:
+            if d1 in salen[k] and ok(d1, k1, k, s1) and ta1 + ttr < H:
                 for s in range(1, S[k] + 1):
                     nuevo('FL', (k1, s1), (k, s), [d1], t_i=ta1)
         for k2 in sorted(libres):                                         # libre -> libre
@@ -114,16 +122,16 @@ def enumerar_pares_posiciones(datos, itinerario, libres, cotas, ttr):
 
     for k, s, o, d, td, ta in fijos:                                     # fijo -> fijo
         for k2, s2, o2, d2, td2, ta2 in salidas_fijas.get(d, []):
-            if k2 != k and ok(d, k, k2) and td2 >= ta + ttr - 1e-9:
+            if k2 != k and ok(d, k, k2, s, s2) and td2 >= ta + ttr - 1e-9:
                 nuevo('FF', (k, s), (k2, s2), [d])
     libres = sorted(libres)
     for k, s in libres:
         lo, hi = cotas[k]
         for k2, s2, o2, d2, td2, ta2 in fijos:                            # libre -> fijo
-            if k2 != k and o2 in llegan[k] and ok(o2, k, k2) and td2 - ttr > lo:
+            if k2 != k and o2 in llegan[k] and ok(o2, k, k2, None, s2) and td2 - ttr > lo:
                 nuevo('LF', (k, s), (k2, s2), [o2], t_j=td2)
         for k1, s1, o1, d1, td1, ta1 in fijos:                            # fijo -> libre
-            if k1 != k and d1 in salen[k] and ok(d1, k1, k) and ta1 + ttr < hi:
+            if k1 != k and d1 in salen[k] and ok(d1, k1, k, s1) and ta1 + ttr < hi:
                 nuevo('FL', (k1, s1), (k, s), [d1], t_i=ta1)
         for k2, s2 in libres:                                             # libre -> libre
             if k2 != k and cotas[k][0] + ttr < cotas[k2][1]:
@@ -170,7 +178,8 @@ def enumerar_pares_flexibles(datos, itinerario, info, ttr):
         por_j = defaultdict(list)                     # aeropuertos donde i puede entregar a j
         for a in sorted(llega[i]):
             for j in salen_de.get(a, []):
-                if j[0] != k and ok(a, k, j[0]) and t_llega_min[i] + ttr <= t_sale_max[j] + 1e-9:
+                if (j[0] != k and ok(a, k, j[0], None if libre(i) else i[1], None if libre(j) else j[1])
+                        and t_llega_min[i] + ttr <= t_sale_max[j] + 1e-9):
                     por_j[j].append(a)
         for j, aps in por_j.items():
             ci, cj = alt[i], alt[j]

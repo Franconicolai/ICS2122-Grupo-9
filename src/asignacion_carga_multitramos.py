@@ -99,7 +99,7 @@ def construir_vuelos(itinerario, datos):
             "id": fid,
             "k": avion,
             "s": posicion,
-            "op": datos["operador"][avion],
+            "op": leg.get("op") or datos["operador"][avion],   # filial que opera el vuelo (interchange)
             "o": origen,
             "d": destino,
             "dep": float(leg["t_dep"]),

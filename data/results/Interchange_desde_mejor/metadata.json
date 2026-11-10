@@ -1,0 +1,8 @@
+{
+  "version": "Interchange_desde_mejor",
+  "fecha": "2026-11-09 20:46:33",
+  "descripcion": "Interchanges (borde base) sobre los vuelos de data/results/Busqueda_ventanas_desplazar_d2",
+  "solver": "gurobi",
+  "dt": "continuo",
+  "tlim": null
+}
