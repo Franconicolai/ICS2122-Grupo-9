@@ -14,9 +14,10 @@ python -u busqueda_por_avion.py --modelo continuo --interchange --corrida data/r
 python -u reasignar_operadores.py --corrida data/results/RamaB_red_dt1 --salida data/results/RamaB_interchange 2>&1 | tee data/results/RamaB_interchange.log
 python -u busqueda_por_avion.py --modelo continuo --interchange --corrida data/results/RamaB_interchange --vecindario ventana,avion,par --ventana-h 12 --ventana-paso 6 --desplazar 2 --desplazar-aviones 10 --desplazar-presupuesto 60 --tiempo 300 --norel 60 --saltar-sin-cambios --umbral-aceptar 100 --mejora-minima 2000 --orden uso --memoria 24 --vueltas 20 --horas 12 --salida data/results/RamaB_interchange_continua 2>&1 | tee data/results/RamaB_interchange_continua.log
 
-# Paso 4: vecindarios grandes con interchanges (noche, ~12 h)
+# Paso 4: vecindarios grandes con interchanges y MILP exacto (noche, ~12 h)
+# --exacto: la filial de cada vuelo es una variable del modelo; el objetivo del modelo es el margen validado.
 # Si el Paso 3 termino con mas margen que el Paso 2, cambiar Interchange_ventanas por RamaB_interchange_continua en --corrida.
-python -u busqueda_por_avion.py --modelo continuo --interchange --corrida data/results/Interchange_ventanas --vecindario ventana,trio,operador --ventana-h 24 --ventana-paso 12 --desplazar 2 --desplazar-aviones 10 --desplazar-presupuesto 60 --tiempo 900 --norel 120 --saltar-sin-cambios --umbral-aceptar 100 --mejora-minima 2000 --orden uso --memoria 24 --vueltas 20 --horas 12 --salida data/results/Interchange_grandes 2>&1 | tee data/results/Interchange_grandes.log
+python -u busqueda_por_avion.py --modelo continuo --interchange --exacto --corrida data/results/Interchange_ventanas --vecindario ventana,trio,operador --ventana-h 24 --ventana-paso 12 --desplazar 2 --desplazar-aviones 10 --desplazar-presupuesto 60 --tiempo 900 --norel 120 --saltar-sin-cambios --umbral-aceptar 100 --mejora-minima 2000 --orden uso --memoria 24 --vueltas 20 --horas 12 --salida data/results/Interchange_grandes 2>&1 | tee data/results/Interchange_grandes.log
 
 # Paso 5: subir los resultados a la rama (nunca a main)
 git add data/results/RamaB_* data/results/Interchange_ventanas* data/results/Interchange_grandes*

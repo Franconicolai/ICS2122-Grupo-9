@@ -182,19 +182,21 @@ python -u busqueda_por_avion.py --modelo continuo --interchange --corrida data/r
 
 \campo{Cómo saber si salió bien:} si el margen final supera el del Paso 2, la rama B también gana con interchanges.
 
-\section{Paso 4 --- Vecindarios grandes con interchanges}
+\section{Paso 4 --- Vecindarios grandes con interchanges y MILP exacto}
 
 \campo{Qué hace:} parte del mejor resultado de los pasos 2 y 3 y prueba vecindarios más grandes que los que caben en el notebook: ventanas de 24 h, tríos de aviones y operadores completos.
 
 \campo{Por qué:} cuando las ventanas de 12 h dejan de mejorar, la solución es un óptimo local para ellas. Para salir de ahí hacen falta vecindarios más grandes, y esos necesitan memoria.
 
+\campo{Qué cambia con \texttt{-{}-exacto}:} la filial de cada vuelo es una variable del modelo, con todas las reglas del validador (\texttt{docs/README\_milp\_exacto.md}). Así, el objetivo del modelo es exactamente el margen validado: no propone candidatos que solo se ven buenos por una aproximación. Si Gurobi cierra el gap en un vecindario, queda demostrado que ese vecindario no puede mejorar. En la instancia completa, el vecindario de un avión se cerró en 26 s.
+
 \begin{lstlisting}
-python -u busqueda_por_avion.py --modelo continuo --interchange --corrida data/results/Interchange_ventanas --vecindario ventana,trio,operador --ventana-h 24 --ventana-paso 12 --desplazar 2 --desplazar-aviones 10 --desplazar-presupuesto 60 --tiempo 900 --norel 120 --saltar-sin-cambios --umbral-aceptar 100 --mejora-minima 2000 --orden uso --memoria 24 --vueltas 20 --horas 12 --salida data/results/Interchange_grandes 2>&1 | tee data/results/Interchange_grandes.log
+python -u busqueda_por_avion.py --modelo continuo --interchange --exacto --corrida data/results/Interchange_ventanas --vecindario ventana,trio,operador --ventana-h 24 --ventana-paso 12 --desplazar 2 --desplazar-aviones 10 --desplazar-presupuesto 60 --tiempo 900 --norel 120 --saltar-sin-cambios --umbral-aceptar 100 --mejora-minima 2000 --orden uso --memoria 24 --vueltas 20 --horas 12 --salida data/results/Interchange_grandes 2>&1 | tee data/results/Interchange_grandes.log
 \end{lstlisting}
 
 \campo{Antes de correrlo:} si el Paso 3 terminó con más margen que el Paso 2, cambia \texttt{Interchange\_ventanas} por \texttt{RamaB\_interchange\_continua} en \texttt{-{}-corrida}.
 
-\campo{Qué esperar:} hasta 15 min por vecindario. Es posible que no mejore; el resultado igual sirve, porque muestra que el óptimo local resiste vecindarios grandes.
+\campo{Qué esperar:} la primera línea incluye \texttt{interchanges (filiales exactas)}. Hasta 15 min por vecindario. En \texttt{progreso.csv}, la columna \texttt{estado} dice \texttt{Optimo} en los vecindarios que se cerraron. Es posible que no mejore; el resultado igual sirve, porque muestra que el óptimo local resiste vecindarios grandes.
 
 \section{Paso 5 --- Revisar y subir}
 
@@ -240,6 +242,7 @@ Opción & Qué controla \\
 \texttt{-{}-orden uso}, \texttt{-{}-max-pares} & Recorre primero los aviones más usados; limita cuántos pares se prueban. \\
 \texttt{-{}-interchange} & Permite que otra filial opere cada vuelo; sin esta opción, cada avión vuela siempre con su filial base. \\
 \texttt{-{}-borde} & Borde de la semana con interchanges: \texttt{flexible} (por defecto) o \texttt{base}. \\
+\texttt{-{}-exacto} & MILP exacto en cada vecindario: la filial de cada vuelo es una variable; implica \texttt{-{}-interchange}. \\
 \bottomrule
 \end{tabularx}
 \end{table}
