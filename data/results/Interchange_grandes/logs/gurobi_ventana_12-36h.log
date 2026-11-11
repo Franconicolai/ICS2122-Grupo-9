@@ -1,0 +1,193 @@
+
+Gurobi 13.0.3 (win64) logging started Tue Nov 10 20:30:36 2026
+
+Set parameter LogFile to value "data/results/Interchange_grandes\logs\gurobi_ventana_12-36h.log"
+Set parameter SoftMemLimit to value 24
+Gurobi Optimizer version 13.0.3 build v13.0.3rc0 (win64 - Windows 11+.0 (26200.2))
+
+CPU model: Intel(R) Core(TM) Ultra 9 285H, instruction set [SSE2|AVX|AVX2]
+Thread count: 16 physical cores, 16 logical processors, using up to 16 threads
+
+Non-default parameters:
+TimeLimit  900
+SoftMemLimit  24
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  120
+LogToConsole  0
+
+Optimize a model with 678630 rows, 1024439 columns and 7013568 nonzeros (Max)
+Model fingerprint: 0x441747db
+Model has 95073 linear objective coefficients
+Variable types: 762898 continuous, 261541 integer (261541 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 4e+04]
+  Bounds range     [1e+00, 8e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 7.40684e+06
+
+Presolve removed 420468 rows and 448471 columns (presolve time = 5s)...
+Presolve removed 518217 rows and 527370 columns (presolve time = 10s)...
+Presolve removed 525068 rows and 536290 columns (presolve time = 15s)...
+Presolve removed 525068 rows and 536290 columns (presolve time = 20s)...
+Presolve removed 525068 rows and 536290 columns (presolve time = 25s)...
+Presolve removed 525068 rows and 536290 columns (presolve time = 30s)...
+Presolve removed 525068 rows and 536290 columns (presolve time = 35s)...
+Presolve removed 525068 rows and 536290 columns (presolve time = 40s)...
+Presolve removed 525068 rows and 536290 columns (presolve time = 45s)...
+Presolve removed 581829 rows and 660933 columns
+Presolve time: 46.31s
+Presolved: 96801 rows, 363506 columns, 1306043 nonzeros
+Variable types: 340780 continuous, 22726 integer (22726 binary)
+Performing another presolve...
+Presolve removed 11406 rows and 5616 columns (presolve time = 5s)...
+Presolve removed 11451 rows and 5728 columns (presolve time = 12s)...
+Presolve removed 11451 rows and 28226 columns (presolve time = 17s)...
+Presolve removed 23841 rows and 75027 columns (presolve time = 20s)...
+Presolve removed 23940 rows and 77039 columns (presolve time = 25s)...
+Presolve removed 23941 rows and 77289 columns
+Presolve time: 26.02s
+Starting NoRel heuristic
+Found phase-1 solution: relaxation 2196.26
+Found phase-1 solution: relaxation 984.296
+Found phase-1 solution: relaxation 970.306
+Found phase-1 solution: relaxation 31.0001
+Found phase-1 solution: relaxation 30.0001
+Found phase-1 solution: relaxation 30.0001
+Found phase-1 solution: relaxation 29.0001
+Found phase-1 solution: relaxation 27.0001
+Found phase-1 solution: relaxation 4.0001
+Found phase-1 solution: relaxation 1.00009
+Elapsed time for NoRel heuristic: 5s (best bound 1.00032e+07)
+Found phase-1 solution: relaxation 0.000100002
+Found phase-1 solution: relaxation 0
+Transition to phase 2
+Elapsed time for NoRel heuristic: 11s (best bound 9.92319e+06)
+Elapsed time for NoRel heuristic: 16s (best bound 9.8486e+06)
+Elapsed time for NoRel heuristic: 21s (best bound 9.84184e+06)
+Elapsed time for NoRel heuristic: 27s (best bound 9.81435e+06)
+Elapsed time for NoRel heuristic: 33s (best bound 9.70405e+06)
+Elapsed time for NoRel heuristic: 39s (best bound 9.61425e+06)
+Elapsed time for NoRel heuristic: 46s (best bound 9.53525e+06)
+Elapsed time for NoRel heuristic: 52s (best bound 9.45145e+06)
+Elapsed time for NoRel heuristic: 60s (best bound 9.3846e+06)
+Elapsed time for NoRel heuristic: 66s (best bound 9.32321e+06)
+Elapsed time for NoRel heuristic: 74s (best bound 9.31075e+06)
+Elapsed time for NoRel heuristic: 80s (best bound 9.28712e+06)
+Elapsed time for NoRel heuristic: 88s (best bound 9.23909e+06)
+Elapsed time for NoRel heuristic: 95s (best bound 9.13932e+06)
+Elapsed time for NoRel heuristic: 102s (best bound 8.98549e+06)
+Elapsed time for NoRel heuristic: 109s (best bound 8.86852e+06)
+Elapsed time for NoRel heuristic: 116s (best bound 8.80293e+06)
+Elapsed time for NoRel heuristic: 123s (best bound 8.73499e+06)
+NoRel heuristic complete
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Ordering time: 8.76s
+
+Barrier statistics:
+ Dense cols : 476
+ AA' NZ     : 4.110e+06
+ Factor NZ  : 2.080e+08 (roughly 1.8 GB of memory)
+ Factor Ops : 1.732e+12 (roughly 4 seconds per iteration)
+ Threads    : 14
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0  -7.47336137e+08  4.51701906e+10  7.39e+04 3.40e+03  5.84e+06   207s
+   1  -5.96498790e+08  4.64204398e+10  5.58e+04 7.63e+03  4.32e+06   207s
+   2  -4.45284407e+08  4.75136524e+10  4.01e+04 4.27e+03  3.14e+06   208s
+   3  -3.99175844e+08  4.79271548e+10  3.52e+04 2.47e+03  2.79e+06   208s
+   4  -2.95606151e+08  4.80193664e+10  2.46e+04 1.68e+03  1.99e+06   208s
+   5  -1.98903169e+08  4.69709779e+10  1.47e+04 9.10e+02  1.22e+06   208s
+   6  -1.48770824e+08  4.57327668e+10  9.59e+03 7.14e+02  8.02e+05   208s
+   7  -8.01191804e+07  4.04575215e+10  6.71e+03 2.89e+02  3.52e+05   208s
+   8  -5.33336378e+07  2.86285013e+10  4.32e+03 1.23e+02  1.91e+05   208s
+   9  -3.27883222e+07  1.83104210e+10  2.39e+03 4.04e+01  9.57e+04   208s
+  10  -2.29269985e+07  1.08579567e+10  1.51e+03 1.61e+01  5.43e+04   208s
+  11  -1.83123316e+07  8.72370352e+09  1.07e+03 1.13e+01  3.89e+04   208s
+  12  -1.22637948e+07  5.40350410e+09  6.39e+02 4.04e+00  1.89e+04   208s
+  13  -9.82641988e+06  3.42560015e+09  4.19e+02 1.38e-01  1.08e+04   208s
+  14  -8.44205111e+06  2.55016247e+09  2.79e+02 1.86e-10  7.43e+03   209s
+  15  -7.86531645e+06  1.78985351e+09  2.04e+02 1.31e-10  5.35e+03   209s
+  16  -7.46037360e+06  1.52688315e+09  1.64e+02 1.16e-10  4.42e+03   209s
+  17  -7.08805266e+06  1.24796496e+09  1.25e+02 1.78e-10  3.49e+03   209s
+  18  -6.69630259e+06  1.01870732e+09  8.21e+01 1.26e-10  2.60e+03   210s
+  19  -6.46823385e+06  7.91571657e+08  6.52e+01 5.09e-11  2.04e+03   211s
+  20  -6.20622048e+06  6.46121109e+08  5.39e+01 5.70e-04  1.66e+03   223s
+  21  -5.97920705e+06  4.28185323e+08  4.83e+01 5.91e-03  1.24e+03   232s
+  22  -5.08460326e+06  2.20462903e+08  3.23e+01 8.85e-04  7.12e+02   241s
+  23  -3.55186947e+06  1.36946300e+08  2.02e+01 7.29e-04  4.35e+02   253s
+  24  -2.03278077e+06  9.29354143e+07  1.27e+01 8.65e-04  2.78e+02   266s
+  25  -7.89253716e+05  6.35253942e+07  7.52e+00 5.68e-04  1.74e+02   276s
+  26   5.64421189e+05  3.82755015e+07  4.69e+00 3.91e-04  1.01e+02   286s
+  27   1.77682883e+06  2.98177440e+07  2.96e+00 2.71e-04  6.87e+01   295s
+  28   3.02765007e+06  2.23190173e+07  1.73e+00 2.19e-04  4.33e+01   305s
+  29   3.96379388e+06  1.84520908e+07  1.12e+00 7.68e-05  3.06e+01   314s
+  30   4.52635734e+06  1.56944162e+07  9.00e-01 1.40e-04  2.34e+01   324s
+  31   4.89394549e+06  1.43000061e+07  7.80e-01 4.29e-04  1.96e+01   333s
+  32   5.25479056e+06  1.31738102e+07  6.57e-01 6.00e-04  1.63e+01   342s
+  33   5.43497516e+06  1.23563694e+07  6.03e-01 6.55e-04  1.43e+01   351s
+  34   5.77312108e+06  1.18003282e+07  4.97e-01 4.88e-04  1.22e+01   360s
+  35   5.86810785e+06  1.12879910e+07  4.67e-01 8.75e-04  1.10e+01   369s
+  36   6.07330317e+06  1.09006175e+07  4.01e-01 1.80e-03  9.61e+00   378s
+  37   6.31692695e+06  1.07598736e+07  3.21e-01 1.78e-03  8.60e+00   387s
+  38   6.36710282e+06  1.02883929e+07  3.08e-01 1.77e-03  7.63e+00   396s
+  39   6.52921928e+06  9.90721418e+06  2.61e-01 1.46e-03  6.48e+00   405s
+  40   6.58914709e+06  9.78569944e+06  2.46e-01 1.63e-03  6.11e+00   413s
+  41   6.77362079e+06  9.66946390e+06  1.96e-01 1.68e-03  5.41e+00   422s
+  42   6.86576031e+06  9.40083099e+06  1.76e-01 1.94e-03  4.72e+00   431s
+  43   6.93047852e+06  9.17116332e+06  1.60e-01 1.68e-03  4.17e+00   441s
+  44   7.01179150e+06  9.03190195e+06  1.43e-01 1.46e-03  3.74e+00   452s
+  45   7.05002265e+06  8.93175665e+06  1.36e-01 1.38e-03  3.49e+00   465s
+  46   7.13915420e+06  8.74785546e+06  1.19e-01 2.21e-03  2.98e+00   480s
+  47   7.23630918e+06  8.61011577e+06  1.01e-01 2.01e-03  2.53e+00   493s
+  48   7.29109965e+06  8.52786856e+06  8.96e-02 2.26e-03  2.26e+00   506s
+  49   7.33320370e+06  8.41703064e+06  8.22e-02 5.20e-03  1.99e+00   521s
+  50   7.41698496e+06  8.31837413e+06  6.58e-02 4.61e-03  1.64e+00   535s
+  51   7.46118983e+06  8.25458064e+06  5.76e-02 4.21e-03  1.44e+00   550s
+  52   7.50193851e+06  8.20627805e+06  5.08e-02 4.12e-03  1.27e+00   565s
+  53   7.52556623e+06  8.16364287e+06  4.67e-02 3.69e-03  1.15e+00   580s
+  54   7.57095203e+06  8.11968071e+06  3.89e-02 2.92e-03  9.83e-01   595s
+  55   7.59805354e+06  8.07721677e+06  3.46e-02 2.48e-03  8.58e-01   612s
+  56   7.62607659e+06  8.05718476e+06  3.00e-02 2.04e-03  7.68e-01   628s
+  57   7.64946078e+06  8.02001771e+06  2.63e-02 2.38e-03  6.60e-01   645s
+  58   7.65784856e+06  8.01156528e+06  2.50e-02 2.35e-03  6.29e-01   663s
+  59   7.68482100e+06  7.98527114e+06  2.09e-02 1.92e-03  5.33e-01   687s
+  60   7.70562478e+06  7.95987822e+06  1.78e-02 1.65e-03  4.50e-01   707s
+  61   7.72398273e+06  7.93624854e+06  1.53e-02 1.25e-03  3.76e-01   730s
+  62   7.73921065e+06  7.92393698e+06  1.34e-02 1.24e-03  3.28e-01   750s
+  63   7.74942814e+06  7.90508001e+06  1.21e-02 9.33e-04  2.78e-01   774s
+  64   7.76346469e+06  7.90141897e+06  1.03e-02 8.72e-04  2.45e-01   797s
+  65   7.77273298e+06  7.89551193e+06  9.08e-03 7.84e-04  2.18e-01   820s
+  66   7.77833419e+06  7.89275726e+06  8.35e-03 7.42e-04  2.03e-01   838s
+  67   7.78438682e+06  7.89126341e+06  7.55e-03 7.18e-04  1.89e-01   859s
+  68   7.78810772e+06  7.88521873e+06  7.08e-03 6.22e-04  1.72e-01   880s
+  69   7.79442373e+06  7.87959490e+06  6.27e-03 5.19e-04  1.51e-01   902s
+
+Barrier performed 69 iterations in 902.28 seconds (504.94 work units)
+Time limit reached
+
+
+
+Root relaxation: time limit, 110515 iterations, 706.14 seconds (203.66 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0          -    0      7406839.92 8734986.60  17.9%     -  902s
+
+Explored 1 nodes (110515 simplex iterations) in 902.78 seconds (369.35 work units)
+Thread count was 16 (of 16 available processors)
+
+Solution count 1: 7.40684e+06 
+
+Time limit reached
+Warning: max constraint violation (1.6667e-05) exceeds tolerance
+Best objective 7.406839917000e+06, best bound 8.734986596073e+06, gap 17.9314%

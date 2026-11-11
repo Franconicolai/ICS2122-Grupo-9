@@ -1,0 +1,50 @@
+
+Gurobi 13.0.3 (win64) logging started Tue Nov 10 20:46:12 2026
+
+Set parameter LogFile to value "data/results/Interchange_grandes\logs\gurobi_ventana_24-48h.log"
+Set parameter SoftMemLimit to value 24
+Gurobi Optimizer version 13.0.3 build v13.0.3rc0 (win64 - Windows 11+.0 (26200.2))
+
+CPU model: Intel(R) Core(TM) Ultra 9 285H, instruction set [SSE2|AVX|AVX2]
+Thread count: 16 physical cores, 16 logical processors, using up to 16 threads
+
+Non-default parameters:
+TimeLimit  900
+SoftMemLimit  24
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  120
+LogToConsole  0
+
+Optimize a model with 687769 rows, 1023237 columns and 7047398 nonzeros (Max)
+Model fingerprint: 0xb3aaabda
+Model has 95073 linear objective coefficients
+Variable types: 758971 continuous, 264266 integer (264266 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 4e+04]
+  Bounds range     [1e+00, 8e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 7.40684e+06
+
+Presolve removed 451916 rows and 472013 columns (presolve time = 5s)...
+Presolve removed 477594 rows and 497772 columns (presolve time = 10s)...
+Presolve removed 563118 rows and 592422 columns
+Presolve time: 13.13s
+Presolved: 124651 rows, 430815 columns, 1663979 nonzeros
+Variable types: 395190 continuous, 35625 integer (35625 binary)
+Performing another presolve...
+Presolve removed 12376 rows and 15144 columns (presolve time = 5s)...
+Presolve removed 12595 rows and 15389 columns
+Presolve time: 7.90s
+
+Explored 1 nodes (0 simplex iterations) in 22.37 seconds (15.13 work units)
+Thread count was 16 (of 16 available processors)
+
+Solution count 2: 7.40684e+06 7.40684e+06 
+
+Optimal solution found (tolerance 1.00e-04)
+Warning: max constraint violation (1.6667e-05) exceeds tolerance
+Best objective 7.406839917000e+06, best bound 7.406839917000e+06, gap 0.0000%

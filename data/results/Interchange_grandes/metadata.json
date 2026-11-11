@@ -1,0 +1,8 @@
+{
+  "version": "Interchange_grandes",
+  "fecha": "2026-11-10 20:30:10",
+  "descripcion": "Búsqueda por vecindarios (MILP continuo con transbordos (sin grilla)) desde Interchange_ventanas",
+  "solver": "gurobi",
+  "dt": "continuo",
+  "tlim": null
+}
