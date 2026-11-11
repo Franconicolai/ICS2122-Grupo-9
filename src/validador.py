@@ -96,7 +96,7 @@ def validar(solucion: Dict[str, Any], config: Optional[Dict[str, Any]] = None,
     freq_exigibles : {(o,d): f} frecuencias exigidas en la instancia (por defecto todas las de la base).
     """
     cfg = {'ciclico': True, 'tat_variable': True, 'min_ton_escala': True, 'mantenimiento': True, 'frecuencias': True,
-           'demanda_diaria': False, 'dist_frecuencias': False, 'transferencias': True}
+           'demanda_diaria': False, 'dist_frecuencias': False, 'transferencias': True, 'swaps': True}
     cfg.update(config or {})
     ruta_raw = ruta_raw or os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data', 'raw data')
     R = _cargar_raw(ruta_raw)
@@ -124,6 +124,10 @@ def validar(solucion: Dict[str, Any], config: Optional[Dict[str, Any]] = None,
 
     # Índice de vuelos para validar conexiones entre aeronaves.
     vuelo_pos = {(k, l['pos']): l for k, legs in it.items() for l in legs}
+    # Operador efectivo de cada vuelo.  En el modelo con swaps el operador es
+    # una propiedad del vuelo; en corridas antiguas se infiere del avión.
+    op_vuelo = {(k, l['pos']): l.get('operador', R['op'][k])
+                for k, legs in it.items() for l in legs}
     transfer_in = {}
     transfer_out = {}
     transferencias = solucion.get('transferencias', [])
@@ -151,7 +155,8 @@ def validar(solucion: Dict[str, Any], config: Optional[Dict[str, Any]] = None,
             viol.append(f"transferencia {origen}->{receptor} de {q}: aeropuertos no coinciden")
         if aeropuerto in tecnicos:
             viol.append(f"transferencia {origen}->{receptor} de {q}: aeropuerto técnico {aeropuerto}")
-        op_origen, op_receptor = R['op'][origen[0]], R['op'][receptor[0]]
+        op_origen = op_vuelo.get(origen, R['op'][origen[0]])
+        op_receptor = op_vuelo.get(receptor, R['op'][receptor[0]])
         if not R['soporte'].get((aeropuerto, op_origen), False):
             viol.append(f"transferencia {origen}->{receptor} de {q}: {op_origen} sin soporte en {aeropuerto}")
         if not R['soporte'].get((aeropuerto, op_receptor), False):
@@ -175,30 +180,56 @@ def validar(solucion: Dict[str, Any], config: Optional[Dict[str, Any]] = None,
             viol.append(f"{k}: posiciones no consecutivas {[l['pos'] for l in legs]}")
         for l in legs:
             o, d = l['tramo']
+            op_l = l.get('operador', op)
             if (o, d) not in R['block']:
                 viol.append(f"{k}: tramo {o}-{d} no está en el catálogo")
                 continue
             if R['block'][(o, d)] > max_bloque + TOL:
                 viol.append(f"{k}: tramo {o}-{d} dura {R['block'][(o, d)]} h > {max_bloque} h")
-            if (op, R['pais'][o]) not in R['permitido'] or (op, R['pais'][d]) not in R['permitido']:
-                viol.append(f"{k}: operador {op} sin derechos de tráfico en {o}-{d}")
+            if (op_l, R['pais'][o]) not in R['permitido'] or (op_l, R['pais'][d]) not in R['permitido']:
+                viol.append(f"{k}: operador {op_l} sin derechos de tráfico en {o}-{d}")
             if abs(l['t_arr'] - l['t_dep'] - R['block'][(o, d)]) > TOL:
                 viol.append(f"{k}: llegada != salida + duración en {o}-{d} (pos {l['pos']})")
             if l['t_dep'] < -TOL or l['t_arr'] > H + TOL:
                 viol.append(f"{k}: vuelo fuera de la semana ({l['t_dep']:.2f}-{l['t_arr']:.2f})")
             freq_real[(o, d)] = freq_real.get((o, d), 0) + 1
-            costo_vuelos += (quema * precio + R['cp'][('ex_fuel_usd_per_block_hour', op)]) * R['block'][(o, d)] + R['fee'][d]
+            costo_vuelos += (quema * precio + R['cp'][('ex_fuel_usd_per_block_hour', op_l)]) * R['block'][(o, d)] + R['fee'][d]
             # capacidad y mínimo por vuelo
             load = carga_vuelo.get((k, l['pos']), 0.0)
             if load > R['payload'][k] + TOL:
                 viol.append(f"{k}: carga {load:.2f} t > payload {R['payload'][k]} t en pos {l['pos']}")
             if cfg['min_ton_escala'] and TOL < load < min_ton - TOL:
                 viol.append(f"{k}: vuelo pos {l['pos']} lleva {load:.2f} t (0 o >= {min_ton})")
-        # continuidad, TAT y cierre
+        # Cambio de operador: solo en aeropuertos interchange con soporte de ambos.
+        if cfg.get('swaps', True):
+            op_primero = legs[0].get('operador', op)
+            if op_primero != op:
+                aeropuerto = legs[0]['tramo'][0]
+                if not (R['soporte'].get((aeropuerto, op), False)
+                        and R['soporte'].get((aeropuerto, op_primero), False)):
+                    viol.append(f"{k}: swap inicial {op}->{op_primero} sin soporte en {aeropuerto}")
+                if legs[0]['t_dep'] <= TOL:
+                    viol.append(f"{k}: swap inicial {op}->{op_primero} sin tiempo antes del primer vuelo")
+            op_ultimo = legs[-1].get('operador', op)
+            if op_ultimo != op:
+                aeropuerto = legs[-1]['tramo'][1]
+                if not (R['soporte'].get((aeropuerto, op_ultimo), False)
+                        and R['soporte'].get((aeropuerto, op), False)):
+                    viol.append(f"{k}: swap final {op_ultimo}->{op} sin soporte en {aeropuerto}")
+                if legs[-1]['t_arr'] >= H - TOL:
+                    viol.append(f"{k}: swap final {op_ultimo}->{op} sin tiempo antes del corte")
+        # continuidad, TAT, swaps y cierre
         for i in range(len(legs) - 1):
             a_, b_ = legs[i], legs[i + 1]
             if a_['tramo'][1] != b_['tramo'][0]:
                 viol.append(f"{k}: discontinuidad {a_['tramo']} -> {b_['tramo']}")
+            op_a = a_.get('operador', op)
+            op_b = b_.get('operador', op)
+            if cfg.get('swaps', True) and op_a != op_b:
+                aeropuerto = a_['tramo'][1]
+                if not (R['soporte'].get((aeropuerto, op_a), False)
+                        and R['soporte'].get((aeropuerto, op_b), False)):
+                    viol.append(f"{k}: swap {op_a}->{op_b} sin soporte en {aeropuerto}")
             gap = b_['t_dep'] - a_['t_arr']
             if cfg['tat_variable']:
                 lleno = lambda s_: carga_vuelo.get((k, s_), 0.0) >= UMBRAL_LLENO * R['payload'][k] - 0.005
@@ -279,10 +310,11 @@ def validar(solucion: Dict[str, Any], config: Optional[Dict[str, Any]] = None,
                 elif de != legs[s + 1][0]:
                     viol.append(f"{k}: carga through {q} no continúa en el mismo aeropuerto desde pos {s}")
             entregado[q] = entregado.get(q, 0.0) + c['a']
-            handling += R['cp'][('handling_usd_per_ton', R['op'][k])] * c['b']
+            handling += R['cp'][('handling_usd_per_ton', op_vuelo.get((k, s), R['op'][k]))] * c['b']
     # Cada transbordo paga handling al operador que recibe la carga.
     for tr in transferencias:
-        handling += (R['cp'][('handling_usd_per_ton', R['op'][tr['to_k']])]
+        receptor = (tr['to_k'], int(tr['to_s']))
+        handling += (R['cp'][('handling_usd_per_ton', op_vuelo.get(receptor, R['op'][tr['to_k']]))]
                      * float(tr['tons']))
     for q, ton in entregado.items():
         if ton > R['demanda_diaria'][q] + 1e-5:

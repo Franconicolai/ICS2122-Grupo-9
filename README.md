@@ -11,9 +11,12 @@ El proyecto está modularizado para separar los datos, el motor matemático de l
   - `raw data/`: Resguardo de los datos brutos de entrada (`airports.csv`, `fleet.csv`, etc.).
   - `results/`: Directorio donde se guardan las salidas de cada corrida (versionadas por carpeta), incluyendo los `.pkl` de la solución, indicadores KPI y archivos para la visualización.
 - `docs/`: Documentación del proyecto (ej. `README_red_espacio_tiempo.md`).
+- `README_MEJORAS_SWAPS.md`: Documento de diseño, formulación, validación y fundamento bibliográfico del Paso 2.5 (cambios de operador intra-semana).
+- `README_AVION_OCIOSO.md`: Justificación de por qué la corrida de referencia usa 18 de 19 aviones y por qué eso no es un fallo.
 - `src/`: Código fuente principal del modelo de optimización.
   - `red_espacio_tiempo.py`: Primer paso (red agregada por operador).
   - `reoptimizacion_por_avion.py`: Segundo paso (separación avión por avión).
+  - `swap_operadores.py`: Paso 2.5 (cambios de operador intra-semana con red espacio-tiempo por avión y aceptación por margen global validado).
   - `asignacion_carga_multitramos.py`: Optimización final y rutero multicommodity de la carga.
   - `validador.py`: Auditor independiente de reglas logísticas.
   - `solver_util.py`: Herramientas de conectividad para solvers (HiGHS, Gurobi).
@@ -188,3 +191,9 @@ Nota: quedaron todas las restricciones comentadas.
   0.50  |   6298840  |  11800.2  |         36  |              18  |          0
   1.00  |   6298194  |  11800.2  |         29  |              18  |          0
   2.00  |   6310307  |  11806.2  |         33  |              19  |          0
+
+**Hito 11**
+- **Integrante**: Fernando Mora
+- **Fecha**: 10 de Noviembre de 2026
+- **Desarrollo**: Se incorporó el **Paso 2.5: cambios de operador intra-semana**. Hasta ahora cada avión quedaba asignado a un único operador durante toda la semana. El nuevo módulo `src/swap_operadores.py` construye una red espacio-tiempo por avión con **estados de operador**: permite volar tramos con otro operador, cambiar de operador en aeropuertos *interchange* y volver al operador inicial antes del corte semanal. La decisión no se toma con el objetivo local del avión: cada rotación propuesta se evalúa con el modelo global de carga multitramos y solo se acepta si el margen del validador independiente mejora. Se agregó además un bucle de precios de carga basado en los duales de la relajación LP para que el MILP del avión valore las conexiones que el modelo global sí ve.
+- **Resultados**: Sobre el itinerario de referencia de 2 h (`modelo_resuelto.pkl`), dos pasadas del Paso 2.5 mejoraron el margen validado de **6.310.307 a 7.140.268 USD (+829.961 USD, +13,15 %)**, con **47 swaps**, 344 vuelos, 18 aviones, 25/25 frecuencias y **0 violaciones**. En la prueba de integración con el Paso 2 (una pasada, límite por operador de 420 s), el margen pasó de **6.280.514 a 7.194.563 USD (+914.049 USD)**, con 346 vuelos, 17 aviones y 0 violaciones. En la corrida de referencia los vuelos se mantienen (344) y solo cambia el operador que los ejecuta (la flota pasa de 172 vuelos SUR / 82 AND / 46 BRA / 44 PAC a 299 PAC / 26 BRA / 14 SUR / 5 AND); en la prueba de integración el baseline ya tenía 346 vuelos. El detalle de la formulación, la matheurística, los supuestos, la comparación con la literatura y las limitaciones está en **[README_MEJORAS_SWAPS.md](README_MEJORAS_SWAPS.md)**. El registro de la corrida sobre el **baseline de 18 aviones** (margen **7.140.268 USD**) está en `data/results/Ejecucion_con_swaps_2h_18aviones/`; el de la prueba de integración con **17 aviones** (margen **7.194.563 USD**) está en `data/results/Ejecucion_con_swaps_2h/`. Ambas carpetas incluyen `README_CORRIDA.md`, `indicadores_kpi.json` y `modelo_resuelto.pkl`.

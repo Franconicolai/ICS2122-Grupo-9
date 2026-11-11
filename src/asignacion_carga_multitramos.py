@@ -93,11 +93,15 @@ def construir_vuelos(itinerario, datos):
             ordenados.append((float(leg["t_dep"]), avion, int(leg["pos"]), leg))
     for fid, (_, avion, posicion, leg) in enumerate(sorted(ordenados)):
         origen, destino = tuple(leg["tramo"])
+        # El operador puede cambiar durante la semana (swap en un aeropuerto
+        # interchange).  Por eso el operador es una propiedad del vuelo, no del
+        # avión.  Si el itinerario no trae el campo (corridas antiguas), se usa
+        # el operador inicial del avión.
         vuelos[fid] = {
             "id": fid,
             "k": avion,
             "s": posicion,
-            "op": datos["operador"][avion],
+            "op": leg.get("operador", datos["operador"][avion]),
             "o": origen,
             "d": destino,
             "dep": float(leg["t_dep"]),
@@ -168,7 +172,7 @@ def _alcanzables(iniciales, adyacencia, campo_destino):
 
 
 def resolver_asignacion(itinerario, datos, ttr_h=TTR_H, tlim=TLIM_CARGA,
-                        gap=GAP_CARGA, log=False):
+                        gap=GAP_CARGA, log=False, relax=False, return_duals=False):
     """Resuelve el flujo de carga para itinerarios fijos.
 
     El valor de ``ttr_h`` es un parámetro operacional. El valor por defecto es
@@ -328,8 +332,10 @@ def resolver_asignacion(itinerario, datos, ttr_h=TTR_H, tlim=TLIM_CARGA,
             "tamano": {"vuelos": len(vuelos), "conexiones": len(conexiones), "variables": 0, "restricciones": 0},
         }
 
+    labels = [r[3] if len(r) > 3 else None for r in rows]
     matriz, lo, hi = filas_a_matriz(rows, len(lb))
-    resultado = resolver_matriz(lb, ub, obj, integ, matriz, lo, hi, tlim, gap, log=log)
+    resultado = resolver_matriz(lb, ub, obj, integ, matriz, lo, hi, tlim, gap,
+                                log=log, relax=relax)
     if resultado["sol"] is None:
         return {
             "ok": False,
@@ -337,6 +343,7 @@ def resolver_asignacion(itinerario, datos, ttr_h=TTR_H, tlim=TLIM_CARGA,
             "objetivo_carga": None,
             "solucion": None,
             "estadisticas": {},
+            "duales_capacidad": None,
             "tamano": {"vuelos": len(vuelos), "conexiones": len(conexiones),
                        "variables": len(lb), "restricciones": len(rows)},
         }
@@ -398,6 +405,13 @@ def resolver_asignacion(itinerario, datos, ttr_h=TTR_H, tlim=TLIM_CARGA,
         "transferencias": transferencias,
         "ttr_h": float(ttr_h),
     }
+    duales_capacidad = None
+    if return_duals and resultado.get("duales") is not None:
+        duales_capacidad = {}
+        for i, lab in enumerate(labels):
+            if isinstance(lab, tuple) and len(lab) >= 2 and lab[0] == "capacidad":
+                duales_capacidad[lab[1]] = float(resultado["duales"][i])
+
     return {
         "ok": True,
         "estado": resultado["estado"],
@@ -405,6 +419,7 @@ def resolver_asignacion(itinerario, datos, ttr_h=TTR_H, tlim=TLIM_CARGA,
         "cota": resultado.get("cota"),
         "gap": resultado.get("gap"),
         "tiempo_s": resultado.get("tiempo"),
+        "duales_capacidad": duales_capacidad,
         "solucion": solucion,
         "estadisticas": {
             "toneladas_entregadas": float(entregado),
@@ -425,10 +440,12 @@ def resolver_asignacion(itinerario, datos, ttr_h=TTR_H, tlim=TLIM_CARGA,
 
 
 def asignar_carga_multitramos(itinerario, ruta_raw=RAW, ttr_h=TTR_H,
-                              tlim=TLIM_CARGA, gap=GAP_CARGA, log=False):
+                              tlim=TLIM_CARGA, gap=GAP_CARGA, log=False,
+                              relax=False, return_duals=False):
     """Función asignar_carga_multitramos: [Descripción pendiente]."""
     datos = cargar_datos_carga(ruta_raw)
-    return resolver_asignacion(itinerario, datos, ttr_h=ttr_h, tlim=tlim, gap=gap, log=log)
+    return resolver_asignacion(itinerario, datos, ttr_h=ttr_h, tlim=tlim,
+                               gap=gap, log=log, relax=relax, return_duals=return_duals)
 
 
 def _main(ruta_pickle):

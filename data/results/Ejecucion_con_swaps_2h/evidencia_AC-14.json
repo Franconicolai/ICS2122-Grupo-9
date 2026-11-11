@@ -1,0 +1,63 @@
+{
+  "avion": "AC-14",
+  "operador_inicial": "AND",
+  "payload_t": 50,
+  "mantenimiento": {
+    "aeropuerto": "MIA",
+    "inicio": "2026-03-05T06:30:00",
+    "fin": "2026-03-05T12:30:00"
+  },
+  "referencia_baseline": {
+    "margen_validado_usd": 6310307.054,
+    "vuelos": 344,
+    "aviones_usados": 18,
+    "AC-14_vuelos": 0,
+    "AC-19_vuelos": 14
+  },
+  "candidato_modo_amplio": [
+    {
+      "avion": "AC-14",
+      "pasada": 1,
+      "estado": "Optimal",
+      "operador_inicial": "AND",
+      "operador_final": "PAC",
+      "vuelos": 28,
+      "swaps": 8,
+      "aps_candidatos": 21,
+      "tramos_candidatos": 69,
+      "enteras": 37925,
+      "restr": 25494,
+      "objetivo_milp": 891353.101,
+      "cota": 899832.5867890007,
+      "gap": 0.009513049070550818,
+      "tiempo_milp_s": 3.7,
+      "tiempo_total_s": 27.3,
+      "margen_candidato": 6109644.655000009,
+      "delta_margen": -200662.399000003,
+      "aceptado": false
+    },
+    {
+      "avion": "AC-14",
+      "pasada": 2,
+      "estado": "Optimal",
+      "operador_inicial": "AND",
+      "operador_final": "PAC",
+      "vuelos": 28,
+      "swaps": 8,
+      "aps_candidatos": 21,
+      "tramos_candidatos": 69,
+      "enteras": 37925,
+      "restr": 25494,
+      "objetivo_milp": 891353.101,
+      "cota": 900259.5765370001,
+      "gap": 0.009992084536428967,
+      "tiempo_milp_s": 5.3,
+      "tiempo_total_s": 34.5,
+      "margen_candidato": 6951544.275000017,
+      "delta_margen": -167691.59900000133,
+      "aceptado": false
+    }
+  ],
+  "conclusion": "El avi?n no se usa porque su mejor rotaci?n propuesta reduce el margen global validado; no es un fallo de factibilidad. Si se exige usar los 19 aviones, debe agregarse una restricci?n de flota completa o una penalizaci?n por avi?n ocioso.",
+  "nota_operador_final": "operador_final es el operador del ?ltimo vuelo del candidato; el cierre semanal se hace en tierra volviendo al operador inicial. El candidato fue rechazado y no forma parte de la soluci?n final."
+}

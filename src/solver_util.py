@@ -40,10 +40,13 @@ def resolver_matriz(lb, ub, obj, integ, A, lo, hi, tlim, gap=0.01, log=True, rel
         estados = {GRB.OPTIMAL: 'Optimal', GRB.TIME_LIMIT: 'Time limit reached', GRB.INFEASIBLE: 'Infeasible',
                    GRB.INF_OR_UNBD: 'Infeasible or unbounded'}
         mip = bool(integ.any())
+        # Para la relajación LP, Pi contiene los precios sombra de las filas.
+        # Se usan en el bucle de precios de carga (Paso 2.5).
+        duales = list(m.Pi) if (ok and not mip) else None
         return dict(estado=estados.get(m.Status, str(m.Status)), obj=m.ObjVal if ok else None,
                     cota=(m.ObjBound if mip else (m.ObjVal if ok else None)),
                     gap=(m.MIPGap if (mip and ok) else None), tiempo=time.time() - t0,
-                    sol=list(x.X) if ok else None)
+                    sol=list(x.X) if ok else None, duales=duales)
     # ---- HiGHS
     import highspy
     from scipy.sparse import csc_matrix
@@ -62,9 +65,16 @@ def resolver_matriz(lb, ub, obj, integ, A, lo, hi, tlim, gap=0.01, log=True, rel
     h.passModel(lp); h.run()
     inf = h.getInfo()
     ok = inf.primal_solution_status == 2
+    duales = None
+    if ok and not integ.any():
+        try:
+            duales = list(h.getSolution().row_dual)
+        except Exception:
+            duales = None
     return dict(estado=h.modelStatusToString(h.getModelStatus()), obj=inf.objective_function_value if ok else None,
                 cota=getattr(inf, 'mip_dual_bound', None), gap=getattr(inf, 'mip_gap', None),
-                tiempo=time.time() - t0, sol=list(h.getSolution().col_value) if ok else None)
+                tiempo=time.time() - t0, sol=list(h.getSolution().col_value) if ok else None,
+                duales=duales)
 
 
 def filas_a_matriz(rows, nc):

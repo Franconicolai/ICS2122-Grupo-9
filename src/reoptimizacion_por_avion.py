@@ -30,6 +30,7 @@ TLIM_OP = float(os.environ.get('TLIM_OP', 300))
 AMPLIAR = os.environ.get('AMPLIAR', '0') == '1'   # 1: usar todos los tramos del operador (modelo completo por avión)
 TTR_H = float(os.environ.get('TTR_H', 2.0))       # provisional; debe confirmarse con el mandante
 TLIM_CARGA = float(os.environ.get('TLIM_CARGA', 300))
+SWAPS = os.environ.get('SWAPS', '1') == '1'       # 1: mejora con cambios de operador intra-semana
 
 
 def resolver_mip(lb, ub, obj, integ, rows, tlim, gap=0.01, log=False):
@@ -143,21 +144,34 @@ def main(pkl):
             am, W = mant[k]
             for t in (W if os.environ.get('SIN_MANT') != '1' else []):
                 rows.append(({idx[('g', k, am, t)]: 1, idx[('u', k)]: -1}, 0, np.inf))
-        por_q = defaultdict(list); por_od = defaultdict(list)
+        por_q = defaultdict(list); por_od = defaultdict(list); por_k_t = defaultdict(list)
         for key, j in idx.items():
             if key[0] == 'x':
                 _, k, e, t = key
+                q = (e[0], e[1], int(t * DT // 24))
                 rows.append(({j: 1, idx[('zl', k, e, t)]: -minton}, 0, np.inf))
                 rows.append(({j: 1, idx[('zl', k, e, t)]: -payload[k]}, -np.inf, 0))
                 rows.append(({idx[('zl', k, e, t)]: 1, idx[('z', k, e, t)]: -1}, -np.inf, 0))
-                por_q[(e[0], e[1], int(t * DT // 24))].append(j)
+                # Desigualdad válida: si el vuelo no se marca como cargado, x=0;
+                # si se marca, x no puede superar la demanda residual del par/día.
+                rows.append(({j: 1, idx[('zl', k, e, t)]: -max(dem_res.get(q, 0.0), 0.0)},
+                             -np.inf, 0))
+                por_q[q].append(j)
             if key[0] == 'z':
-                por_od[key[2]].append(j)
+                _, k, e, t = key
+                por_od[e].append(j)
+                por_k_t[(k, t)].append(j)
         for q, js in por_q.items():
             rows.append(({j: 1 for j in js}, -np.inf, max(dem_res[q], 0.0)))
         for od, f in freq_res.items():
             if f > 0 and os.environ.get('SIN_FREQ') != '1':
                 rows.append(({j: 1 for j in por_od.get(od, [])}, f, np.inf))
+        # Desigualdad válida: un avión no puede despegar más de un vuelo por bloque,
+        # y si u=0 no puede volar.  Una fila por (avión, bloque), no por arco.
+        for (k, t), js in por_k_t.items():
+            co = {j: 1 for j in js}
+            co[idx[('u', k)]] = -1
+            rows.append((co, -np.inf, 0))
         # romper simetría: aviones idénticos (mismo payload y aeropuerto de mantenimiento) se ordenan por uso
         r = resolver_mip(lb, ub, obj, integ, rows, TLIM_OP, log=os.environ.get('LOG') == '1')
         print(f"{op}: {len(K)} aviones, {len(cand)} tramos candidatos, {r['nint']} enteras, {r['nrows']} restr. "
@@ -173,30 +187,61 @@ def main(pkl):
             fs = sorted([(key[3], key[2]) for key, j in idx.items() if key[0] == 'z' and key[1] == k and x[j] > 0.5])
             legs = []
             for p, (t, e) in enumerate(fs, start=1):
-                legs.append({'pos': p, 'tramo': e, 't_dep': t * DT, 't_arr': t * DT + tau[e]})
+                legs.append({'pos': p, 'tramo': e, 't_dep': t * DT, 't_arr': t * DT + tau[e],
+                             'operador': op})
                 xv = x[idx[('x', k, e, t)]] if ('x', k, e, t) in idx else 0.0
                 xv = xv if xv > 1e-6 else 0.0
                 cargas[(k, p)] = xv
                 vuelos[op][(e, t)] += 1; carga[op][(e, t)] += xv
             itinerario[k] = legs
 
+    # Paso 2.5: mejora con cambios de operador intra-semana.  El baseline sigue
+    # siendo el pipeline por operador; la mejora es avión por avión y se acepta
+    # solo si el margen validado con la asignación global de carga mejora.
+    resumen_swaps = []
+    multi = None
+    v = None
+    if SWAPS:
+        try:
+            from swap_operadores import mejorar_con_swaps
+            print('\n[Paso 2.5] Mejora con cambios de operador intra-semana...', flush=True)
+            mejora = mejorar_con_swaps(
+                itinerario, info, DT, ruta_raw=RAW, ttr_h=TTR_H,
+                tlim_carga=TLIM_CARGA, log=os.environ.get('LOG_CARGA') == '1')
+            if mejora and mejora.get('ok'):
+                itinerario = mejora['itinerario']
+                multi = mejora['multi']
+                v = mejora['validacion']
+                resumen_swaps = mejora.get('resumen', [])
+                print(f"[Paso 2.5] margen baseline={mejora['margen_base']:,.0f} | "
+                      f"margen final={mejora['margen_final']:,.0f} | "
+                      f"mejora={mejora['mejora']:+,.0f}", flush=True)
+            else:
+                print('[Paso 2.5] Sin mejora validada; se conserva el baseline sin swaps', flush=True)
+        except Exception as e:
+            print(f'[Paso 2.5] Error en swaps: {e}; se conserva el baseline sin swaps', flush=True)
+
     # Asignación global: ve simultáneamente todos los vuelos individuales y permite
     # carga directa, through y transbordos entre aeronaves u operadores.
-    multi = asignar_carga_multitramos(
-        itinerario, ruta_raw=RAW, ttr_h=TTR_H, tlim=TLIM_CARGA,
-        log=os.environ.get('LOG_CARGA') == '1')
-    print(f"Carga multitramos: {multi['estado']} | tamaño={multi['tamano']}", flush=True)
-    if not multi['ok']:
-        print('No se pudo obtener una asignación global de carga'); return
+    if multi is None:
+        multi = asignar_carga_multitramos(
+            itinerario, ruta_raw=RAW, ttr_h=TTR_H, tlim=TLIM_CARGA,
+            log=os.environ.get('LOG_CARGA') == '1')
+        print(f"Carga multitramos: {multi['estado']} | tamaño={multi['tamano']}", flush=True)
+        if not multi['ok']:
+            print('No se pudo obtener una asignación global de carga'); return
+    else:
+        print(f"Carga multitramos (mejor solución con swaps): {multi['estado']} | tamaño={multi['tamano']}", flush=True)
     s = multi['solucion']
     cargas = defaultdict(float)
     for registro in s['cargas']:
         cargas[(registro['k'], registro['s'])] += registro['x']
     perd = 0.0  # la incompatibilidad lleno-lleno se impone dentro del submodelo de carga
-    cfg = {'ciclico': True, 'tat_variable': True, 'min_ton_escala': True, 'mantenimiento': True,
-           'frecuencias': True, 'demanda_diaria': True, 'dist_frecuencias': False,
-           'transferencias': True, 'ttr_h': TTR_H}
-    v = validar(s, cfg, ruta_raw=RAW)
+    if v is None:
+        cfg = {'ciclico': True, 'tat_variable': True, 'min_ton_escala': True, 'mantenimiento': True,
+               'frecuencias': True, 'demanda_diaria': True, 'dist_frecuencias': False,
+               'transferencias': True, 'swaps': True, 'ttr_h': TTR_H}
+        v = validar(s, cfg, ruta_raw=RAW)
     # El validador es la fuente única de KPI. Esto evita que el ejecutor y el
     # informe usen fórmulas distintas (en particular para ocupación CTK/ACTK).
     kp = dict(v['kpis'])
@@ -207,16 +252,22 @@ def main(pkl):
         'ttr_h': TTR_H,
     })
     calidad_optimizacion = {
-        'metodo': 'secuencial_en_tres_pasos',
+        'metodo': ('secuencial_en_tres_pasos_con_swaps' if SWAPS else 'secuencial_en_tres_pasos'),
         'gap_global_disponible': False,
         'gap_global': None,
         'nota': ('No existe una cota común para la solución integrada: los gaps de los '
-                 'subproblemas no se pueden sumar ni promediar para formar un gap global.'),
+                 'subproblemas no se pueden sumar ni promediar para formar un gap global. '
+                 'La mejora con swaps es una matheurística avión por avión: propone una '
+                 'rotación y la acepta solo si el margen validado con la carga global mejora.'),
         'paso_1_red_agregada': P.get('res', {}),
         'paso_2_por_operador': [
             {clave: fila.get(clave) for clave in ('operador', 'estado', 'objetivo', 'cota', 'gap', 'tiempo_s')}
             for fila in resumen
         ],
+        'paso_2_5_swaps': {
+            'habilitado': SWAPS,
+            'resumen': resumen_swaps,
+        },
         'paso_3_carga_condicionada_itinerarios': {
             clave: multi.get(clave) for clave in ('estado', 'objetivo_carga', 'cota', 'gap', 'tiempo_s')
         },
@@ -233,11 +284,12 @@ def main(pkl):
     
     op_de = dict(zip(fl.aircraft_id, fl.operator))
     leg = {(k, l['pos']): l for k, legs in itinerario.items() for l in legs}
-    costo_v = {(k, p): (fuel_h + c[('ex_fuel_usd_per_block_hour', op_de[k])]) * tau[tuple(l['tramo'])]
+    costo_v = {(k, p): (fuel_h + c[('ex_fuel_usd_per_block_hour', l.get('operador', op_de[k]))]) * tau[tuple(l['tramo'])]
                        + fee[tuple(l['tramo'])[1]] for (k, p), l in leg.items()}
     hand_v, ing_v, por_q = defaultdict(float), defaultdict(float), defaultdict(list)
     for reg in s['cargas']:
-        hand_v[(reg['k'], reg['s'])] += (reg['b'] + reg.get('transfer_in', 0.0)) * c[('handling_usd_per_ton', op_de[reg['k']])]
+        op_reg = leg[(reg['k'], reg['s'])].get('operador', op_de[reg['k']])
+        hand_v[(reg['k'], reg['s'])] += (reg['b'] + reg.get('transfer_in', 0.0)) * c[('handling_usd_per_ton', op_reg)]
         por_q[tuple(reg['q'])].append(reg)
     for q, regs in por_q.items():
         total = 1000 * tarifa[(q[0], q[1])] * sum(reg['a'] for reg in regs)
@@ -248,7 +300,7 @@ def main(pkl):
     print(f"[costos por vuelo] vuelos {sum(costo_v.values()):,.0f} vs {v['costo_vuelos']:,.0f} | "
           f"handling {sum(hand_v.values()):,.0f} vs {v['handling']:,.0f} | "
           f"ingresos {sum(ing_v.values()):,.0f} vs {v['ingresos']:,.0f}")
-    filas = [{'avion': k, 'operador': op_de[k], 'pos': l['pos'],
+    filas = [{'avion': k, 'operador': l.get('operador', op_de[k]), 'pos': l['pos'],
               'origen': l['tramo'][0], 'destino': l['tramo'][1], 't_dep_h': l['t_dep'], 't_arr_h': l['t_arr'],
               'dia': int(l['t_dep'] // 24) + 1, 'carga_t': round(cargas.get((k, l['pos']), 0.0), 3),
               'costo_usd': round(costo_v[(k, l['pos'])], 2),

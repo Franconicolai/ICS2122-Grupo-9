@@ -12,6 +12,15 @@ os.environ['SOLVER'] = os.environ.get('SOLVER', 'gurobi')
 os.environ['DT'] = os.environ.get('DT', '1')
 os.environ['TLIM'] = os.environ.get('TLIM', '1500')
 os.environ['TLIM_OP'] = os.environ.get('TLIM_OP', '420')
+# Paso 2.5: cambios de operador intra-semana (matheurística avión por avión).
+os.environ['SWAPS'] = os.environ.get('SWAPS', '1')
+os.environ['SWAP_TLIM'] = os.environ.get('SWAP_TLIM', '120')
+os.environ['SWAP_PASSES'] = os.environ.get('SWAP_PASSES', '2')
+os.environ['SWAP_MODO'] = os.environ.get('SWAP_MODO', 'auto')
+os.environ['SWAP_DUAL_WEIGHT'] = os.environ.get('SWAP_DUAL_WEIGHT', '0.5')
+os.environ['SWAP_MAX_OD'] = os.environ.get('SWAP_MAX_OD', '15')
+os.environ['SWAP_TECNICOS'] = os.environ.get('SWAP_TECNICOS', '1')
+os.environ['SWAP_HUBS'] = os.environ.get('SWAP_HUBS', '1')
 
 # Agregar src al path
 sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
@@ -76,7 +85,15 @@ def ejecutar_modelo():
         "fecha": time.strftime("%Y-%m-%d %H:%M:%S"),
         "solver": os.environ['SOLVER'],
         "dt": os.environ['DT'],
-        "tlim": os.environ['TLIM']
+        "tlim": os.environ['TLIM'],
+        "swaps": os.environ.get('SWAPS'),
+        "swap_tlim": os.environ.get('SWAP_TLIM'),
+        "swap_passes": os.environ.get('SWAP_PASSES'),
+        "swap_modo": os.environ.get('SWAP_MODO'),
+        "swap_dual_weight": os.environ.get('SWAP_DUAL_WEIGHT'),
+        "swap_max_od": os.environ.get('SWAP_MAX_OD'),
+        "swap_tecnicos": os.environ.get('SWAP_TECNICOS'),
+        "swap_hubs": os.environ.get('SWAP_HUBS')
     }
     with open(os.path.join(results_dir, "metadata.json"), "w", encoding="utf-8") as f:
         json.dump(metadata, f, indent=2, ensure_ascii=False)
