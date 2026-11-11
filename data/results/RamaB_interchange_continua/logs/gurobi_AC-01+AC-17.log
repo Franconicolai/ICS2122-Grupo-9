@@ -1,0 +1,100 @@
+
+Gurobi 13.0.3 (win64) logging started Wed Nov 11 12:04:58 2026
+
+Set parameter LogFile to value "data/results/RamaB_interchange_continua\logs\gurobi_AC-01+AC-17.log"
+Set parameter SoftMemLimit to value 24
+Gurobi Optimizer version 13.0.3 build v13.0.3rc0 (win64 - Windows 11+.0 (26200.2))
+
+CPU model: Intel(R) Core(TM) Ultra 9 285H, instruction set [SSE2|AVX|AVX2]
+Thread count: 16 physical cores, 16 logical processors, using up to 16 threads
+
+Non-default parameters:
+TimeLimit  300
+SoftMemLimit  24
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  60
+LogToConsole  0
+
+Optimize a model with 409732 rows, 1284647 columns and 5859977 nonzeros (Max)
+Model fingerprint: 0x0e8d571c
+Model has 1098378 linear objective coefficients
+Variable types: 1062164 continuous, 222483 integer (222483 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 7e+04]
+  Bounds range     [2e-01, 8e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 7.54237e+06
+
+Presolve removed 85773 rows and 269523 columns (presolve time = 5s)...
+Presolve removed 85852 rows and 269528 columns (presolve time = 10s)...
+Presolve removed 85852 rows and 269528 columns (presolve time = 15s)...
+Presolve removed 85939 rows and 270312 columns (presolve time = 20s)...
+Presolve removed 86333 rows and 272554 columns (presolve time = 25s)...
+Presolve removed 86556 rows and 272554 columns (presolve time = 30s)...
+Presolve removed 86556 rows and 272554 columns (presolve time = 35s)...
+Presolve removed 86556 rows and 272554 columns (presolve time = 41s)...
+Presolve removed 86556 rows and 272564 columns
+Presolve time: 41.16s
+Presolved: 323176 rows, 1012083 columns, 5077614 nonzeros
+Variable types: 876146 continuous, 135937 integer (135937 binary)
+Starting NoRel heuristic
+Elapsed time for NoRel heuristic: 9s (best bound 9.59562e+06)
+Found heuristic solution: objective 7542824.2380
+Elapsed time for NoRel heuristic: 14s (best bound 9.59562e+06)
+Elapsed time for NoRel heuristic: 20s (best bound 9.59562e+06)
+Found heuristic solution: objective 7542851.2380
+Found heuristic solution: objective 7543649.0380
+Elapsed time for NoRel heuristic: 28s (best bound 9.59562e+06)
+Found heuristic solution: objective 7543888.5880
+Found heuristic solution: objective 7544789.8680
+Found heuristic solution: objective 7544856.8680
+Found heuristic solution: objective 7544986.8680
+Elapsed time for NoRel heuristic: 37s (best bound 9.59562e+06)
+Found heuristic solution: objective 7545086.8680
+Found heuristic solution: objective 7545089.4680
+Elapsed time for NoRel heuristic: 42s (best bound 9.59562e+06)
+Found heuristic solution: objective 7545139.4680
+Elapsed time for NoRel heuristic: 52s (best bound 9.59562e+06)
+Elapsed time for NoRel heuristic: 58s (best bound 9.59562e+06)
+Elapsed time for NoRel heuristic: 70s (best bound 9.59562e+06)
+NoRel heuristic complete
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Elapsed ordering time = 5s
+Elapsed ordering time = 10s
+Elapsed ordering time = 15s
+Elapsed ordering time = 20s
+Elapsed ordering time = 25s
+Elapsed ordering time = 30s
+Elapsed ordering time = 35s
+Elapsed ordering time = 40s
+Elapsed ordering time = 45s
+Elapsed ordering time = 50s
+Ordering time: 133.11s
+
+Barrier performed 0 iterations in 250.61 seconds (211.38 work units)
+Memory limit reached
+
+
+
+Root relaxation: memory limit, 0 iterations, 172.05 seconds (142.86 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0          -    0      7545139.47 9595616.98  27.2%     -  284s
+
+Explored 1 nodes (0 simplex iterations) in 284.52 seconds (211.39 work units)
+Thread count was 16 (of 16 available processors)
+
+Solution count 10: 7.54514e+06 7.54509e+06 7.54509e+06 ... 7.54282e+06
+
+Memory limit reached
+Best objective 7.545139468000e+06, best bound 9.595616977000e+06, gap 27.1761%
