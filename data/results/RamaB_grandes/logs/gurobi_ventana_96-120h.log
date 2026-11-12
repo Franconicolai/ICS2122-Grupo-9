@@ -1,0 +1,439 @@
+
+Gurobi 13.0.3 (win64) logging started Wed Nov 11 23:19:17 2026
+
+Set parameter LogFile to value "data/results/RamaB_grandes\logs\gurobi_ventana_96-120h.log"
+Set parameter SoftMemLimit to value 24
+Gurobi Optimizer version 13.0.3 build v13.0.3rc0 (win64 - Windows 11+.0 (26200.2))
+
+CPU model: Intel(R) Core(TM) Ultra 9 285H, instruction set [SSE2|AVX|AVX2]
+Thread count: 16 physical cores, 16 logical processors, using up to 16 threads
+
+Non-default parameters:
+TimeLimit  900
+SoftMemLimit  24
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  120
+LogToConsole  0
+
+Optimize a model with 1169015 rows, 1338931 columns and 9584259 nonzeros (Max)
+Model fingerprint: 0x16c6b898
+Model has 95073 linear objective coefficients
+Variable types: 931844 continuous, 407087 integer (407087 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 4e+04]
+  Bounds range     [2e-01, 8e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 7.52001e+06
+
+Presolve removed 689936 rows and 607047 columns (presolve time = 5s)...
+Presolve removed 704415 rows and 607852 columns (presolve time = 10s)...
+Presolve removed 844364 rows and 686797 columns (presolve time = 15s)...
+Presolve removed 861312 rows and 687068 columns (presolve time = 20s)...
+Presolve removed 861869 rows and 687434 columns (presolve time = 42s)...
+Presolve removed 861869 rows and 824711 columns (presolve time = 45s)...
+Presolve removed 985417 rows and 859496 columns
+Presolve time: 47.88s
+Presolved: 183598 rows, 479435 columns, 2027711 nonzeros
+Variable types: 426800 continuous, 52635 integer (52634 binary)
+Performing another presolve...
+Presolve removed 19533 rows and 8986 columns (presolve time = 5s)...
+Presolve removed 20046 rows and 10038 columns (presolve time = 10s)...
+Presolve removed 20046 rows and 10038 columns (presolve time = 22s)...
+Presolve removed 20046 rows and 30004 columns (presolve time = 25s)...
+Presolve removed 20046 rows and 30004 columns (presolve time = 32s)...
+Presolve removed 34458 rows and 46830 columns (presolve time = 35s)...
+Presolve removed 35501 rows and 46835 columns (presolve time = 40s)...
+Presolve removed 35945 rows and 47102 columns (presolve time = 45s)...
+Presolve removed 35992 rows and 47114 columns
+Presolve time: 48.35s
+Starting NoRel heuristic
+Found phase-1 solution: relaxation 1210.2
+Found phase-1 solution: relaxation 1207.29
+Found phase-1 solution: relaxation 1181
+Found phase-1 solution: relaxation 844.2
+Found phase-1 solution: relaxation 395.86
+Found phase-1 solution: relaxation 348.99
+Found phase-1 solution: relaxation 1.00009
+Elapsed time for NoRel heuristic: 11s (best bound 9.91023e+06)
+Found phase-1 solution: relaxation 0
+Transition to phase 2
+Elapsed time for NoRel heuristic: 17s (best bound 9.86679e+06)
+Elapsed time for NoRel heuristic: 24s (best bound 9.75266e+06)
+Elapsed time for NoRel heuristic: 30s (best bound 9.67149e+06)
+Elapsed time for NoRel heuristic: 48s (best bound 9.66201e+06)
+Elapsed time for NoRel heuristic: 56s (best bound 9.65521e+06)
+Elapsed time for NoRel heuristic: 74s (best bound 9.64911e+06)
+Elapsed time for NoRel heuristic: 81s (best bound 9.62412e+06)
+Elapsed time for NoRel heuristic: 95s (best bound 9.60522e+06)
+Elapsed time for NoRel heuristic: 103s (best bound 9.58588e+06)
+Elapsed time for NoRel heuristic: 119s (best bound 9.58119e+06)
+Elapsed time for NoRel heuristic: 129s (best bound 9.58099e+06)
+NoRel heuristic complete
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Elapsed ordering time = 5s
+Elapsed ordering time = 10s
+Elapsed ordering time = 15s
+Elapsed ordering time = 20s
+Ordering time: 60.39s
+Elapsed ordering time = 62s
+Elapsed ordering time = 65s
+Elapsed ordering time = 74s
+Elapsed ordering time = 79s
+Elapsed ordering time = 80s
+Elapsed ordering time = 85s
+Elapsed ordering time = 91s
+Elapsed ordering time = 95s
+Elapsed ordering time = 100s
+Elapsed ordering time = 105s
+Elapsed ordering time = 110s
+Elapsed ordering time = 115s
+Elapsed ordering time = 120s
+Elapsed ordering time = 125s
+Elapsed ordering time = 130s
+Elapsed ordering time = 135s
+Elapsed ordering time = 140s
+Elapsed ordering time = 145s
+Elapsed ordering time = 150s
+Elapsed ordering time = 155s
+Elapsed ordering time = 160s
+Elapsed ordering time = 172s
+Elapsed ordering time = 178s
+Elapsed ordering time = 180s
+Elapsed ordering time = 185s
+Elapsed ordering time = 190s
+Elapsed ordering time = 195s
+Elapsed ordering time = 200s
+Elapsed ordering time = 205s
+Elapsed ordering time = 210s
+Elapsed ordering time = 215s
+Elapsed ordering time = 220s
+Elapsed ordering time = 225s
+Elapsed ordering time = 230s
+Elapsed ordering time = 235s
+Elapsed ordering time = 240s
+Elapsed ordering time = 245s
+Elapsed ordering time = 250s
+Elapsed ordering time = 255s
+Elapsed ordering time = 268s
+Elapsed ordering time = 274s
+Elapsed ordering time = 275s
+Elapsed ordering time = 280s
+Elapsed ordering time = 285s
+Elapsed ordering time = 290s
+Elapsed ordering time = 295s
+Elapsed ordering time = 300s
+Elapsed ordering time = 305s
+Elapsed ordering time = 310s
+Elapsed ordering time = 315s
+Elapsed ordering time = 320s
+Elapsed ordering time = 325s
+Elapsed ordering time = 330s
+Elapsed ordering time = 335s
+Elapsed ordering time = 340s
+Elapsed ordering time = 345s
+Elapsed ordering time = 350s
+Elapsed ordering time = 355s
+Elapsed ordering time = 370s
+Elapsed ordering time = 379s
+Elapsed ordering time = 383s
+Elapsed ordering time = 386s
+Elapsed ordering time = 390s
+Elapsed ordering time = 395s
+Elapsed ordering time = 400s
+Elapsed ordering time = 405s
+Elapsed ordering time = 410s
+Elapsed ordering time = 415s
+Elapsed ordering time = 420s
+Elapsed ordering time = 425s
+Elapsed ordering time = 430s
+Elapsed ordering time = 435s
+Elapsed ordering time = 440s
+Elapsed ordering time = 445s
+Elapsed ordering time = 450s
+Elapsed ordering time = 455s
+Elapsed ordering time = 460s
+Elapsed ordering time = 470s
+Elapsed ordering time = 476s
+Elapsed ordering time = 480s
+Elapsed ordering time = 485s
+Elapsed ordering time = 490s
+Elapsed ordering time = 495s
+Elapsed ordering time = 500s
+Elapsed ordering time = 505s
+Elapsed ordering time = 510s
+Elapsed ordering time = 515s
+Elapsed ordering time = 520s
+Elapsed ordering time = 525s
+Elapsed ordering time = 530s
+Elapsed ordering time = 535s
+Elapsed ordering time = 540s
+Elapsed ordering time = 545s
+Elapsed ordering time = 550s
+Elapsed ordering time = 555s
+Ordering time: 561.09s
+Elapsed ordering time = 562s
+Elapsed ordering time = 565s
+Elapsed ordering time = 573s
+Elapsed ordering time = 575s
+Elapsed ordering time = 580s
+Elapsed ordering time = 585s
+Elapsed ordering time = 590s
+Elapsed ordering time = 595s
+Elapsed ordering time = 600s
+Elapsed ordering time = 605s
+Elapsed ordering time = 610s
+Elapsed ordering time = 615s
+Elapsed ordering time = 620s
+Elapsed ordering time = 627s
+Elapsed ordering time = 631s
+Elapsed ordering time = 635s
+Elapsed ordering time = 640s
+Elapsed ordering time = 645s
+Elapsed ordering time = 650s
+Elapsed ordering time = 655s
+Elapsed ordering time = 662s
+Elapsed ordering time = 665s
+Elapsed ordering time = 669s
+Ordering time: 669.38s
+
+Barrier performed 0 iterations in 909.48 seconds (366.18 work units)
+Time limit reached
+
+
+
+Root relaxation: time limit, 77481 iterations, 683.19 seconds (163.35 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0          -    0      7520005.64 9580991.85  27.4%     -  909s
+
+Explored 1 nodes (77481 simplex iterations) in 909.79 seconds (331.08 work units)
+Thread count was 16 (of 16 available processors)
+
+Solution count 1: 7.52001e+06 
+
+Time limit reached
+Best objective 7.520005638000e+06, best bound 9.580991845855e+06, gap 27.4067%
+
+Gurobi 13.0.3 (win64) logging started Thu Nov 12 01:15:31 2026
+
+Set parameter LogFile to value "data/results/RamaB_grandes\logs\gurobi_ventana_96-120h.log"
+Set parameter SoftMemLimit to value 24
+Gurobi Optimizer version 13.0.3 build v13.0.3rc0 (win64 - Windows 11+.0 (26200.2))
+
+CPU model: Intel(R) Core(TM) Ultra 9 285H, instruction set [SSE2|AVX|AVX2]
+Thread count: 16 physical cores, 16 logical processors, using up to 16 threads
+
+Non-default parameters:
+TimeLimit  900
+SoftMemLimit  24
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  120
+LogToConsole  0
+
+Optimize a model with 1169015 rows, 1338931 columns and 9584259 nonzeros (Max)
+Model fingerprint: 0x16c6b898
+Model has 95073 linear objective coefficients
+Variable types: 931844 continuous, 407087 integer (407087 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 4e+04]
+  Bounds range     [2e-01, 8e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 7.52001e+06
+
+Presolve removed 696345 rows and 607047 columns (presolve time = 5s)...
+Presolve removed 751756 rows and 608104 columns (presolve time = 10s)...
+Presolve removed 844400 rows and 686867 columns (presolve time = 15s)...
+Presolve removed 861358 rows and 687091 columns (presolve time = 20s)...
+Presolve removed 861869 rows and 687434 columns (presolve time = 31s)...
+Presolve removed 985269 rows and 858814 columns (presolve time = 35s)...
+Presolve removed 985417 rows and 859496 columns
+Presolve time: 35.27s
+Presolved: 183598 rows, 479435 columns, 2027711 nonzeros
+Variable types: 426800 continuous, 52635 integer (52634 binary)
+Performing another presolve...
+Presolve removed 19533 rows and 8986 columns (presolve time = 5s)...
+Presolve removed 20046 rows and 10038 columns (presolve time = 14s)...
+Presolve removed 20046 rows and 30004 columns (presolve time = 16s)...
+Presolve removed 20046 rows and 30004 columns (presolve time = 22s)...
+Presolve removed 34580 rows and 46830 columns (presolve time = 25s)...
+Presolve removed 35887 rows and 47085 columns (presolve time = 30s)...
+Presolve removed 35967 rows and 47102 columns (presolve time = 35s)...
+Presolve removed 35992 rows and 47114 columns
+Presolve time: 36.90s
+Starting NoRel heuristic
+Found phase-1 solution: relaxation 1210.2
+Found phase-1 solution: relaxation 1207.29
+Found phase-1 solution: relaxation 1181
+Found phase-1 solution: relaxation 844.2
+Found phase-1 solution: relaxation 395.86
+Found phase-1 solution: relaxation 348.99
+Found phase-1 solution: relaxation 1.00009
+Found phase-1 solution: relaxation 0
+Transition to phase 2
+Elapsed time for NoRel heuristic: 8s (best bound 9.86679e+06)
+Elapsed time for NoRel heuristic: 14s (best bound 9.68115e+06)
+Elapsed time for NoRel heuristic: 23s (best bound 9.66201e+06)
+Elapsed time for NoRel heuristic: 36s (best bound 9.64911e+06)
+Elapsed time for NoRel heuristic: 46s (best bound 9.60522e+06)
+Elapsed time for NoRel heuristic: 57s (best bound 9.58119e+06)
+Elapsed time for NoRel heuristic: 69s (best bound 9.58061e+06)
+Elapsed time for NoRel heuristic: 82s (best bound 9.57831e+06)
+Elapsed time for NoRel heuristic: 93s (best bound 9.56716e+06)
+Elapsed time for NoRel heuristic: 109s (best bound 9.56065e+06)
+Elapsed time for NoRel heuristic: 120s (best bound 9.40954e+06)
+NoRel heuristic complete
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Elapsed ordering time = 6s
+Ordering time: 27.24s
+Elapsed ordering time = 28s
+Elapsed ordering time = 30s
+Elapsed ordering time = 35s
+Elapsed ordering time = 40s
+Elapsed ordering time = 45s
+Elapsed ordering time = 50s
+Elapsed ordering time = 55s
+Elapsed ordering time = 60s
+Elapsed ordering time = 65s
+Elapsed ordering time = 70s
+Elapsed ordering time = 76s
+Elapsed ordering time = 80s
+Elapsed ordering time = 85s
+Elapsed ordering time = 90s
+Elapsed ordering time = 95s
+Elapsed ordering time = 100s
+Elapsed ordering time = 105s
+Elapsed ordering time = 110s
+Elapsed ordering time = 118s
+Elapsed ordering time = 120s
+Elapsed ordering time = 125s
+Elapsed ordering time = 130s
+Elapsed ordering time = 135s
+Elapsed ordering time = 140s
+Elapsed ordering time = 145s
+Elapsed ordering time = 150s
+Elapsed ordering time = 160s
+Elapsed ordering time = 163s
+Elapsed ordering time = 166s
+Elapsed ordering time = 170s
+Elapsed ordering time = 175s
+Elapsed ordering time = 180s
+Elapsed ordering time = 185s
+Elapsed ordering time = 190s
+Elapsed ordering time = 195s
+Elapsed ordering time = 202s
+Elapsed ordering time = 205s
+Elapsed ordering time = 210s
+Elapsed ordering time = 215s
+Elapsed ordering time = 220s
+Elapsed ordering time = 225s
+Elapsed ordering time = 230s
+Elapsed ordering time = 235s
+Ordering time: 239.86s
+Elapsed ordering time = 240s
+Elapsed ordering time = 245s
+Elapsed ordering time = 250s
+Elapsed ordering time = 255s
+Elapsed ordering time = 260s
+Elapsed ordering time = 265s
+Elapsed ordering time = 269s
+Elapsed ordering time = 270s
+Elapsed ordering time = 275s
+Elapsed ordering time = 280s
+Elapsed ordering time = 285s
+Elapsed ordering time = 293s
+Elapsed ordering time = 296s
+Elapsed ordering time = 300s
+Elapsed ordering time = 305s
+Elapsed ordering time = 310s
+Elapsed ordering time = 318s
+Elapsed ordering time = 321s
+Elapsed ordering time = 325s
+Elapsed ordering time = 330s
+Elapsed ordering time = 335s
+Elapsed ordering time = 340s
+Ordering time: 344.05s
+
+Barrier statistics:
+ Dense cols : 1682
+ AA' NZ     : 1.289e+07
+ Factor NZ  : 9.530e+08 (roughly 8.0 GB of memory)
+ Factor Ops : 1.908e+13 (roughly 50 seconds per iteration)
+ Threads    : 14
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0  -3.33643668e+08  9.17393414e+10  1.86e+04 5.08e+03  2.13e+06   549s
+   1  -2.51036927e+08  9.10327531e+10  1.33e+04 8.92e+03  1.42e+06   549s
+   2  -1.89035469e+08  8.79211438e+10  9.62e+03 4.49e+03  9.89e+05   549s
+   3  -1.66077130e+08  8.13393668e+10  8.24e+03 2.37e+03  7.94e+05   549s
+   4  -1.58119347e+08  7.66382376e+10  7.74e+03 1.78e+03  7.20e+05   549s
+   5  -9.55753351e+07  7.30666557e+10  3.81e+03 1.41e+03  3.80e+05   549s
+   6  -7.80812296e+07  5.41157491e+10  2.77e+03 5.87e+02  2.56e+05   549s
+   7  -5.77392467e+07  4.32171620e+10  1.83e+03 4.13e+02  1.68e+05   550s
+   8  -4.02649261e+07  3.20909492e+10  1.04e+03 2.27e+02  9.85e+04   550s
+   9  -2.69853565e+07  2.29016339e+10  5.21e+02 1.42e+02  5.44e+04   550s
+  10  -1.91284900e+07  1.42827537e+10  3.74e+02 7.71e+01  3.04e+04   550s
+  11  -1.53135015e+07  9.32263154e+09  3.03e+02 3.97e+01  1.95e+04   550s
+  12  -1.12844316e+07  7.07088647e+09  2.21e+02 2.52e+01  1.16e+04   550s
+  13  -9.56446952e+06  5.05810060e+09  1.38e+02 1.39e+01  7.42e+03   551s
+  14  -9.03399255e+06  3.74400671e+09  1.08e+02 6.68e+00  5.44e+03   551s
+  15  -8.60440710e+06  2.97735935e+09  8.14e+01 1.65e+00  4.24e+03   551s
+  16  -8.25350445e+06  2.14977703e+09  6.32e+01 1.92e-10  3.11e+03   552s
+  17  -7.84191793e+06  1.67340517e+09  4.49e+01 1.81e-10  2.33e+03   552s
+  18  -7.39675449e+06  1.36897012e+09  3.17e+01 4.07e-10  1.84e+03   553s
+  19  -6.92881421e+06  1.11590077e+09  2.34e+01 1.57e-10  1.46e+03   553s
+  20  -6.29395636e+06  8.59377594e+08  1.61e+01 2.06e-10  1.10e+03   554s
+  21  -5.65089966e+06  6.10536108e+08  1.19e+01 9.64e-11  7.98e+02   555s
+  22  -4.81429141e+06  4.88530140e+08  9.39e+00 3.06e-10  6.40e+02   556s
+  23  -4.26795356e+06  3.96674262e+08  7.67e+00 2.50e-10  5.22e+02   557s
+  24  -3.12282753e+06  2.96688506e+08  5.53e+00 7.07e-11  3.87e+02   558s
+  25  -2.35237539e+06  2.31123011e+08  4.78e+00 2.98e-10  3.02e+02   559s
+  26  -1.57702052e+06  1.90051579e+08  3.76e+00 1.28e-10  2.45e+02   561s
+  27  -1.00613529e+06  1.58151812e+08  3.21e+00 1.20e-10  2.03e+02   563s
+  28  -5.37441041e+05  1.29819936e+08  2.87e+00 8.11e-11  1.67e+02   566s
+  29   1.47012651e+05  1.10619663e+08  2.45e+00 8.96e-11  1.41e+02   569s
+  30   6.69192286e+05  9.75898045e+07  2.15e+00 5.59e-11  1.23e+02   572s
+  31   1.05571969e+06  8.57158345e+07  1.93e+00 1.35e-10  1.07e+02   576s
+  32   1.51592194e+06  8.06214882e+07  1.67e+00 1.04e-10  9.79e+01   580s
+  33   1.88320690e+06  7.60014145e+07  1.48e+00 1.45e-10  9.04e+01   587s
+  34   2.24144794e+06  6.74094286e+07  1.30e+00 3.00e-03  7.90e+01   715s
+  35   3.09312164e+06  5.63784558e+07  9.17e-01 5.91e-03  6.26e+01   801s
+  36   3.57849303e+06  4.87096694e+07  7.64e-01 8.70e-03  5.25e+01   887s
+
+Barrier performed 36 iterations in 903.21 seconds (698.52 work units)
+Time limit reached
+
+
+
+Root relaxation: time limit, 139766 iterations, 709.90 seconds (358.93 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0          -    0      7520005.64 9409542.78  25.1%     -  903s
+
+Explored 1 nodes (139766 simplex iterations) in 903.70 seconds (557.99 work units)
+Thread count was 16 (of 16 available processors)
+
+Solution count 1: 7.52001e+06 
+
+Time limit reached
+Best objective 7.520005638000e+06, best bound 9.409542778502e+06, gap 25.1268%

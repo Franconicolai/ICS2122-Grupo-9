@@ -1,0 +1,148 @@
+
+Gurobi 13.0.3 (win64) logging started Wed Nov 11 12:32:24 2026
+
+Set parameter LogFile to value "data/results/RamaB_grandes\logs\gurobi_ventana_12-36h.log"
+Set parameter SoftMemLimit to value 24
+Gurobi Optimizer version 13.0.3 build v13.0.3rc0 (win64 - Windows 11+.0 (26200.2))
+
+CPU model: Intel(R) Core(TM) Ultra 9 285H, instruction set [SSE2|AVX|AVX2]
+Thread count: 16 physical cores, 16 logical processors, using up to 16 threads
+
+Non-default parameters:
+TimeLimit  900
+SoftMemLimit  24
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  120
+LogToConsole  0
+
+Optimize a model with 636341 rows, 1072667 columns and 7106007 nonzeros (Max)
+Model fingerprint: 0x954c98fe
+Model has 95073 linear objective coefficients
+Variable types: 824251 continuous, 248416 integer (248416 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 4e+04]
+  Bounds range     [2e-01, 8e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 7.52001e+06
+
+Presolve removed 434898 rows and 489639 columns (presolve time = 5s)...
+Presolve removed 523690 rows and 599723 columns
+Presolve time: 8.12s
+Presolved: 112651 rows, 472944 columns, 1714192 nonzeros
+Variable types: 444897 continuous, 28047 integer (28047 binary)
+Performing another presolve...
+Presolve removed 2727 rows and 816 columns (presolve time = 5s)...
+Presolve removed 2727 rows and 816 columns (presolve time = 10s)...
+Presolve removed 2727 rows and 816 columns (presolve time = 15s)...
+Presolve removed 63207 rows and 224818 columns
+Presolve time: 17.97s
+
+Explored 1 nodes (0 simplex iterations) in 26.79 seconds (28.94 work units)
+Thread count was 16 (of 16 available processors)
+
+Solution count 2: 7.52001e+06 7.52001e+06 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 7.520005638000e+06, best bound 7.520005638000e+06, gap 0.0000%
+
+Gurobi 13.0.3 (win64) logging started Wed Nov 11 22:00:55 2026
+
+Set parameter LogFile to value "data/results/RamaB_grandes\logs\gurobi_ventana_12-36h.log"
+Set parameter SoftMemLimit to value 24
+Gurobi Optimizer version 13.0.3 build v13.0.3rc0 (win64 - Windows 11+.0 (26200.2))
+
+CPU model: Intel(R) Core(TM) Ultra 9 285H, instruction set [SSE2|AVX|AVX2]
+Thread count: 16 physical cores, 16 logical processors, using up to 16 threads
+
+Non-default parameters:
+TimeLimit  900
+SoftMemLimit  24
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  120
+LogToConsole  0
+
+Optimize a model with 636341 rows, 1072667 columns and 7106007 nonzeros (Max)
+Model fingerprint: 0x954c98fe
+Model has 95073 linear objective coefficients
+Variable types: 824251 continuous, 248416 integer (248416 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 4e+04]
+  Bounds range     [2e-01, 8e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 7.52001e+06
+
+Presolve removed 523008 rows and 599672 columns (presolve time = 5s)...
+Presolve removed 523690 rows and 599723 columns
+Presolve time: 5.11s
+Presolved: 112651 rows, 472944 columns, 1714192 nonzeros
+Variable types: 444897 continuous, 28047 integer (28047 binary)
+Performing another presolve...
+Presolve removed 2727 rows and 816 columns (presolve time = 5s)...
+Presolve removed 2727 rows and 816 columns (presolve time = 10s)...
+Presolve removed 63207 rows and 224818 columns
+Presolve time: 12.17s
+
+Explored 1 nodes (0 simplex iterations) in 17.79 seconds (28.94 work units)
+Thread count was 16 (of 16 available processors)
+
+Solution count 2: 7.52001e+06 7.52001e+06 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 7.520005638000e+06, best bound 7.520005638000e+06, gap 0.0000%
+
+Gurobi 13.0.3 (win64) logging started Thu Nov 12 00:07:55 2026
+
+Set parameter LogFile to value "data/results/RamaB_grandes\logs\gurobi_ventana_12-36h.log"
+Set parameter SoftMemLimit to value 24
+Gurobi Optimizer version 13.0.3 build v13.0.3rc0 (win64 - Windows 11+.0 (26200.2))
+
+CPU model: Intel(R) Core(TM) Ultra 9 285H, instruction set [SSE2|AVX|AVX2]
+Thread count: 16 physical cores, 16 logical processors, using up to 16 threads
+
+Non-default parameters:
+TimeLimit  900
+SoftMemLimit  24
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  120
+LogToConsole  0
+
+Optimize a model with 636341 rows, 1072667 columns and 7106007 nonzeros (Max)
+Model fingerprint: 0x954c98fe
+Model has 95073 linear objective coefficients
+Variable types: 824251 continuous, 248416 integer (248416 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 4e+04]
+  Bounds range     [2e-01, 8e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 7.52001e+06
+
+Presolve removed 508645 rows and 577545 columns (presolve time = 5s)...
+Presolve removed 523690 rows and 599723 columns
+Presolve time: 6.02s
+Presolved: 112651 rows, 472944 columns, 1714192 nonzeros
+Variable types: 444897 continuous, 28047 integer (28047 binary)
+Performing another presolve...
+Presolve removed 2727 rows and 816 columns (presolve time = 5s)...
+Presolve removed 2727 rows and 816 columns (presolve time = 10s)...
+Presolve removed 63207 rows and 224818 columns
+Presolve time: 13.67s
+
+Explored 1 nodes (0 simplex iterations) in 20.31 seconds (28.94 work units)
+Thread count was 16 (of 16 available processors)
+
+Solution count 2: 7.52001e+06 7.52001e+06 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 7.520005638000e+06, best bound 7.520005638000e+06, gap 0.0000%

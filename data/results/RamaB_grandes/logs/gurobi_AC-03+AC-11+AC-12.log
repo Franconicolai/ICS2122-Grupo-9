@@ -1,0 +1,119 @@
+
+Gurobi 13.0.3 (win64) logging started Thu Nov 12 02:56:27 2026
+
+Set parameter LogFile to value "data/results/RamaB_grandes\logs\gurobi_AC-03+AC-11+AC-12.log"
+Set parameter SoftMemLimit to value 24
+Gurobi Optimizer version 13.0.3 build v13.0.3rc0 (win64 - Windows 11+.0 (26200.2))
+
+CPU model: Intel(R) Core(TM) Ultra 9 285H, instruction set [SSE2|AVX|AVX2]
+Thread count: 16 physical cores, 16 logical processors, using up to 16 threads
+
+Non-default parameters:
+TimeLimit  900
+SoftMemLimit  24
+FeasibilityTol  1e-05
+MIPFocus  1
+NodefileStart  0.5
+NoRelHeurTime  120
+LogToConsole  0
+
+Optimize a model with 1195932 rows, 1889122 columns and 11301398 nonzeros (Max)
+Model fingerprint: 0xe2e4f142
+Model has 95073 linear objective coefficients
+Variable types: 1472495 continuous, 416627 integer (416627 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 2e+02]
+  Objective range  [4e+01, 4e+04]
+  Bounds range     [2e-01, 8e+02]
+  RHS range        [1e+00, 3e+02]
+
+Loaded user MIP start with objective 7.52001e+06
+
+Presolve removed 90870 rows and 260271 columns (presolve time = 5s)...
+Presolve removed 129139 rows and 260271 columns (presolve time = 10s)...
+Presolve removed 133931 rows and 260271 columns (presolve time = 15s)...
+Presolve removed 135517 rows and 260297 columns (presolve time = 20s)...
+Presolve removed 137665 rows and 260297 columns (presolve time = 25s)...
+Presolve removed 140253 rows and 260297 columns (presolve time = 30s)...
+Presolve removed 140303 rows and 260322 columns (presolve time = 35s)...
+Presolve removed 140303 rows and 260322 columns (presolve time = 40s)...
+Presolve removed 140303 rows and 260322 columns (presolve time = 45s)...
+Presolve removed 140303 rows and 260322 columns (presolve time = 50s)...
+Presolve removed 140303 rows and 260322 columns (presolve time = 58s)...
+Presolve removed 140303 rows and 266002 columns (presolve time = 61s)...
+Presolve removed 150784 rows and 266024 columns (presolve time = 65s)...
+Presolve removed 150972 rows and 266090 columns (presolve time = 70s)...
+Presolve removed 151037 rows and 266090 columns (presolve time = 75s)...
+Presolve removed 151037 rows and 266090 columns (presolve time = 80s)...
+Presolve removed 151037 rows and 266090 columns (presolve time = 85s)...
+Presolve removed 151037 rows and 266090 columns (presolve time = 90s)...
+Presolve removed 151037 rows and 266090 columns (presolve time = 95s)...
+Presolve removed 151037 rows and 266090 columns (presolve time = 105s)...
+Presolve removed 151037 rows and 269970 columns (presolve time = 110s)...
+Presolve removed 156446 rows and 271218 columns (presolve time = 115s)...
+Presolve removed 157038 rows and 271218 columns (presolve time = 120s)...
+Presolve removed 157038 rows and 271233 columns (presolve time = 125s)...
+Presolve removed 157038 rows and 271233 columns
+Presolve time: 125.06s
+Presolved: 1038894 rows, 1617889 columns, 10814969 nonzeros
+Variable types: 1287337 continuous, 330552 integer (330552 binary)
+Starting NoRel heuristic
+Elapsed time for NoRel heuristic: 18s (best bound 1.07561e+07)
+Elapsed time for NoRel heuristic: 26s (best bound 1.07561e+07)
+Elapsed time for NoRel heuristic: 34s (best bound 1.07561e+07)
+Elapsed time for NoRel heuristic: 75s (best bound 1.07561e+07)
+Elapsed time for NoRel heuristic: 82s (best bound 1.07561e+07)
+Elapsed time for NoRel heuristic: 88s (best bound 1.07561e+07)
+Elapsed time for NoRel heuristic: 95s (best bound 1.07466e+07)
+Elapsed time for NoRel heuristic: 115s (best bound 1.07466e+07)
+Elapsed time for NoRel heuristic: 190s (best bound 1.07466e+07)
+NoRel heuristic complete
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Elapsed ordering time = 5s
+Elapsed ordering time = 10s
+Elapsed ordering time = 15s
+Elapsed ordering time = 20s
+Elapsed ordering time = 25s
+Elapsed ordering time = 30s
+Elapsed ordering time = 35s
+Elapsed ordering time = 40s
+Elapsed ordering time = 45s
+Elapsed ordering time = 50s
+Elapsed ordering time = 55s
+Elapsed ordering time = 60s
+Elapsed ordering time = 65s
+Elapsed ordering time = 70s
+Elapsed ordering time = 75s
+Elapsed ordering time = 80s
+Elapsed ordering time = 85s
+Elapsed ordering time = 90s
+Elapsed ordering time = 95s
+Elapsed ordering time = 100s
+Elapsed ordering time = 105s
+Elapsed ordering time = 110s
+Elapsed ordering time = 115s
+Elapsed ordering time = 120s
+Elapsed ordering time = 125s
+Elapsed ordering time = 155s
+Elapsed ordering time = 174s
+Elapsed ordering time = 184s
+Ordering time: 266.49s
+
+Barrier performed 0 iterations in 597.93 seconds (520.36 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+Warning: Possible non-determinism after error
+
+
+Explored 0 nodes (0 simplex iterations) in 598.86 seconds (520.36 work units)
+Thread count was 1 (of 16 available processors)
+
+Solution count 2: 7.52001e+06 
+No other solutions better than 0
+
+Solve interrupted (error code 10001)
+Best objective 7.520005638000e+06, best bound -, gap -
