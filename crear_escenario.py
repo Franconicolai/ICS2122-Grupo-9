@@ -20,6 +20,50 @@ if hasattr(sys.stdout, 'reconfigure'):
 RAW = os.path.join('data', 'raw data')
 
 
+def crear_escenario(nombre, combustible=1.0, demanda=1.0, tarifa=1.0, exfuel=(), reemplazar=True):
+    """Crea un escenario y devuelve su ruta; permite reutilizar esta logica desde la bateria."""
+    if not nombre or os.path.basename(nombre) != nombre:
+        raise ValueError('el nombre del escenario debe ser un nombre simple de carpeta')
+    dst = os.path.join('data', 'escenarios', nombre)
+    if os.path.exists(dst):
+        if not reemplazar:
+            return dst
+        shutil.rmtree(dst)
+    shutil.copytree(RAW, dst)
+    cambios = []
+
+    cp = pd.read_csv(os.path.join(dst, 'cost_params.csv'))
+    if combustible != 1.0:
+        m = cp.param == 'fuel_price_usd_per_gal'
+        cp.loc[m, 'value'] = cp.loc[m, 'value'] * combustible
+        cambios.append(f'combustible x{combustible:g} -> {cp.loc[m, "value"].iloc[0]:.3f} USD/gal')
+    for e in exfuel:
+        filial, valor = e.split('=')
+        m = (cp.param == 'ex_fuel_usd_per_block_hour') & (cp.operator == filial.strip().upper())
+        if not m.any():
+            raise ValueError(f'filial desconocida: {filial}')
+        cp.loc[m, 'value'] = float(valor)
+        cambios.append(f'ex-fuel {filial.upper()} = {float(valor):,.0f} USD/h')
+    cp.to_csv(os.path.join(dst, 'cost_params.csv'), index=False)
+
+    if demanda != 1.0:
+        dd = pd.read_csv(os.path.join(dst, 'demand_daily.csv'))
+        dias = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+        dd[dias] = (dd[dias] * demanda).round(1)
+        dd.to_csv(os.path.join(dst, 'demand_daily.csv'), index=False)
+        cambios.append(f'demanda x{demanda:g}')
+    dw = pd.read_csv(os.path.join(dst, 'demand_weekly.csv'))
+    if demanda != 1.0:
+        dw['tons_week'] = (dw['tons_week'] * demanda).round(1)
+    if tarifa != 1.0:
+        dw['tariff_usd_per_kg'] = (dw['tariff_usd_per_kg'] * tarifa).round(4)
+        cambios.append(f'tarifas x{tarifa:g}')
+    dw.to_csv(os.path.join(dst, 'demand_weekly.csv'), index=False)
+
+    print(f'Escenario creado en {dst}: {", ".join(cambios) if cambios else "sin cambios (control)"}')
+    return dst
+
+
 def main():
     ap = argparse.ArgumentParser(description='Crea un escenario de sensibilidad en data/escenarios/<nombre>.')
     ap.add_argument('--nombre', required=True)
@@ -28,42 +72,10 @@ def main():
     ap.add_argument('--tarifa', type=float, default=1.0, help='factor sobre las tarifas (USD/kg)')
     ap.add_argument('--exfuel', action='append', default=[], help='FILIAL=USD_por_hora, por ejemplo PAC=3800')
     a = ap.parse_args()
-
-    dst = os.path.join('data', 'escenarios', a.nombre)
-    if os.path.exists(dst):
-        shutil.rmtree(dst)
-    shutil.copytree(RAW, dst)
-    cambios = []
-
-    cp = pd.read_csv(os.path.join(dst, 'cost_params.csv'))
-    if a.combustible != 1.0:
-        m = cp.param == 'fuel_price_usd_per_gal'
-        cp.loc[m, 'value'] = cp.loc[m, 'value'] * a.combustible
-        cambios.append(f'combustible x{a.combustible:g} -> {cp.loc[m, "value"].iloc[0]:.3f} USD/gal')
-    for e in a.exfuel:
-        filial, valor = e.split('=')
-        m = (cp.param == 'ex_fuel_usd_per_block_hour') & (cp.operator == filial.strip().upper())
-        if not m.any():
-            sys.exit(f'filial desconocida: {filial}')
-        cp.loc[m, 'value'] = float(valor)
-        cambios.append(f'ex-fuel {filial.upper()} = {float(valor):,.0f} USD/h')
-    cp.to_csv(os.path.join(dst, 'cost_params.csv'), index=False)
-
-    if a.demanda != 1.0:
-        dd = pd.read_csv(os.path.join(dst, 'demand_daily.csv'))
-        dias = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
-        dd[dias] = (dd[dias] * a.demanda).round(1)
-        dd.to_csv(os.path.join(dst, 'demand_daily.csv'), index=False)
-        cambios.append(f'demanda x{a.demanda:g}')
-    dw = pd.read_csv(os.path.join(dst, 'demand_weekly.csv'))
-    if a.demanda != 1.0:
-        dw['tons_week'] = (dw['tons_week'] * a.demanda).round(1)
-    if a.tarifa != 1.0:
-        dw['tariff_usd_per_kg'] = (dw['tariff_usd_per_kg'] * a.tarifa).round(4)
-        cambios.append(f'tarifas x{a.tarifa:g}')
-    dw.to_csv(os.path.join(dst, 'demand_weekly.csv'), index=False)
-
-    print(f'Escenario creado en {dst}: {", ".join(cambios) if cambios else "sin cambios (control)"}')
+    try:
+        crear_escenario(a.nombre, a.combustible, a.demanda, a.tarifa, a.exfuel)
+    except ValueError as exc:
+        sys.exit(f'[!] {exc}')
 
 
 if __name__ == '__main__':

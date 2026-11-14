@@ -1,0 +1,8 @@
+{
+  "version": "base",
+  "fecha": "2026-11-14 16:53:07",
+  "descripcion": "MILP completo con warm start desde RamaB_interchange_continua",
+  "solver": "gurobi",
+  "dt": "continuo (MILP)",
+  "tlim": null
+}

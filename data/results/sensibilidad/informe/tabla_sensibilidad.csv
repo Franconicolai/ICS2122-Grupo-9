@@ -1,0 +1,18 @@
+parametro,valor,etiqueta,margen_usd,cambio_usd,cambio_pct,ingresos_usd,costo_vuelos_usd,costo_handling_usd,toneladas,pct_demanda,vuelos_vacios,interchanges,vuelos_otra_filial,factor_ocupacion_pct,protocolo,estado
+Control,Base,base,7520006,0,0.0,19793765,11713717,560043,12810.2,95.76,78,53,323,73.28,Mismos vuelos (reasigna operadores y carga; validador actual),Ejecutado y validado
+Costo PAC,3.800 USD/h,pac_3800,6831461,-688545,-9.156176205178559,19793765,12402262,560043,12810.2,95.76,78,53,323,73.28,Mismos vuelos (reasigna operadores y carga; validador actual),Ejecutado y validado
+Costo PAC,4.250 USD/h,pac_4250,6684548,-835458,-11.109804965581144,19794049,12433834,675667,12810.2,95.76,76,57,336,73.23,Mismos vuelos (reasigna operadores y carga; validador actual),Ejecutado y validado
+Costo PAC,4.450 USD/h,pac_4450,6679676,-840330,-11.174592147931797,19794349,12439414,675259,12810.2,95.76,78,62,336,73.31,Mismos vuelos (reasigna operadores y carga; validador actual),Ejecutado y validado
+Combustible,-20 %,combustible_-20,8784257,1264251,16.811834990557188,19793765,10449465,560043,12810.2,95.76,78,53,323,73.28,Mismos vuelos (reasigna operadores y carga; validador actual),Ejecutado y validado
+Combustible,+20 %,combustible_+20,6255754,-1264252,-16.81184828841892,19793765,12977968,560043,12810.2,95.76,78,53,323,73.28,Mismos vuelos (reasigna operadores y carga; validador actual),Ejecutado y validado
+Combustible,+40 %,combustible_+40,4991502,-2528504,-33.62369657683784,19793765,14242220,560043,12810.2,95.76,78,53,323,73.28,Mismos vuelos (reasigna operadores y carga; validador actual),Ejecutado y validado
+Demanda,-20 %,demanda_-20,4081737,-3438269,-45.72162575402201,16230662,11696725,452200,10499.5,98.11,62,45,331,67.91,Mismos vuelos (reasigna operadores y carga; validador actual),Ejecutado y validado
+Demanda,-10 %,demanda_-10,5962837,-1557169,-20.707018052911128,18178195,11703560,511798,11765.9,97.73,60,49,331,71.1,Mismos vuelos (reasigna operadores y carga; validador actual),Ejecutado y validado
+Demanda,+10 %,demanda_+10,8111344,591338,7.863530959948702,20387974,11709068,567562,13136.6,89.27,45,48,325,73.99,Mismos vuelos (reasigna operadores y carga; validador actual),Ejecutado y validado
+Demanda,+20 %,demanda_+20,8630331,1110325,14.764948325839102,20917873,11706674,580868,13416.2,83.58,68,54,331,75.24,Mismos vuelos (reasigna operadores y carga; validador actual),Ejecutado y validado
+Borde semanal,Estricto,base_borde_base,7414550,-105456,-1.4023393066441703,19793765,11820305,558910,12810.2,95.76,75,50,293,72.76,Mismos vuelos (reasigna operadores y carga; validador actual),Ejecutado y validado
+Cambio de operador,Desactivado,base_sin_interchange,6388786,-1131220,-15.042807146696425,19791707,12847723,555198,12808.3,95.75,73,0,0,73.12,Mismos vuelos (reasigna operadores y carga; validador actual),Ejecutado y validado
+Tarifas,-10 %,tarifas_-10,5540629,-1979377,-26.321481658392294,17814388,11713717,560043,12810.2,95.76,78,53,323,73.15,Mismos vuelos (reasigna operadores y carga; validador actual),Ejecutado y validado
+Tarifas,+10 %,tarifas_+10,9499396,1979390,26.321654530594788,21773454,11713717,560341,12810.2,95.76,73,53,323,73.26,Mismos vuelos (reasigna operadores y carga; validador actual),Ejecutado y validado
+TTR,1 h,base_ttr1,7520006,0,0.0,19793765,11713717,560043,12810.2,95.76,73,53,323,73.25,Mismos vuelos (reasigna operadores y carga; validador actual),Ejecutado y validado
+TTR,3 h,base_ttr3,7516981,-3025,-0.040226031734549146,19790303,11713717,559605,12807.1,95.74,73,53,323,72.97,Mismos vuelos (reasigna operadores y carga; validador actual),Ejecutado y validado

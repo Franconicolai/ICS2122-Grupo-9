@@ -1,0 +1,8 @@
+{
+  "version": "pac_4250",
+  "fecha": "2026-11-14 17:07:03",
+  "descripcion": "MILP completo con warm start desde RamaB_interchange_continua",
+  "solver": "gurobi",
+  "dt": "continuo (MILP)",
+  "tlim": null
+}

@@ -1,0 +1,8 @@
+{
+  "version": "combustible_+40",
+  "fecha": "2026-11-14 17:25:44",
+  "descripcion": "MILP completo con warm start desde RamaB_interchange_continua",
+  "solver": "gurobi",
+  "dt": "continuo (MILP)",
+  "tlim": null
+}
